@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        id="cordova-plugin-customfcmreceiver"
+        version="1.0.0">
+
+    <name>Custom FCM Receiver</name>
+    <description>Test plugin to illustrate how FirebasePluginMessageReceiver can be used.</description>
+    <license>MIT</license>
+
+    <js-module src="www/customfcmreceiver.js" name="CustomFCMReceiverPlugin">
+        <clobbers target="cordova.plugin.customfcmreceiver" />
+    </js-module>
+
+    <platform name="android">
+        <source-file src="src/CustomFCMReceiverPlugin.java" target-dir="src/cordova/plugin/customfcmreceiver" />
+
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="CustomFCMReceiverPlugin" >
+                <param name="android-package" value="cordova.plugin.customfcmreceiver.CustomFCMReceiverPlugin"/>
+                <param name="onload" value="true" />
+            </feature>
+        </config-file>
+    </platform>
+</plugin>

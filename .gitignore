@@ -1,7 +1,7 @@
 /.idea
 /platforms
-/plugins/*/**
 /plugins/cordova-plugin-firebase
+/plugins/cordova-plugin-whitelist
 /plugins/android.json
 /plugins/ios.json
 /node_modules

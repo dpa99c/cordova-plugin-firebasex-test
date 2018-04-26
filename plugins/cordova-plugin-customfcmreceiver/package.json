@@ -1,0 +1,8 @@
+{
+  "name": "cordova-plugin-customfcmreceiver",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {},
+  "devDependencies": {},
+  "license": "MIT"
+}
