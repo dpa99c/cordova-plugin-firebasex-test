@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "605981097027",
+    "firebase_url": "https://fir-test-7d995.firebaseio.com",
+    "project_id": "fir-test-7d995",
+    "storage_bucket": "fir-test-7d995.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:605981097027:android:f39ce2b45e7c13b7",
+        "android_client_info": {
+          "package_name": "io.cordova.firebase.test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "605981097027-2f3h4lj88fv6ktftpsr8jt8q5vqocchs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_7hXc-PmIPCzMRiuckJUE0-337cHQXy4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
