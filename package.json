@@ -10,16 +10,14 @@
     "author": "Apache Cordova Team",
     "license": "Apache-2.0",
     "dependencies": {
-        "cordova-android": "^6.3.0",
+        "cordova-android": "*",
         "cordova-plugin-whitelist": "^1.3.3",
-        "cordova-plugin-cloud-settings": "git+https://github.com/dpa99c/cordova-plugin-cloud-settings.git"
+        "cordova-plugin-firebase": "git+https://github.com/dpa99c/cordova-plugin-firebase.git"
     },
     "cordova": {
         "plugins": {
             "cordova-plugin-whitelist": {},
-            "cordova-plugin-cloud-settings": {
-                "BACKUP_SERVICE_KEY": "AEdPqrEAAAAIJJfjFAwKjjOgGlieOvf9-LizY218CFWy1z0bcQ"
-            }
+            "cordova-plugin-firebase": {}
         },
         "platforms": [
             "android"

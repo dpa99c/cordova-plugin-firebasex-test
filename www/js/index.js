@@ -1,22 +1,32 @@
-var $output, $name;
+var $output;
 function onDeviceReady(){
     $output = $('#log-output');
-    $name = $('#name');
     log("deviceready");
+
+    // Custom FCM receiver plugin
+    cordova.plugin.customfcmreceiver.registerReceiver(function(message){
+        log("Received custom message: "+message);
+    });
+
+    // cordova-plugin-firebase
+    window.FirebasePlugin.onNotificationOpen(function(notification) {
+        var msg = "FirebasePlugin message: "+notification.body + '<br/>received in: ' + (notification.tap ? "background" : "foreground");
+        if(notification.title){
+            msg += '<br/>title='+notification.title;
+        }
+        log(msg);
+    }, function(error) {
+        logError("Failed receiving FirebasePlugin message: " + error);
+    });
+
+    window.FirebasePlugin.onTokenRefresh(function(token){
+        log("Token received: " + token)
+    }, function(error) {
+        logError("Failed receiving token: " + error);
+    });
 }
 $(document).on('deviceready', onDeviceReady);
 
-function clear(){
-    $output.empty();
-    $name.val('');
-}
-
-function stringify(str){
-    if(typeof str === "object"){
-        str = JSON.stringify(str);
-    }
-    return str;
-}
 
 function prependLogMessage(message){
     $output.prepend('<span class="'+(message.logLevel ? message.logLevel : '')+'">' +message.msg + '</span>' + (message.nobreak ? "<br/>" : "<br/><br/>" ));
@@ -36,33 +46,4 @@ function logError(msg){
     log(msg, {
         logLevel: "error"
     });
-}
-
-function onError(action, error){
-    logError(action +": "+stringify(error));
-}
-
-function onSuccess(action){
-    log(action +": successful");
-}
-
-function backup(){
-    log("backup");
-    var data = {
-        name: $name.val()
-    };
-    cordova.plugin.cloudsettings.save(data, onSuccess.bind(this, "backup"), onError.bind(this, "backup"));
-}
-
-function restore(){
-    log("restore");
-    cordova.plugin.cloudsettings.restore(function(data) {
-        onSuccess("restore: "+JSON.stringify(data));
-        if (data) {
-            $name.val(data.name);
-            log("data restored");
-        } else {
-            log("no data to restore");
-        }
-    }, onError.bind(this, "restore"));
 }
