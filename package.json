@@ -12,7 +12,7 @@
     "dependencies": {
         "cordova-android": "*",
         "cordova-plugin-whitelist": "^1.3.3",
-        "cordova-plugin-firebase": "git+https://github.com/dpa99c/cordova-plugin-firebase.git"
+        "cordova-plugin-firebase": "git+https://github.com/dpa99c/cordova-plugin-firebase.git#custom_receiver"
     },
     "cordova": {
         "plugins": {
