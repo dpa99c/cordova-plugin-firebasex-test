@@ -3,10 +3,12 @@ function onDeviceReady(){
     $output = $('#log-output');
     log("deviceready");
 
-    // Custom FCM receiver plugin
-    cordova.plugin.customfcmreceiver.registerReceiver(function(message){
-        log("Received custom message: "+message);
-    });
+    if(cordova.platformId === "android"){
+        // Custom FCM receiver plugin
+        cordova.plugin.customfcmreceiver.registerReceiver(function(message){
+            log("Received custom message: "+message);
+        });
+    }
 
     // cordova-plugin-firebase
     window.FirebasePlugin.onNotificationOpen(function(notification) {

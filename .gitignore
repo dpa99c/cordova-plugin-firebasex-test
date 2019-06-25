@@ -1,6 +1,8 @@
 /.idea
 /platforms
-/plugins/cordova-plugin-firebase
+/plugins/cordova-plugin-androidx
+/plugins/cordova-plugin-firebasex
+/plugins/cordova-plugin-cocoapod-supportx
 /plugins/cordova-plugin-whitelist
 /plugins/android.json
 /plugins/ios.json
