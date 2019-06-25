@@ -22,9 +22,15 @@ function onDeviceReady(){
     });
 
     window.FirebasePlugin.onTokenRefresh(function(token){
-        log("Token received: " + token)
+        log("Token refreshed: " + token)
     }, function(error) {
-        logError("Failed receiving token: " + error);
+        logError("Failed to refresh token: " + error);
+    });
+
+    window.FirebasePlugin.getToken(function(token){
+        log("Got token: " + token)
+    }, function(error) {
+        logError("Failed to get token: " + error);
     });
 }
 $(document).on('deviceready', onDeviceReady);
