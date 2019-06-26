@@ -15,7 +15,7 @@
     <allow-intent href="mailto:*" />
     <platform name="android">
     </platform>
-    <plugin name="cordova-plugin-firebasex" spec="^3.0.5" />
-    <engine name="android" spec="^8.0.0" />
-    <engine name="ios" spec="^4.5.5" />
+    <engine name="ios" spec="^5.0.1" />
+    <plugin name="cordova-plugin-firebasex" spec="https://github.com/dpa99c/cordova-plugin-firebase#dev" />
+    <engine name="android" spec="~8.0.0" />
 </widget>
