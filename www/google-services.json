@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:605981097027:android:f39ce2b45e7c13b7",
+        "mobilesdk_app_id": "1:605981097027:android:f0724ba3f55a03d2",
         "android_client_info": {
-          "package_name": "io.cordova.firebase.test"
+          "package_name": "uk.co.workingedge.firebase.test"
         }
       },
       "oauth_client": [
@@ -25,15 +25,20 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "605981097027-2f3h4lj88fv6ktftpsr8jt8q5vqocchs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "605981097027-vjhh24d51jek6jaim6hvp3med2g0qslu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "uk.co.workingedge.firebase.test"
+              }
+            }
+          ]
         }
       }
     }
