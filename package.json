@@ -14,7 +14,7 @@
     "cordova-ios": "^5.0.1",
     "cordova-plugin-androidx": "^1.0.2",
     "cordova-plugin-cocoapod-supportx": "^1.7.2",
-    "cordova-plugin-firebasex": "git+https://github.com/dpa99c/cordova-plugin-firebase.git#dev",
+    "cordova-plugin-firebasex": "^3.0.5",
     "cordova-plugin-whitelist": "^1.3.3"
   },
   "cordova": {
