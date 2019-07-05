@@ -9,3 +9,6 @@
 /node_modules
 /package-lock.json
 /plugins/fetch.json
+/service-account.json
+/plugins/cordova-custom-config
+/build.json

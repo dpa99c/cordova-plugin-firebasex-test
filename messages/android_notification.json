@@ -1,0 +1,23 @@
+{
+  "name": "android_notification",
+  "notification": {
+    "body": "Notification with custom Android settings",
+    "title": "Android Notification"
+  },
+  "android": {
+    "collapse_key": "a",
+    "priority": "high",
+    "ttl": "3600s",
+    "notification": {
+      "channel_id": "fcm_default_channel",
+      "icon": "coffee",
+      "color": "#00ff00",
+      "tag": "default",
+      "sound": "default"
+    }
+  },
+  "data": {
+    "notification_foreground": "true",
+    "key_1": "Data for key one"
+  }
+}

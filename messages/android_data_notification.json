@@ -1,0 +1,20 @@
+{
+  "name": "android_data_notification",
+  "data" : {
+    "notification_body" : "Data message body",
+    "notification_title": "Data message title",
+    "notification_foreground": "true",
+    "notification_android_channel_id": "fcm_default_channel",
+    "notification_android_priority": "2",
+    "notification_android_visibility": "1",
+    "notification_android_color": "#ff0000",
+    "notification_android_icon": "coffee",
+    "notification_android_sound": "crystal",
+    "notification_android_vibrate": "500, 200, 500",
+    "notification_android_lights": "#ffff0000, 250, 250",
+    "key_1" : "Data for key one"
+  },
+  "android": {
+    "collapse_key": "a"
+  }
+}

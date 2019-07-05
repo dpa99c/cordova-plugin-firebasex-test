@@ -7,11 +7,22 @@
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
     <link rel="stylesheet" type="text/css" href="css/index.css">
-    <title>Hello World</title>
+    <title>Firebase Plugin Test</title>
 </head>
 <body>
 
-<p>Activity log</p>
+<div id="ui">
+    <button onclick="clearLog()">Clear activity log</button>
+    <button onclick="clearNotifications()">Clear notifications</button>
+    <button onclick="getBadgeNumber()">Get badge number</button>
+    <button onclick="incrementBadgeNumber()">Increment badge number</button>
+    <button onclick="clearBadgeNumber()">Clear badge number</button>
+    <button onclick="sendNonFatal()">Send non-fatal error</button>
+    <button onclick="sendCrash()">Send crash</button>
+</div>
+
+
+<p>Activity log (latest first)</p>
 <xmp id="log-output"></xmp>
 
 

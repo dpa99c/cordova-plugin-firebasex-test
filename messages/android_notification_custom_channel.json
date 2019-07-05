@@ -1,0 +1,18 @@
+{
+  "name": "android_notification_custom_channel",
+  "notification": {
+    "body": "Custom channel body",
+    "title": "Custom channel title"
+  },
+  "android": {
+    "collapse_key": "a",
+    "notification": {
+      "channel_id": "my_channel_id",
+      "icon": "thumbs_up"
+    }
+  },
+  "data": {
+    "notification_foreground": "true",
+    "key_1": "Data for key one"
+  }
+}

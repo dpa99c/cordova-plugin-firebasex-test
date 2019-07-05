@@ -1,0 +1,19 @@
+{
+  "name": "ios_notification_custom_sound_and_badge",
+  "notification": {
+    "body": "iOS Notification with custom sound and a badge",
+    "title": "iOS Notification"
+  },
+  "apns": {
+    "payload": {
+      "aps": {
+        "badge": 10,
+        "sound": "blackberry.caf"
+      }
+    }
+  },
+  "data": {
+    "notification_foreground": "true",
+    "key_1": "Data for key one"
+  }
+}

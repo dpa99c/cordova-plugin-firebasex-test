@@ -1,0 +1,11 @@
+{
+  "name": "ios_data_notification",
+  "data" : {
+    "notification_body" : "Data message body",
+    "notification_title": "Data message title",
+    "notification_foreground": "true",
+    "notification_ios_sound": "blackberry.caf",
+    "notification_ios_badge": "1",
+    "key_1" : "Data for key one"
+  }
+}

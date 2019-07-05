@@ -19,6 +19,11 @@ body {
     padding: 4px;
 }
 
+button {
+    margin: 8px;
+    padding: 4px 8px;
+}
+
 .log{
     color: black;
 }

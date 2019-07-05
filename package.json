@@ -1,16 +1,13 @@
 {
-  "name": "helloworld",
-  "displayName": "HelloCordova",
-  "version": "1.0.0",
-  "description": "A sample Apache Cordova application that responds to the deviceready event.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Apache Cordova Team",
+  "name": "uk.co.workingedge.firebase.test",
+  "displayName": "FirebaseTest",
+  "version": "5.0.0",
+  "description": "Test project for cordova-plugin-firebasex",
+  "author": "Dave Alden",
   "license": "Apache-2.0",
   "dependencies": {
     "cordova-android": "^8.0.0",
+    "cordova-custom-config": "^5.1.0",
     "cordova-ios": "^5.0.1",
     "cordova-plugin-firebasex": "*",
     "cordova-plugin-whitelist": "^1.3.3"
@@ -18,12 +15,22 @@
   "cordova": {
     "plugins": {
       "cordova-plugin-whitelist": {},
-      "cordova-plugin-firebasex": {}
+      "cordova-plugin-firebasex": {
+        "ANDROID_ICON_ACCENT": "#FF11FF11"
+      },
+      "cordova-custom-config": {}
     },
     "platforms": [
       "android",
       "ios"
     ]
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "google-auth-library": "^4.2.5",
+    "xml2js": "^0.4.19"
+  },
+  "scripts": {
+    "send": "node ./scripts/sendMessage.js",
+    "enableAnalyticsDebug": "node ./scripts/enableFirebaseAnalyticsDebug.js"
+  }
 }

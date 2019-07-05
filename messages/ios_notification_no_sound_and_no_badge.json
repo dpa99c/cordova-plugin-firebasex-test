@@ -1,0 +1,11 @@
+{
+  "name": "ios_notification_no_sound_and_no_badge",
+  "notification": {
+    "body": "iOS Notification with no sound and no badge",
+    "title": "iOS Notification"
+  },
+  "data": {
+    "notification_foreground": "true",
+    "key_1": "Data for key one"
+  }
+}
