@@ -20,7 +20,7 @@ The [configured package ID](https://github.com/dpa99c/cordova-plugin-firebasex-t
 Therefore in order to build this project for iOS, you may need to change the package ID to one which is associated with your Apple Developer Team and for which you have set appropriate capabilities (i.e. enabled Push Notifications). 
 
 ### Cocopods
-[cordova-plugin-firebasex](https://github.com/dpa99c/cordova-plugin-firebasex) depends on [cordova-plugin-cocoapod-supportx](https://github.com/dpa99c/cordova-plugin-cocoapods-support) which adds Cordova support for the [CocoaPods dependency manager]( https://cocoapods.org/) in order to satify the iOS Firebase SDK library dependencies.
+[cordova-plugin-firebasex](https://github.com/dpa99c/cordova-plugin-firebasex) relies on `cordova@9`/`cordova-ios@5` support for the [CocoaPods dependency manager]( https://cocoapods.org/) in order to satify the iOS Firebase SDK library dependencies.
 
 Therefore please make sure you have Cocoapods installed in your iOS build environment - setup instructions can be found [here](https://cocoapods.org/).
 Also make sure your local Cocoapods repo is up-to-date by running `pod repo update`.
