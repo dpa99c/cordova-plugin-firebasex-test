@@ -5,6 +5,7 @@ This repo contains a [Cordova](http://cordova.apache.org/) project which builds 
 # CLI build instructions
 
     git clone https://github.com/dpa99c/cordova-plugin-firebasex-test.git && cd cordova-plugin-firebasex-test
+    npm install
     
     cordova platform add ios
     cordova run ios
