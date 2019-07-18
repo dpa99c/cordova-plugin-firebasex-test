@@ -176,16 +176,14 @@ var getToken = function(){
 
 var handleNotificationMessage = function(message){
 
-    var title, type = 'FCM';
+    var title;
     if(message.title){
         title = message.title;
     }else if(message.notification && message.notification.title){
         title = message.notification.title;
     }else if(message.aps && message.aps.alert && message.aps.alert.title){
-        type = 'APNS';
         title = message.aps.alert.title;
     }
-
 
     var body;
     if(message.body){
@@ -196,7 +194,10 @@ var handleNotificationMessage = function(message){
         body = message.aps.alert.body;
     }
 
-    var msg = type + " notification message received in " + (message.tap ? "background": "foreground");
+    var msg = "Notification message received";
+    if(message.tap){
+        msg += " (tapped in " + message.tap + ")";
+    }
     if(title){
         msg += '; title='+title;
     }

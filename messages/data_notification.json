@@ -1,0 +1,14 @@
+{
+  "name": "data_notification",
+  "data" : {
+    "notification_body" : "Data message body",
+    "notification_title": "Data message title",
+    "notification_foreground": "true",
+    "key_1" : "Data for key one"
+  },
+  "android": {
+    "notification": {
+      "channel_id": "fcm_default_channel"
+    }
+  }
+}
