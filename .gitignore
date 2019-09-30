@@ -12,3 +12,4 @@
 /service-account.json
 /plugins/cordova-custom-config
 /build.json
+/plugins/cordova-plugin-androidx-adapter

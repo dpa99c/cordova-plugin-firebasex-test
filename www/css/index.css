@@ -44,3 +44,8 @@ button {
 .field{
     margin: 16px;
 }
+
+body:not(.android) .android-only,
+body:not(.ios) .ios-only{
+    display: none;
+}

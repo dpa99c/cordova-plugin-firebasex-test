@@ -13,18 +13,18 @@ var init = function() {
 
         args = getArgs();
 
-        deviceToken = args['token'];
-        if(!deviceToken){
-            reject('--token argument not found - please specify as --token={device_token}');
-            return;
-        }
-
         messageFileName = args['message'];
         if(!messageFileName){
             reject('--message argument not found - please specify as --message={message_file_name.json}');
             return
         }
+        var isTopicMessage = messageFileName.match('topic');
 
+        deviceToken = args['token'];
+        if(!deviceToken && !isTopicMessage){
+            reject('--token argument not found - please specify as --token={device_token}');
+            return;
+        }
 
         try{
             message = require('../messages/'+messageFileName);
@@ -33,7 +33,9 @@ var init = function() {
             return;
         }
 
-        message.token = deviceToken;
+        if(!isTopicMessage){
+            message.token = deviceToken;
+        }
         message = {
             message: message,
             validate_only: false
