@@ -58,6 +58,8 @@ function onDeviceReady(){
 
     checkNotificationPermission(false); // Check permission then get token
 
+    checkAutoInit();
+
     // Platform-specific
     $('body').addClass(cordova.platformId);
     if(cordova.platformId === "android"){
@@ -159,6 +161,35 @@ var checkNotificationPermission = function(requested){
             // Denied
             logError("Notifications won't be shown as permission is denied");
         }
+    });
+};
+
+var checkAutoInit = function(){
+    FirebasePlugin.isAutoInitEnabled(function(enabled){
+        log("Auto init is " + (enabled ? "enabled" : "disabled"));
+        $('body')
+            .addClass('autoinit-' + (enabled ? 'enabled' : 'disabled'))
+            .removeClass('autoinit-' + (enabled ? 'disabled' : 'enabled'));
+    }, function(error) {
+        logError("Failed to check auto init: " + error);
+    });
+};
+
+var enableAutoInit = function(){
+    FirebasePlugin.setAutoInitEnabled(true, function(){
+        log("Enabled auto init");
+        checkAutoInit();
+    }, function(error) {
+        logError("Failed to enable auto init: " + error);
+    });
+};
+
+var disableAutoInit = function(){
+    FirebasePlugin.setAutoInitEnabled(false, function(){
+        log("Disabled auto init");
+        checkAutoInit();
+    }, function(error) {
+        logError("Failed to disable auto init: " + error);
     });
 };
 
