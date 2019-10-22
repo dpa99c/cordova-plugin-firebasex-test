@@ -8,7 +8,8 @@
     "payload": {
       "aps": {
         "badge": 1,
-        "sound": "default"
+        "sound": "default",
+        "content-available": 1
       }
     }
   },
