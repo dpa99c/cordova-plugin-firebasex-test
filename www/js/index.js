@@ -335,8 +335,10 @@ function setCrashlyticsUserId(){
 }
 
 function sendNonFatal(){
-    // Log a test error
-    FirebasePlugin.logError("Test error", function(){
+    // Log a test error with a stacktrace
+    var errorMessage = "Test error";
+    var stackTrace = StackTrace.getSync();
+    FirebasePlugin.logError(errorMessage, stackTrace, function(){
         log("Sent non-fatal error");
     },function(error){
         log("Failed to send non-fatal error: " + error);
