@@ -466,3 +466,47 @@ function getValue(){
 
 
 // Authentication
+var verificationId;
+function verifyPhoneNumber(){
+    var phoneNumber = $('#phoneNumberInput').val().trim();
+    if(!phoneNumber) return logError("Valid phone number must be entered");
+    var timeoutInSeconds = 60;
+
+    FirebasePlugin.verifyPhoneNumber(phoneNumber, timeoutInSeconds, function(credential) {
+        log("Received phone number verification credential");
+        console.dir(credential);
+
+        if(typeof credential === 'object'){
+            verificationId = credential.verificationId;
+
+            if(credential.instantVerification){
+                log("Using instant verification code");
+                $('#verificationCodeInput').val(credential.code);
+            }
+            $('#useVerificationCode').show();
+        }
+
+    }, function(error) {
+        logError("Failed to verify phone number: "+error);
+    });
+}
+
+function signInWithCredential(){
+    var code = $('#verificationCodeInput').val().trim();
+    if(!code) return logError("Verification code must be entered");
+    FirebasePlugin.signInWithCredential(verificationId, code, function() {
+        log("Successfully signed in");
+    }, function(error) {
+        logError("Failed to sign in: "+error);
+    });
+}
+
+function linkUserWithCredential(){
+    var code = $('#verificationCodeInput').val().trim();
+    if(!code) return logError("Verification code must be entered");
+    FirebasePlugin.linkUserWithCredential(verificationId, code, function() {
+        log("Successfully linked user");
+    }, function(error) {
+        logError("Failed to link user: "+error);
+    });
+}

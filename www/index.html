@@ -53,7 +53,18 @@
     <button id="remote_activate" disabled="disabled" onclick="activateFetched()">Activate</button>
     <button id="remote_getValue" disabled="disabled" onclick="getValue()">Get value</button>
 
-
+    <h3>Authentication</h3>
+    <div id="enterPhoneNumber">
+        <input id="phoneNumberInput" placeholder="Enter phone number" />
+        <button onclick="verifyPhoneNumber()">Verify phone number</button>
+    </div>
+    <div id="useVerificationCode">
+        <input id="verificationCodeInput" placeholder="Enter verification code" />
+        <div>
+            <button onclick="signInWithCredential()">Sign in</button>
+            <button onclick="linkUserWithCredential()">Link account</button>
+        </div>
+    </div>
 </div>
 
 
