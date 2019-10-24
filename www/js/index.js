@@ -56,14 +56,12 @@ function onDeviceReady(){
         logError("Failed to refresh token: " + error);
     });
 
+    checkNotificationPermission(false); // Check permission then get token
 
-    checkPermission(false); // Check permission then get token
-    setTimeout(setScreenName, 1000);
-    setUserID();
-    setUserProperty();
-    logEvent();
+    checkAutoInit();
 
     // Platform-specific
+    $('body').addClass(cordova.platformId);
     if(cordova.platformId === "android"){
         initAndroid();
     }else if(cordova.platformId === "ios"){
@@ -149,7 +147,7 @@ var initAndroid = function(){
 };
 
 // Notifications
-var checkPermission = function(requested){
+var checkNotificationPermission = function(requested){
     FirebasePlugin.hasPermission(function(hasPermission){
         if(hasPermission){
             log("Remote notifications permission granted");
@@ -158,7 +156,7 @@ var checkPermission = function(requested){
         }else if(!requested){
             // Request permission
             log("Requesting remote notifications permission");
-            FirebasePlugin.grantPermission(checkPermission.bind(this, true));
+            FirebasePlugin.grantPermission(checkNotificationPermission.bind(this, true));
         }else{
             // Denied
             logError("Notifications won't be shown as permission is denied");
@@ -166,11 +164,56 @@ var checkPermission = function(requested){
     });
 };
 
+var checkAutoInit = function(){
+    FirebasePlugin.isAutoInitEnabled(function(enabled){
+        log("Auto init is " + (enabled ? "enabled" : "disabled"));
+        $('body')
+            .addClass('autoinit-' + (enabled ? 'enabled' : 'disabled'))
+            .removeClass('autoinit-' + (enabled ? 'disabled' : 'enabled'));
+    }, function(error) {
+        logError("Failed to check auto init: " + error);
+    });
+};
+
+var enableAutoInit = function(){
+    FirebasePlugin.setAutoInitEnabled(true, function(){
+        log("Enabled auto init");
+        checkAutoInit();
+    }, function(error) {
+        logError("Failed to enable auto init: " + error);
+    });
+};
+
+var disableAutoInit = function(){
+    FirebasePlugin.setAutoInitEnabled(false, function(){
+        log("Disabled auto init");
+        checkAutoInit();
+    }, function(error) {
+        logError("Failed to disable auto init: " + error);
+    });
+};
+
+var getID = function(){
+    FirebasePlugin.getId(function(id){
+        log("Got FCM ID: " + id)
+    }, function(error) {
+        logError("Failed to get FCM ID: " + error);
+    });
+};
+
 var getToken = function(){
     FirebasePlugin.getToken(function(token){
-        log("Got token: " + token)
+        log("Got FCM token: " + token)
     }, function(error) {
-        logError("Failed to get token: " + error);
+        logError("Failed to get FCM token: " + error);
+    });
+};
+
+var getAPNSToken = function(){
+    FirebasePlugin.getAPNSToken(function(token){
+        log("Got APNS token: " + token)
+    }, function(error) {
+        logError("Failed to get APNS token: " + error);
     });
 };
 
@@ -214,35 +257,29 @@ var handleDataMessage = function(message){
 
 
 function clearNotifications(){
-    // Log a test error
     FirebasePlugin.clearAllNotifications(function(){
         log("Cleared all notifications");
     },function(error){
-        log("Failed to clean notifications: " + error);
+        log("Failed to clear notifications: " + error);
     });
 }
 
-// Crashlytics
-function sendNonFatal(){
-    // Log a test error
-    FirebasePlugin.logError("Test error", function(){
-        log("Sent non-fatal error");
+function subscribe(){
+    FirebasePlugin.subscribe("my_topic", function(){
+        log("Subscribed to topic");
     },function(error){
-        log("Failed to send non-fatal error: " + error);
+        log("Failed to subscribe to topic: " + error);
     });
 }
 
-function sendCrash(){
-    // Log a test message
-    FirebasePlugin.logMessage("A custom message about this crash", function(){
-        console.log("Sent crash message");
-        FirebasePlugin.sendCrash();
+function unsubscribe(){
+    FirebasePlugin.unsubscribe("my_topic", function(){
+        log("Unsubscribed from topic");
     },function(error){
-        log("Failed to send crash message: " + error);
+        log("Failed to unsubscribe from topic: " + error);
     });
 }
 
-// Badge
 function getBadgeNumber(){
     FirebasePlugin.getBadgeNumber(function(number){
         log("Current badge number: "+number);
@@ -272,7 +309,61 @@ function clearBadgeNumber(){
     });
 }
 
+function unregister(){
+    FirebasePlugin.unregister(function(){
+        log("Unregistered from Firebase");
+    },function(error){
+        log("Failed to unregister from Firebase: " + error);
+    });
+}
+
+// Crashlytics
+function setCrashlyticsCollectionEnabled(){
+    FirebasePlugin.setCrashlyticsCollectionEnabled( function(){
+        log("Enabled crashlytics data collection");
+    },function(error){
+        log("Failed to enable crashlytics data collection: " + error);
+    });
+}
+
+function setCrashlyticsUserId(){
+    FirebasePlugin.setCrashlyticsUserId("crashlytics_user_id", function(){
+        log("Set crashlytics user ID");
+    },function(error){
+        log("Failed to set crashlytics user ID: " + error);
+    });
+}
+
+function sendNonFatal(){
+    // Log a test error
+    FirebasePlugin.logError("Test error", function(){
+        log("Sent non-fatal error");
+    },function(error){
+        log("Failed to send non-fatal error: " + error);
+    });
+}
+
+function logCrashMessage(){
+    FirebasePlugin.logMessage("A custom message about this crash", function(){
+        console.log("Logged crash message - it will be sent with the next crash");
+    },function(error){
+        log("Failed to log crash message: " + error);
+    });
+}
+
+function sendCrash(){
+    FirebasePlugin.sendCrash();
+}
+
 // Analytics
+function setAnalyticsCollectionEnabled(){
+    FirebasePlugin.setAnalyticsCollectionEnabled(true, function(){
+        log("Enabled analytics data collection");
+    },function(error){
+        log("Failed to enable analytics data collection: " + error);
+    });
+}
+
 function logEvent(){
     FirebasePlugin.logEvent("my_event", {"foo": "bar"}, function(){
         log("Logged event");
@@ -304,3 +395,72 @@ function setUserProperty(){
         log("Failed to set user property: " + error);
     });
 }
+
+// Performance
+function setPerformanceCollectionEnabled(){
+    FirebasePlugin.setPerformanceCollectionEnabled(true, function(){
+        log("Enabled performance data collection");
+    },function(error){
+        log("Failed to enable performance data collection: " + error);
+    });
+}
+
+var traceName = "my_trace";
+function startTrace(){
+    FirebasePlugin.startTrace(traceName, function(){
+        log("Trace started");
+    },function(error){
+        log("Failed to start trace: " + error);
+    });
+}
+
+function incrementCounter(){
+    FirebasePlugin.incrementCounter(traceName, "my_counter", function(){
+        log("Incremented trace counter");
+    },function(error){
+        log("Failed to increment trace counter: " + error);
+    });
+}
+
+function stopTrace(){
+    FirebasePlugin.stopTrace(traceName, function(){
+        log("Trace stopped");
+    },function(error){
+        log("Failed to stop trace: " + error);
+    });
+}
+
+// Remote config
+function fetch(){
+    FirebasePlugin.fetch(function(){
+        log("Remote config fetched");
+        $('#remote_activate').removeAttr('disabled');
+    },function(error){
+        log("Failed to fetch remote config: " + error);
+    });
+}
+
+function activateFetched(){
+    FirebasePlugin.activateFetched(function(activated){
+        log("Remote config was activated: " + activated);
+        if(activated){
+            $('#remote_getValue').removeAttr('disabled');
+        }
+    },function(error){
+        log("Failed to activate remote config: " + error);
+    });
+}
+
+function getValue(){
+    FirebasePlugin.getValue("background_color", function(value){
+        log("Get remote config activated: " + value);
+        if(value){
+            $('body').css('background-color', value);
+        }
+    },function(error){
+        log("Failed to activate remote config: " + error);
+    });
+}
+
+
+// Authentication

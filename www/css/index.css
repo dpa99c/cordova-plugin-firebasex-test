@@ -44,3 +44,10 @@ button {
 .field{
     margin: 16px;
 }
+
+body:not(.android) .android-only,
+body:not(.ios) .ios-only,
+body:not(.autoinit-enabled) .autoinit-disable,
+body:not(.autoinit-disabled) .autoinit-enable{
+    display: none;
+}

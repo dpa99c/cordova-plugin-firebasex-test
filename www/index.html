@@ -13,12 +13,47 @@
 
 <div id="ui">
     <button onclick="clearLog()">Clear activity log</button>
+
+    <h3>Notifications</h3>
     <button onclick="clearNotifications()">Clear notifications</button>
-    <button onclick="getBadgeNumber()">Get badge number</button>
-    <button onclick="incrementBadgeNumber()">Increment badge number</button>
+    <button onclick="getID()">Get FCM ID</button>
+    <button onclick="getToken()">Get FCM token</button>
+    <button onclick="getAPNSToken()" class="ios-only">Get APNS token</button>
+    <button onclick="getBadgeNumber()" class="ios-only">Get badge number</button>
+    <button onclick="incrementBadgeNumber()" class="ios-only">Increment badge number</button>
     <button onclick="clearBadgeNumber()">Clear badge number</button>
-    <button onclick="sendNonFatal()">Send non-fatal error</button>
+    <button onclick="subscribe()">Subscribe</button>
+    <button onclick="unsubscribe()">Unsubscribe</button>
+    <button onclick="unregister()">Unregister</button>
+    <button class="autoinit-enable" onclick="enableAutoInit()">Enable Auto Init</button>
+    <button class="autoinit-disable" onclick="disableAutoInit()">Disable Auto Init</button>
+
+    <h3>Crashlytics</h3>
+    <button onclick="setCrashlyticsCollectionEnabled()">Enable crashlytics data collection</button>
+    <button onclick="setCrashlyticsUserId()">Set crashlytics user ID</button>
+    <button onclick="sendNonFatal()">Log non-fatal error</button>
+    <button onclick="logCrashMessage()">Log crash message</button>
     <button onclick="sendCrash()">Send crash</button>
+
+    <h3>Analytics</h3>
+    <button onclick="setAnalyticsCollectionEnabled()">Enable analytics data collection</button>
+    <button onclick="setUserID()">Set user ID</button>
+    <button onclick="setUserProperty()">Set user property</button>
+    <button onclick="setScreenName()">Set screen name</button>
+    <button onclick="logEvent()">Log event</button>
+
+    <h3>Performance</h3>
+    <button onclick="setPerformanceCollectionEnabled()">Enable performance data collection</button>
+    <button onclick="startTrace()">Start trace</button>
+    <button onclick="incrementCounter()">Increment counter</button>
+    <button onclick="stopTrace()">Stop trace</button>
+
+    <h3>Remote config</h3>
+    <button onclick="fetch()">Fetch</button>
+    <button id="remote_activate" disabled="disabled" onclick="activateFetched()">Activate</button>
+    <button id="remote_getValue" disabled="disabled" onclick="getValue()">Get value</button>
+
+
 </div>
 
 

@@ -11,7 +11,7 @@ try{
     if(platform === "android"){
         command = "adb shell setprop debug.firebase.analytics.app " + APP_ID;
     }else if(platform === "ios"){
-        command = "node scripts/enableiOSFirebaseAnalyticsDebug.js --projectName="+XCODE_PROJECT_NAME;
+        command = "node scripts/enableFirebaseAnalyticsDebugiOS.js --projectName="+XCODE_PROJECT_NAME;
     }else{
         throw new Error("Please specify --platform=ios|android");
     }
