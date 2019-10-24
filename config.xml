@@ -13,6 +13,7 @@
 
     <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
     <plugin name="cordova-plugin-firebasex" spec="https://github.com/dpa99c/cordova-plugin-firebase#dev" >
+        <variable name="IOS_STRIP_DEBUG" value="true" />
         <variable name="FIREBASE_ANALYTICS_COLLECTION_ENABLED" value="false" />
         <variable name="FIREBASE_PERFORMANCE_COLLECTION_ENABLED" value="false" />
         <variable name="FIREBASE_CRASHLYTICS_COLLECTION_ENABLED" value="false" />
