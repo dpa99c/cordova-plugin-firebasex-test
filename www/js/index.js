@@ -15,7 +15,12 @@ function log(msg, opts){
     prependLogMessage(opts);
 }
 
-function logError(msg){
+function logError(msg, error){
+    if(typeof error === 'object'){
+        msg += ': ' + JSON.stringify(error);
+    }else if(typeof error === 'string'){
+        msg += ': ' + error;
+    }
     log(msg, {
         logLevel: "error"
     });
@@ -47,13 +52,13 @@ function onDeviceReady(){
         }
 
     }, function(error) {
-        logError("Failed receiving FirebasePlugin message: " + error);
+        logError("Failed receiving FirebasePlugin message", error);
     });
 
     FirebasePlugin.onTokenRefresh(function(token){
         log("Token refreshed: " + token)
     }, function(error) {
-        logError("Failed to refresh token: " + error);
+        logError("Failed to refresh token", error);
     });
 
     checkNotificationPermission(false); // Check permission then get token
@@ -141,7 +146,7 @@ var initAndroid = function(){
             );
         },
         function(error) {
-            logError("Create channel error: " + error);
+            logError("Create channel error", error);
         }
     );
 };
@@ -171,7 +176,7 @@ var checkAutoInit = function(){
             .addClass('autoinit-' + (enabled ? 'enabled' : 'disabled'))
             .removeClass('autoinit-' + (enabled ? 'disabled' : 'enabled'));
     }, function(error) {
-        logError("Failed to check auto init: " + error);
+        logError("Failed to check auto init", error);
     });
 };
 
@@ -180,7 +185,7 @@ var enableAutoInit = function(){
         log("Enabled auto init");
         checkAutoInit();
     }, function(error) {
-        logError("Failed to enable auto init: " + error);
+        logError("Failed to enable auto init", error);
     });
 };
 
@@ -189,7 +194,7 @@ var disableAutoInit = function(){
         log("Disabled auto init");
         checkAutoInit();
     }, function(error) {
-        logError("Failed to disable auto init: " + error);
+        logError("Failed to disable auto init", error);
     });
 };
 
@@ -197,7 +202,7 @@ var getID = function(){
     FirebasePlugin.getId(function(id){
         log("Got FCM ID: " + id)
     }, function(error) {
-        logError("Failed to get FCM ID: " + error);
+        logError("Failed to get FCM ID", error);
     });
 };
 
@@ -205,7 +210,7 @@ var getToken = function(){
     FirebasePlugin.getToken(function(token){
         log("Got FCM token: " + token)
     }, function(error) {
-        logError("Failed to get FCM token: " + error);
+        logError("Failed to get FCM token", error);
     });
 };
 
@@ -213,7 +218,7 @@ var getAPNSToken = function(){
     FirebasePlugin.getAPNSToken(function(token){
         log("Got APNS token: " + token)
     }, function(error) {
-        logError("Failed to get APNS token: " + error);
+        logError("Failed to get APNS token", error);
     });
 };
 
@@ -260,7 +265,7 @@ function clearNotifications(){
     FirebasePlugin.clearAllNotifications(function(){
         log("Cleared all notifications");
     },function(error){
-        log("Failed to clear notifications: " + error);
+        logError("Failed to clear notifications", error);
     });
 }
 
@@ -268,7 +273,7 @@ function subscribe(){
     FirebasePlugin.subscribe("my_topic", function(){
         log("Subscribed to topic");
     },function(error){
-        log("Failed to subscribe to topic: " + error);
+        logError("Failed to subscribe to topic", error);
     });
 }
 
@@ -276,7 +281,7 @@ function unsubscribe(){
     FirebasePlugin.unsubscribe("my_topic", function(){
         log("Unsubscribed from topic");
     },function(error){
-        log("Failed to unsubscribe from topic: " + error);
+        logError("Failed to unsubscribe from topic", error);
     });
 }
 
@@ -284,7 +289,7 @@ function getBadgeNumber(){
     FirebasePlugin.getBadgeNumber(function(number){
         log("Current badge number: "+number);
     },function(error){
-        log("Failed to get badge number: " + error);
+        logError("Failed to get badge number", error);
     });
 }
 
@@ -294,10 +299,10 @@ function incrementBadgeNumber(){
         FirebasePlugin.setBadgeNumber(number, function(){
             log("Set badge number to: "+number);
         },function(error){
-            log("Failed to set badge number: " + error);
+            logError("Failed to set badge number", error);
         });
     },function(error){
-        log("Failed to get badge number: " + error);
+        logError("Failed to get badge number", error);
     });
 }
 
@@ -305,7 +310,7 @@ function clearBadgeNumber(){
     FirebasePlugin.setBadgeNumber(0, function(){
         log("Cleared badge number");
     },function(error){
-        log("Failed to clear badge number: " + error);
+        logError("Failed to clear badge number", error);
     });
 }
 
@@ -313,7 +318,7 @@ function unregister(){
     FirebasePlugin.unregister(function(){
         log("Unregistered from Firebase");
     },function(error){
-        log("Failed to unregister from Firebase: " + error);
+        logError("Failed to unregister from Firebase", error);
     });
 }
 
@@ -322,7 +327,7 @@ function setCrashlyticsCollectionEnabled(){
     FirebasePlugin.setCrashlyticsCollectionEnabled( function(){
         log("Enabled crashlytics data collection");
     },function(error){
-        log("Failed to enable crashlytics data collection: " + error);
+        logError("Failed to enable crashlytics data collection", error);
     });
 }
 
@@ -330,7 +335,7 @@ function setCrashlyticsUserId(){
     FirebasePlugin.setCrashlyticsUserId("crashlytics_user_id", function(){
         log("Set crashlytics user ID");
     },function(error){
-        log("Failed to set crashlytics user ID: " + error);
+        logError("Failed to set crashlytics user ID", error);
     });
 }
 
@@ -341,7 +346,7 @@ function sendNonFatal(){
     FirebasePlugin.logError(errorMessage, stackTrace, function(){
         log("Sent non-fatal error");
     },function(error){
-        log("Failed to send non-fatal error: " + error);
+        logError("Failed to send non-fatal error", error);
     });
 }
 
@@ -349,7 +354,7 @@ function logCrashMessage(){
     FirebasePlugin.logMessage("A custom message about this crash", function(){
         console.log("Logged crash message - it will be sent with the next crash");
     },function(error){
-        log("Failed to log crash message: " + error);
+        logError("Failed to log crash message", error);
     });
 }
 
@@ -362,7 +367,7 @@ function setAnalyticsCollectionEnabled(){
     FirebasePlugin.setAnalyticsCollectionEnabled(true, function(){
         log("Enabled analytics data collection");
     },function(error){
-        log("Failed to enable analytics data collection: " + error);
+        logError("Failed to enable analytics data collection", error);
     });
 }
 
@@ -370,7 +375,7 @@ function logEvent(){
     FirebasePlugin.logEvent("my_event", {"foo": "bar"}, function(){
         log("Logged event");
     },function(error){
-        log("Failed to log event: " + error);
+        logError("Failed to log event", error);
     });
 }
 
@@ -378,7 +383,7 @@ function setScreenName(){
     FirebasePlugin.setScreenName("my_screen", function(){
         log("Sent screen name");
     },function(error){
-        log("Failed to send screen name: " + error);
+        logError("Failed to send screen name", error);
     });
 }
 
@@ -386,7 +391,7 @@ function setUserID(){
     FirebasePlugin.setUserId("user_id", function(){
         log("Set user ID");
     },function(error){
-        log("Failed to set user ID: " + error);
+        logError("Failed to set user ID", error);
     });
 }
 
@@ -394,7 +399,7 @@ function setUserProperty(){
     FirebasePlugin.setUserProperty("some_key", "some_value", function(){
         log("Set user property");
     },function(error){
-        log("Failed to set user property: " + error);
+        logError("Failed to set user property", error);
     });
 }
 
@@ -403,7 +408,7 @@ function setPerformanceCollectionEnabled(){
     FirebasePlugin.setPerformanceCollectionEnabled(true, function(){
         log("Enabled performance data collection");
     },function(error){
-        log("Failed to enable performance data collection: " + error);
+        logError("Failed to enable performance data collection", error);
     });
 }
 
@@ -412,7 +417,7 @@ function startTrace(){
     FirebasePlugin.startTrace(traceName, function(){
         log("Trace started");
     },function(error){
-        log("Failed to start trace: " + error);
+        logError("Failed to start trace", error);
     });
 }
 
@@ -420,7 +425,7 @@ function incrementCounter(){
     FirebasePlugin.incrementCounter(traceName, "my_counter", function(){
         log("Incremented trace counter");
     },function(error){
-        log("Failed to increment trace counter: " + error);
+        logError("Failed to increment trace counter", error);
     });
 }
 
@@ -428,7 +433,7 @@ function stopTrace(){
     FirebasePlugin.stopTrace(traceName, function(){
         log("Trace stopped");
     },function(error){
-        log("Failed to stop trace: " + error);
+        logError("Failed to stop trace", error);
     });
 }
 
@@ -438,7 +443,7 @@ function fetch(){
         log("Remote config fetched");
         $('#remote_activate').removeAttr('disabled');
     },function(error){
-        log("Failed to fetch remote config: " + error);
+        logError("Failed to fetch remote config", error);
     });
 }
 
@@ -449,7 +454,7 @@ function activateFetched(){
             $('#remote_getValue').removeAttr('disabled');
         }
     },function(error){
-        log("Failed to activate remote config: " + error);
+        logError("Failed to activate remote config", error);
     });
 }
 
@@ -460,7 +465,7 @@ function getValue(){
             $('body').css('background-color', value);
         }
     },function(error){
-        log("Failed to activate remote config: " + error);
+        logError("Failed to activate remote config", error);
     });
 }
 
@@ -487,7 +492,7 @@ function verifyPhoneNumber(){
         }
 
     }, function(error) {
-        logError("Failed to verify phone number: "+error);
+        logError("Failed to verify phone number", error);
     });
 }
 
@@ -497,7 +502,7 @@ function signInWithCredential(){
     FirebasePlugin.signInWithCredential(verificationId, code, function() {
         log("Successfully signed in");
     }, function(error) {
-        logError("Failed to sign in: "+error);
+        logError("Failed to sign in", error);
     });
 }
 
@@ -507,6 +512,6 @@ function linkUserWithCredential(){
     FirebasePlugin.linkUserWithCredential(verificationId, code, function() {
         log("Successfully linked user");
     }, function(error) {
-        logError("Failed to link user: "+error);
+        logError("Failed to link user", error);
     });
 }
