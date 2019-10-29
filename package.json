@@ -21,7 +21,8 @@
         "ANDROID_ICON_ACCENT": "#FF11FF11",
         "FIREBASE_ANALYTICS_COLLECTION_ENABLED": "false",
         "FIREBASE_PERFORMANCE_COLLECTION_ENABLED": "false",
-        "FIREBASE_CRASHLYTICS_COLLECTION_ENABLED": "false"
+        "FIREBASE_CRASHLYTICS_COLLECTION_ENABLED": "false",
+        "SETUP_RECAPTCHA_VERIFICATION": "true"
       },
       "cordova-custom-config": {}
     },

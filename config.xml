@@ -17,6 +17,7 @@
         <variable name="FIREBASE_ANALYTICS_COLLECTION_ENABLED" value="false" />
         <variable name="FIREBASE_PERFORMANCE_COLLECTION_ENABLED" value="false" />
         <variable name="FIREBASE_CRASHLYTICS_COLLECTION_ENABLED" value="false" />
+        <variable name="SETUP_RECAPTCHA_VERIFICATION" value="true" />
     </plugin>
 
     <engine name="android" spec="^8.0.0" />
