@@ -477,23 +477,23 @@ function verifyPhoneNumber(){
     if(!phoneNumber) return logError("Valid phone number must be entered");
     var timeoutInSeconds = 60;
 
-    FirebasePlugin.verifyPhoneNumber(phoneNumber, timeoutInSeconds, function(credential) {
+    var fakeVerificationCode = $('#mockInstantVerificationInput')[0].checked ? '123456' : null;
+
+    FirebasePlugin.verifyPhoneNumber(function(credential) {
         log("Received phone number verification credential");
         console.dir(credential);
 
-        if(typeof credential === 'object'){
-            verificationId = credential.verificationId;
+        verificationId = credential.verificationId;
 
-            if(credential.instantVerification){
-                log("Using instant verification code");
-                $('#verificationCodeInput').val(credential.code);
-            }
-            $('#useVerificationCode').show();
+        if(credential.instantVerification){
+            log("Using instant verification code");
+            $('#verificationCodeInput').val(credential.code);
         }
+        $('#useVerificationCode').show();
 
     }, function(error) {
         logError("Failed to verify phone number", error);
-    });
+    }, phoneNumber, timeoutInSeconds, fakeVerificationCode,);
 }
 
 function signInWithCredential(){
