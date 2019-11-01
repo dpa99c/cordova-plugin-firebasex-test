@@ -45,9 +45,9 @@ function onDeviceReady(){
 
         var sendError = function(){
             FirebasePlugin.logError(logMessage, stackTrace, function(){
-                log("Sent non-fatal error");
+                log("Sent JS exception trace");
             },function(error){
-                logError("Failed to send non-fatal error", error);
+                logError("Failed to send JS exception trace", error);
             });
         };
 
@@ -367,6 +367,14 @@ function setCrashlyticsUserId(){
 }
 
 function sendNonFatal(){
+    FirebasePlugin.logError("This is a non-fatal error", function(){
+        log("Sent non-fatal error");
+    },function(error){
+        logError("Failed to send non-fatal error", error);
+    });
+}
+
+function causeJsException(){
     // Cause an uncaught JS exception
     var foo = someUndefinedVariable.bar;
 }
