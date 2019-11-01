@@ -75,7 +75,13 @@ function onDeviceReady(){
 }
 $(document).on('deviceready', onDeviceReady);
 
-var initIos = function(){};
+var initIos = function(){
+    FirebasePlugin.onApnsTokenReceived(function(token){
+        log("APNS token received: " + token)
+    }, function(error) {
+        logError("Failed to receive APNS token", error);
+    });
+};
 
 var initAndroid = function(){
 
@@ -372,7 +378,11 @@ function setAnalyticsCollectionEnabled(){
 }
 
 function logEvent(){
-    FirebasePlugin.logEvent("my_event", {"foo": "bar"}, function(){
+    FirebasePlugin.logEvent("my_event", {
+        string: "bar",
+        integer: 10,
+        float: 1.234
+    }, function(){
         log("Logged event");
     },function(error){
         logError("Failed to log event", error);
