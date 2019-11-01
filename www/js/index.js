@@ -37,6 +37,33 @@ function onDeviceReady(){
     log("deviceready");
 
 
+    // Set global error handler to catch uncaught JS exceptions
+    var appRootURL = window.location.href.replace("index.html",'');
+    window.onerror = function(errorMsg, url, line, col, error) {
+        var logMessage = errorMsg;
+        var stackTrace = null;
+
+        var sendError = function(){
+            FirebasePlugin.logError(logMessage, stackTrace, function(){
+                log("Sent non-fatal error");
+            },function(error){
+                logError("Failed to send non-fatal error", error);
+            });
+        };
+
+        logMessage += ': url='+url.replace(appRootURL, '')+'; line='+line+'; col='+col;
+
+        if(typeof error === 'object'){
+            StackTrace.fromError(error).then(function(trace){
+                stackTrace = trace;
+                sendError()
+            });
+        }else{
+            sendError();
+        }
+    };
+
+
     //Register handlers
     FirebasePlugin.onMessageReceived(function(message) {
         try{
@@ -346,14 +373,8 @@ function setCrashlyticsUserId(){
 }
 
 function sendNonFatal(){
-    // Log a test error with a stacktrace
-    var errorMessage = "Test error";
-    var stackTrace = StackTrace.getSync();
-    FirebasePlugin.logError(errorMessage, stackTrace, function(){
-        log("Sent non-fatal error");
-    },function(error){
-        logError("Failed to send non-fatal error", error);
-    });
+    // Cause an uncaught JS exception
+    var foo = someUndefinedVariable.bar;
 }
 
 function logCrashMessage(){
