@@ -20,7 +20,7 @@
         <variable name="SETUP_RECAPTCHA_VERIFICATION" value="true" />
     </plugin>
 
-    <engine name="android" spec="^8.0.0" />
+    <engine name="android" spec="^8.1.0" />
     <platform name="android">
         <resource-file src="res/android/raw/blackberry.mp3" target="app/src/main/res/raw/blackberry.mp3" />
         <resource-file src="res/android/raw/msn.mp3" target="app/src/main/res/raw/msn.mp3" />

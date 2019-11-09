@@ -6,7 +6,7 @@
   "author": "Dave Alden",
   "license": "Apache-2.0",
   "dependencies": {
-    "cordova-android": "^8.0.0",
+    "cordova-android": "^8.1.0",
     "cordova-custom-config": "^5.1.0",
     "cordova-ios": "^5.0.1",
     "cordova-plugin-androidx": "^1.0.2",
