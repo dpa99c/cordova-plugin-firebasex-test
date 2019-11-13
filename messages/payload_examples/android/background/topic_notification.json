@@ -1,0 +1,13 @@
+{
+    "google.delivered_priority": "normal",
+    "google.sent_time": 1573668467624,
+    "google.ttl": 3600,
+    "google.original_priority": "normal",
+    "messageType": "notification",
+    "notification_foreground": "true",
+    "tap": "background",
+    "from": "/topics/my_topic",
+    "key_1": "Data for key one",
+    "google.message_id": "0:1573668468056877%4ad38fef4ad38fef",
+    "collapse_key": "uk.co.workingedge.firebase.test"
+}

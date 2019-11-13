@@ -1,0 +1,15 @@
+{
+    "channel_id": "fcm_default_channel",
+    "messageType": "notification",
+    "notification_foreground": "true",
+    "id": "0:1573667479409688%4ad38fef4ad38fef",
+    "ttl": "3600",
+    "body": "Notification with default settings",
+    "from": "605981097027",
+    "key_1": "Data for key one",
+    "sound": "default",
+    "title": "Default Notification",
+    "sent_time": "1573667479402",
+    "collapse_key": "uk.co.workingedge.firebase.test",
+    "show_notification": "true"
+}

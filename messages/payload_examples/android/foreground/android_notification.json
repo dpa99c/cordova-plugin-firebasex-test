@@ -1,0 +1,17 @@
+{
+    "channel_id": "fcm_default_channel",
+    "messageType": "notification",
+    "notification_foreground": "true",
+    "id": "0:1573668255292913%4ad38fef4ad38fef",
+    "ttl": "3600",
+    "body": "Notification with custom Android settings",
+    "from": "605981097027",
+    "icon": "coffee",
+    "color": "#00ff00",
+    "key_1": "Data for key one",
+    "sound": "default",
+    "title": "Android Notification",
+    "sent_time": "1573668255289",
+    "collapse_key": "uk.co.workingedge.firebase.test",
+    "show_notification": "true"
+}
