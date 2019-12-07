@@ -510,7 +510,7 @@ function getValue(){
 
 
 // Authentication
-var verificationId;
+var credential;
 function verifyPhoneNumber(){
     var phoneNumber = $('#phoneNumberInput').val().trim();
     if(!phoneNumber) return logError("Valid phone number must be entered");
@@ -518,17 +518,16 @@ function verifyPhoneNumber(){
 
     var fakeVerificationCode = $('#mockInstantVerificationInput')[0].checked ? '123456' : null;
 
-    FirebasePlugin.verifyPhoneNumber(function(credential) {
+    FirebasePlugin.verifyPhoneNumber(function(_credential) {
         log("Received phone number verification credential");
+        $('#useAuthCredentials').show();
+        credential = _credential;
         console.dir(credential);
 
-        verificationId = credential.verificationId;
-
-        if(credential.instantVerification){
-            log("Using instant verification code");
-            $('#verificationCodeInput').val(credential.code);
+        if(!credential.instantVerification){
+            log("Instant verification not used - SMS code required via user input");
+            $('#enterVerificationCode').show();
         }
-        $('#useVerificationCode').show();
 
     }, function(error) {
         logError("Failed to verify phone number", error);
@@ -536,9 +535,14 @@ function verifyPhoneNumber(){
 }
 
 function signInWithCredential(){
-    var code = $('#verificationCodeInput').val().trim();
-    if(!code) return logError("Verification code must be entered");
-    FirebasePlugin.signInWithCredential(verificationId, code, function() {
+    if(!credential) return logError("No auth credential exists - request a credential first");
+
+    if(!credential.instantVerification){
+        credential.code = $('#verificationCodeInput').val().trim();
+        if(!credential.code) return logError("Verification code must be entered");
+    }
+
+    FirebasePlugin.signInWithCredential(credential, function() {
         log("Successfully signed in");
     }, function(error) {
         logError("Failed to sign in", error);
@@ -546,9 +550,14 @@ function signInWithCredential(){
 }
 
 function linkUserWithCredential(){
-    var code = $('#verificationCodeInput').val().trim();
-    if(!code) return logError("Verification code must be entered");
-    FirebasePlugin.linkUserWithCredential(verificationId, code, function() {
+    if(!credential) return logError("No auth credential exists - request a credential first");
+
+    if(!credential.instantVerification){
+        credential.code = $('#verificationCodeInput').val().trim();
+        if(!credential.code) return logError("Verification code must be entered");
+    }
+
+    FirebasePlugin.linkUserWithCredential(credential, function() {
         log("Successfully linked user");
     }, function(error) {
         logError("Failed to link user", error);
