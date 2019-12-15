@@ -563,3 +563,11 @@ function linkUserWithCredential(){
         logError("Failed to link user", error);
     });
 }
+
+function isUserSignedIn(){
+    FirebasePlugin.isUserSignedIn(function(isSignedIn) {
+        log("User "+(isSignedIn ? "is" : "is not") + " signed in");
+    }, function(error) {
+        logError("Failed to check if user is signed in", error);
+    });
+}

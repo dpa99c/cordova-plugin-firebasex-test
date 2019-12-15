@@ -22,7 +22,8 @@
         "FIREBASE_ANALYTICS_COLLECTION_ENABLED": "false",
         "FIREBASE_PERFORMANCE_COLLECTION_ENABLED": "false",
         "FIREBASE_CRASHLYTICS_COLLECTION_ENABLED": "false",
-        "SETUP_RECAPTCHA_VERIFICATION": "true"
+        "SETUP_RECAPTCHA_VERIFICATION": "true",
+        "IOS_STRIP_DEBUG": "true"
       },
       "cordova-custom-config": {}
     },
