@@ -571,3 +571,11 @@ function isUserSignedIn(){
         logError("Failed to check if user is signed in", error);
     });
 }
+
+function getCurrentUser(){
+    FirebasePlugin.getCurrentUser(function(user) {
+        log("Current user info: " + JSON.stringify(user));
+    }, function(error) {
+        logError("Failed to get current user", error);
+    });
+}
