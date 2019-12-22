@@ -13,3 +13,4 @@
 /plugins/cordova-custom-config
 /build.json
 /plugins/cordova-plugin-androidx-adapter
+/plugins/cordova-plugin-dialogs

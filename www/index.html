@@ -54,23 +54,25 @@
     <button id="remote_getValue" disabled="disabled" onclick="getValue()">Get value</button>
 
     <h3>Authentication</h3>
+
+    <h4>Obtain auth credential</h4>
+    <div id="enterPhoneNumber" class="section">
+        <button onclick="verifyPhoneNumber()">Verify phone number</button>
+        <div id="mockInstantVerification">
+            <label>Mock instant verification</label>
+            <input id="mockInstantVerificationInput" type="checkbox" />
+        </div>
+    </div>
+
+    <h4>Use auth credential</h4>
+    <button onclick="signInWithCredential()">Sign in</button>
+    <button onclick="linkUserWithCredential()">Link account</button>
+
+    <h4>Current signed-in user</h4>
     <button onclick="isUserSignedIn()">Is user signed in?</button>
     <button onclick="getCurrentUser()">Get current user</button>
-    <div id="enterPhoneNumber">
-        <input id="phoneNumberInput" placeholder="Enter phone number" />
-        <button onclick="verifyPhoneNumber()">Verify phone number</button>
-    </div>
-    <div id="mockInstantVerification">
-        <label>Mock instant verification</label>
-        <input id="mockInstantVerificationInput" type="checkbox" />
-    </div>
-    <div id="enterVerificationCode">
-        <input id="verificationCodeInput" placeholder="Enter verification code" />
-    </div>
-    <div id="useAuthCredentials">
-        <button onclick="signInWithCredential()">Sign in</button>
-        <button onclick="linkUserWithCredential()">Link account</button>
-    </div>
+    <button onclick="updateUserProfile()">Update user profile</button>
+
 </div>
 
 

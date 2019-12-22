@@ -45,10 +45,15 @@ button {
     margin: 16px;
 }
 
+.section{
+    border: 1px solid #ccc;
+    padding: 8px;
+    margin: 8px 0;
+}
+
 body:not(.android) .android-only,
 body:not(.ios) .ios-only,
 body:not(.autoinit-enabled) .autoinit-disable,
-body:not(.autoinit-disabled) .autoinit-enable,
-#enterVerificationCode, #useAuthCredentials{
+body:not(.autoinit-disabled) .autoinit-enable{
     display: none;
 }

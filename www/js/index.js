@@ -1,5 +1,8 @@
 var $output, FirebasePlugin;
 
+// Fake authentication code as defined in the Firebase Console: see https://firebase.google.com/docs/auth/android/phone-auth#integration-testing
+var FAKE_SMS_VERIFICATION_CODE = '123456';
+
 // UI logging
 function prependLogMessage(message){
     $output.prepend('<span class="'+(message.logLevel ? message.logLevel : '')+'">' +message.msg + '</span>' + (message.nobreak ? "<br/>" : "<br/><br/>" ));
@@ -28,6 +31,18 @@ function logError(msg, error){
 
 function clearLog(){
     $output.empty();
+}
+
+function promptUserForInput(title, msg, cb) {
+    navigator.notification.prompt(
+        msg,
+        function(result){
+            var input = result.input1 || '';
+            cb(input.trim());
+        },
+        title,
+        ['Ok']
+    );
 }
 
 // Init
@@ -91,6 +106,8 @@ function onDeviceReady(){
     checkNotificationPermission(false); // Check permission then get token
 
     checkAutoInit();
+
+    isUserSignedIn();
 
     // Platform-specific
     $('body').addClass(cordova.platformId);
@@ -510,39 +527,54 @@ function getValue(){
 
 
 // Authentication
-var credential;
+var authCredential;
 function verifyPhoneNumber(){
-    var phoneNumber = $('#phoneNumberInput').val().trim();
-    if(!phoneNumber) return logError("Valid phone number must be entered");
+
     var timeoutInSeconds = 60;
 
-    var fakeVerificationCode = $('#mockInstantVerificationInput')[0].checked ? '123456' : null;
+    var enterPhoneNumber = function(){
+        promptUserForInput("Enter phone number", "Input full phone number including international dialing code", function(phoneNumber){
+            if(!phoneNumber) return logError("Valid phone number must be entered");
+            verify(phoneNumber);
+        });
+    };
 
-    FirebasePlugin.verifyPhoneNumber(function(_credential) {
-        log("Received phone number verification credential");
-        $('#useAuthCredentials').show();
-        credential = _credential;
-        console.dir(credential);
+    var enterVerificationCode = function(credential){
+        promptUserForInput("Enter verification code", "Input the code in the received verification SMS", function(verificationCode){
+            if(!verificationCode) return logError("Valid verification code must be entered");
+            credential.code = verificationCode;
+            verified(credential);
+        });
+    };
 
-        if(!credential.instantVerification){
-            log("Instant verification not used - SMS code required via user input");
-            $('#enterVerificationCode').show();
-        }
+    var verify = function(phoneNumber){
+        var fakeVerificationCode = $('#mockInstantVerificationInput')[0].checked ? FAKE_SMS_VERIFICATION_CODE : null;
 
-    }, function(error) {
-        logError("Failed to verify phone number", error);
-    }, phoneNumber, timeoutInSeconds, fakeVerificationCode,);
+        FirebasePlugin.verifyPhoneNumber(function(credential) {
+            log("Received phone number verification credential");
+            if(credential.instantVerification){
+                log("Instant verification used - no SMS code required");
+                verified(credential);
+            }else{
+                log("Instant verification not used - SMS code required via user input");
+                enterVerificationCode(credential);
+            }
+        }, function(error) {
+            logError("Failed to verify phone number", error);
+        }, phoneNumber, timeoutInSeconds, fakeVerificationCode);
+    };
+
+    var verified = function(credential){
+        authCredential = credential;
+    };
+
+    enterPhoneNumber();
 }
 
 function signInWithCredential(){
-    if(!credential) return logError("No auth credential exists - request a credential first");
+    if(!authCredential) return logError("No auth credential exists - request a credential first");
 
-    if(!credential.instantVerification){
-        credential.code = $('#verificationCodeInput').val().trim();
-        if(!credential.code) return logError("Verification code must be entered");
-    }
-
-    FirebasePlugin.signInWithCredential(credential, function() {
+    FirebasePlugin.signInWithCredential(authCredential, function() {
         log("Successfully signed in");
     }, function(error) {
         logError("Failed to sign in", error);
@@ -550,14 +582,9 @@ function signInWithCredential(){
 }
 
 function linkUserWithCredential(){
-    if(!credential) return logError("No auth credential exists - request a credential first");
+    if(!authCredential) return logError("No auth credential exists - request a credential first");
 
-    if(!credential.instantVerification){
-        credential.code = $('#verificationCodeInput').val().trim();
-        if(!credential.code) return logError("Verification code must be entered");
-    }
-
-    FirebasePlugin.linkUserWithCredential(credential, function() {
+    FirebasePlugin.linkUserWithCredential(authCredential, function() {
         log("Successfully linked user");
     }, function(error) {
         logError("Failed to link user", error);
@@ -578,4 +605,32 @@ function getCurrentUser(){
     }, function(error) {
         logError("Failed to get current user", error);
     });
+}
+
+function updateUserProfile(){
+    var profile = {};
+
+    var inputName = function(){
+        promptUserForInput("Enter name", "Input user display name", function(name){
+            profile.name = name;
+            inputPhotoUri();
+        });
+    };
+
+    var inputPhotoUri = function(){
+        promptUserForInput("Enter photo URL", "Input URL for user profile photo", function(url){
+            profile.photoUri = url;
+            updateProfile();
+        });
+    };
+
+    var updateProfile = function(){
+        FirebasePlugin.updateUserProfile(profile, function(){
+            log("User profile successfully updated");
+        }, function(error) {
+            logError("Failed to update user profile", error);
+        });
+    };
+
+    inputName();
 }
