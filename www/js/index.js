@@ -581,6 +581,16 @@ function signInWithCredential(){
     });
 }
 
+function reauthenticateWithCredential(){
+    if(!authCredential) return logError("No auth credential exists - request a credential first");
+
+    FirebasePlugin.reauthenticateWithCredential(authCredential, function() {
+        log("Successfully reauthenticated");
+    }, function(error) {
+        logError("Failed to reauthenticate", error);
+    });
+}
+
 function linkUserWithCredential(){
     if(!authCredential) return logError("No auth credential exists - request a credential first");
 
