@@ -636,7 +636,7 @@ function updateUserProfile(){
 }
 
 function updateUserEmail(){
-    promptUserForInput("Enter email", "Input user email address", function(email){
+    promptUserForInput("Enter email", "Input user email address to update", function(email){
         FirebasePlugin.updateUserEmail(email, function(){
             log("User email successfully updated");
         }, function(error) {
@@ -659,6 +659,16 @@ function updateUserPassword(){
             log("User password successfully updated");
         }, function(error) {
             logError("Failed to update user password", error);
+        });
+    });
+}
+
+function sendUserPasswordResetEmail(){
+    promptUserForInput("Enter email", "Input user email address for reset password", function(email){
+        FirebasePlugin.sendUserPasswordResetEmail(email, function(){
+            log("User password reset email sent successfully");
+        }, function(error) {
+            logError("Failed to send user password reset email", error);
         });
     });
 }
