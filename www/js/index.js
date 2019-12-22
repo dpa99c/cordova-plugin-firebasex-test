@@ -634,3 +634,13 @@ function updateUserProfile(){
 
     inputName();
 }
+
+function updateUserEmail(){
+    promptUserForInput("Enter email", "Input user email address", function(email){
+        FirebasePlugin.updateUserEmail(email, function(){
+            log("User email successfully updated");
+        }, function(error) {
+            logError("Failed to update user email", error);
+        });
+    });
+}
