@@ -652,3 +652,13 @@ function sendUserEmailVerification(){
         logError("Failed to send user verification email", error);
     });
 }
+
+function updateUserPassword(){
+    promptUserForInput("Enter password", "Input new account password", function(password){
+        FirebasePlugin.updateUserPassword(password, function(){
+            log("User password successfully updated");
+        }, function(error) {
+            logError("Failed to update user password", error);
+        });
+    });
+}
