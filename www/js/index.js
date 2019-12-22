@@ -644,3 +644,11 @@ function updateUserEmail(){
         });
     });
 }
+
+function sendUserEmailVerification(){
+    FirebasePlugin.sendUserEmailVerification(function(){
+        log("Sent user email verification successfully updated");
+    }, function(error) {
+        logError("Failed to send user verification email", error);
+    });
+}
