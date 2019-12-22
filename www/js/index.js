@@ -672,3 +672,11 @@ function sendUserPasswordResetEmail(){
         });
     });
 }
+
+function deleteUser(){
+    FirebasePlugin.deleteUser(function(){
+        log("User account deleted");
+    }, function(error) {
+        logError("Failed to delete current user account", error);
+    });
+}
