@@ -622,6 +622,14 @@ function isUserSignedIn(){
     });
 }
 
+function signOutUser(){
+    FirebasePlugin.signOutUser(function() {
+        log("User signed out");
+    }, function(error) {
+        logError("Failed to sign out user", error);
+    });
+}
+
 function getCurrentUser(){
     FirebasePlugin.getCurrentUser(function(user) {
         log("Current user info: " + JSON.stringify(user));
