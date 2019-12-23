@@ -531,6 +531,7 @@ var authCredential;
 function verifyPhoneNumber(){
 
     var timeoutInSeconds = 60;
+    var awaitingSms = false;
 
     var enterPhoneNumber = function(){
         promptUserForInput("Enter phone number", "Input full phone number including international dialing code", function(phoneNumber){
@@ -547,19 +548,31 @@ function verifyPhoneNumber(){
         });
     };
 
+    var dismissUserPromptForVerificationCode = function() {
+        navigator.notification.dismissAll();
+    };
+
     var verify = function(phoneNumber){
         var fakeVerificationCode = $('#mockInstantVerificationInput')[0].checked ? FAKE_SMS_VERIFICATION_CODE : null;
 
         FirebasePlugin.verifyPhoneNumber(function(credential) {
             log("Received phone number verification credential");
             if(credential.instantVerification){
-                log("Instant verification used - no SMS code required");
+                if(awaitingSms){
+                    awaitingSms = false;
+                    log("Auto-retrieval used to retrieve verification code from SMS - user does not need to manually enter");
+                    dismissUserPromptForVerificationCode();
+                }else{
+                    log("Instant verification used - no SMS code sent to device");
+                }
                 verified(credential);
             }else{
-                log("Instant verification not used - SMS code required via user input");
+                log("Instant verification not used - SMS code sent to device");
+                awaitingSms = true;
                 enterVerificationCode(credential);
             }
         }, function(error) {
+            awaitingSms = false;
             logError("Failed to verify phone number", error);
         }, phoneNumber, timeoutInSeconds, fakeVerificationCode);
     };
