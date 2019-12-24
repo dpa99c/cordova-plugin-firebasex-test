@@ -715,13 +715,22 @@ function deleteUser(){
 function createUserWithEmailAndPassword(){
     promptUserForInput("Enter email", "Email address for new account", function(email){
         promptUserForInput("Enter password", "Password for new account", function(password){
-            FirebasePlugin.createUserWithEmailAndPassword({
-                email: email,
-                password: password
-            }, function(){
+            FirebasePlugin.createUserWithEmailAndPassword(email, password, function(){
                 log("Successfully created email/password-based user account");
             }, function(error) {
                 logError("Failed to create email/password-based user account", error);
+            });
+        });
+    });
+}
+
+function signInUserWithEmailAndPassword(){
+    promptUserForInput("Enter email", "Enter email address", function(email){
+        promptUserForInput("Enter password", "Enter account password", function(password){
+            FirebasePlugin.signInUserWithEmailAndPassword(email, password, function(){
+                log("Successfully signed in to email/password-based user account");
+            }, function(error) {
+                logError("Failed to sign in to email/password-based user account", error);
             });
         });
     });
