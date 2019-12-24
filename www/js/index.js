@@ -711,3 +711,18 @@ function deleteUser(){
         logError("Failed to delete current user account", error);
     });
 }
+
+function createUserWithEmailAndPassword(){
+    promptUserForInput("Enter email", "Email address for new account", function(email){
+        promptUserForInput("Enter password", "Password for new account", function(password){
+            FirebasePlugin.createUserWithEmailAndPassword({
+                email: email,
+                password: password
+            }, function(){
+                log("Successfully created email/password-based user account");
+            }, function(error) {
+                logError("Failed to create email/password-based user account", error);
+            });
+        });
+    });
+}
