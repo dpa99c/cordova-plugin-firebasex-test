@@ -584,6 +584,15 @@ function verifyPhoneNumber(){
     enterPhoneNumber();
 }
 
+function authenticateUserWithGoogle(){
+    FirebasePlugin.authenticateUserWithGoogle(SERVER_CLIENT_ID, function(credential) {
+        authCredential = credential;
+        log("Successfully authenticated with Google");
+    }, function(error) {
+        logError("Failed to authenticate with Google", error);
+    });
+}
+
 function signInWithCredential(){
     if(!authCredential) return logError("No auth credential exists - request a credential first");
 

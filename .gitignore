@@ -16,3 +16,4 @@
 /plugins/cordova-plugin-dialogs
 /www/GoogleService-Info.plist
 /www/google-services.json
+/debug.keystore
