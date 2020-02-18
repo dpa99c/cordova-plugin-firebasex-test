@@ -599,7 +599,7 @@ function authenticateUserWithApple(){
         log("Successfully authenticated with Apple");
     }, function(error) {
         logError("Failed to authenticate with Apple", error);
-    });
+    }, 'en-GB');
 }
 
 function signInWithCredential(){
