@@ -16,9 +16,9 @@ This repo contains a [Cordova](http://cordova.apache.org/) project which builds 
 ## iOS build notes
 
 ### iOS package ID
-The [configured package ID](https://github.com/dpa99c/cordova-plugin-firebasex-test/blob/master/config.xml#L2) for this test project is `uk.co.workingedge.firebase.test` which I have registered with my Apple Developer Team in order to create an iOS provisioning profile APNS certificate for it in order to test iOS Push Notifications via the Firebase Console.
+The [configured package ID](https://github.com/dpa99c/cordova-plugin-firebasex-test/blob/master/config.xml#L2) for this test project is `uk.co.workingedge.firebase.test` which I have registered with my Apple Developer Team in order to create an iOS provisioning profile with appropriate permissions.
 
-Therefore in order to build this project for iOS, you may need to change the package ID to one which is associated with your Apple Developer Team and for which you have set appropriate capabilities (i.e. enabled Push Notifications). 
+Therefore in order to test this project on iOS, you will need to change the package ID to one which is associated with your Apple Developer Team and for which you have set appropriate capabilities.
 
 ### Cocopods
 [cordova-plugin-firebasex](https://github.com/dpa99c/cordova-plugin-firebasex) relies on `cordova@9`/`cordova-ios@5` support for the [CocoaPods dependency manager]( https://cocoapods.org/) in order to satify the iOS Firebase SDK library dependencies.
@@ -73,6 +73,12 @@ where `<your_device_token>` is the token you noted down and `<message_name>` is 
 ```    
 npm run-script send -- --message=notification.json --token="cJlSa4UjtO0:APA91bFNDPVnHaS1__UTdNc8kt3uplnxBOcPGBbEO37J0FU3vFgGyud7gWDT2RJ5VmSJ68qFyiCu0y-WWcur7hE8RelRkzlS3RK6edFycpvm4K2szsMqMXOxEy72V9a41u6kaVh7U4nz"
 ```
+
+## Testing authentication
+To test the authentication methods, you must configure each method for the target mobile platform as outlined in the plugin documentation for that method.
+
+## Android
+Set your server client ID in `www/js/config.js` - see the [Firebase documentation](https://firebase.google.com/docs/auth/android/google-signin#authenticate_with_firebase) for where to find this. This is used for Google Sign In on Android.
 
 # Analytics DebugView
 See [this page](https://support.google.com/firebase/answer/7201382?hl=en&utm_id=ad&authuser=1) for how to manually enable Firebase Analytics DebugView.
