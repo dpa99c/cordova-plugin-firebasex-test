@@ -593,6 +593,15 @@ function authenticateUserWithGoogle(){
     });
 }
 
+function authenticateUserWithApple(){
+    FirebasePlugin.authenticateUserWithApple(function(credential) {
+        authCredential = credential;
+        log("Successfully authenticated with Apple");
+    }, function(error) {
+        logError("Failed to authenticate with Apple", error);
+    });
+}
+
 function signInWithCredential(){
     if(!authCredential) return logError("No auth credential exists - request a credential first");
 
