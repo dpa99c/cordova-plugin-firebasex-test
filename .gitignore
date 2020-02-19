@@ -14,6 +14,6 @@
 /build.json
 /plugins/cordova-plugin-androidx-adapter
 /plugins/cordova-plugin-dialogs
-/www/GoogleService-Info.plist
-/www/google-services.json
+GoogleService-Info.plist
+google-services.json
 /debug.keystore
