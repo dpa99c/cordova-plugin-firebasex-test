@@ -753,3 +753,44 @@ function signInUserWithEmailAndPassword(){
         });
     });
 }
+
+// Firestore
+var firestoreCollection = "my_collection";
+var firestoreDocument = {
+    "a_string": "foo",
+    "a_boolean": true,
+    "an_integer": 1,
+    "an_array": [1, 2, 3],
+    "a_subcollection": {
+        "subcollection_doc_1": {
+            "another_string": "bar",
+            "another_boolean": false,
+            "another_integer": 0,
+            "another_array": [3, 2, 1]
+        }
+    }
+};
+
+function addDocumentToFirestoreCollection(){
+    FirebasePlugin.addDocumentToFirestoreCollection(firestoreDocument, firestoreCollection, function(id){
+        log("Successfully added document to Firestore with id="+id);
+    }, function(error) {
+        logError("Failed to add document to Firestore", error);
+    });
+}
+
+function fetchFirestoreCollection(){
+    FirebasePlugin.fetchFirestoreCollection(firestoreCollection, function(data){
+
+        log("Successfully fetched Firestore collection: " + JSON.stringify(data));
+        console.dir(data);
+    }, function(error) {
+        logError("Failed to fetch Firestore collection", error);
+    });
+}
+
+var santiseJson = function(json){
+    for(var key in json){
+
+    }
+};

@@ -17,3 +17,4 @@
 GoogleService-Info.plist
 google-services.json
 /debug.keystore
+/plugins/cordova-plugin-enable-multidex
