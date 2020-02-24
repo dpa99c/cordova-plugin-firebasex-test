@@ -103,6 +103,10 @@ function onDeviceReady(){
         logError("Failed to refresh token", error);
     });
 
+    FirebasePlugin.registerAuthStateChangeListener(function(userSignedIn){
+        log("Auth state changed: User signed " + (userSignedIn ? "in" : "out"));
+    });
+
     checkNotificationPermission(false); // Check permission then get token
 
     checkAutoInit();
