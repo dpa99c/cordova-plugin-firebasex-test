@@ -765,15 +765,14 @@ var firestoreDocument = {
     "a_boolean": true,
     "an_integer": 1,
     "an_array": [1, 2, 3],
-    "a_subcollection": {
-        "subcollection_doc_1": {
-            "another_string": "bar",
-            "another_boolean": false,
-            "another_integer": 0,
-            "another_array": [3, 2, 1]
-        }
+    "a_map": {
+        "another_string": "bar",
+        "another_boolean": false,
+        "another_integer": 0,
+        "another_array": [3, 2, 1]
     }
 };
+var firestoreDocumentId = 1;
 
 function addDocumentToFirestoreCollection(){
     FirebasePlugin.addDocumentToFirestoreCollection(firestoreDocument, firestoreCollection, function(id){
@@ -782,6 +781,35 @@ function addDocumentToFirestoreCollection(){
         logError("Failed to add document to Firestore", error);
     });
 }
+
+function setDocumentInFirestoreCollection(){
+    FirebasePlugin.setDocumentInFirestoreCollection(firestoreDocumentId, firestoreDocument, firestoreCollection, function(){
+        log("Successfully set document in Firestore with id="+firestoreDocumentId);
+    }, function(error) {
+        logError("Failed to set document in Firestore", error);
+    });
+}
+
+function updateDocumentInFirestoreCollection(){
+    var documentFragment = {
+        "an_integer": Math.round(Math.random()*100),
+        "a_string": "foobar"
+    };
+    FirebasePlugin.updateDocumentInFirestoreCollection(firestoreDocumentId, documentFragment, firestoreCollection, function(){
+        log("Successfully updated document in Firestore with id="+firestoreDocumentId);
+    }, function(error) {
+        logError("Failed to update document in Firestore", error);
+    });
+}
+
+function deleteDocumentFromFirestoreCollection(){
+    FirebasePlugin.deleteDocumentFromFirestoreCollection(firestoreDocumentId, firestoreCollection, function(){
+        log("Successfully deleted document in Firestore with id="+firestoreDocumentId);
+    }, function(error) {
+        logError("Failed to delete document in Firestore", error);
+    });
+}
+
 
 function fetchFirestoreCollection(){
     FirebasePlugin.fetchFirestoreCollection(firestoreCollection, function(data){
@@ -792,9 +820,3 @@ function fetchFirestoreCollection(){
         logError("Failed to fetch Firestore collection", error);
     });
 }
-
-var santiseJson = function(json){
-    for(var key in json){
-
-    }
-};
