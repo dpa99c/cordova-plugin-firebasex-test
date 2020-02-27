@@ -810,6 +810,15 @@ function deleteDocumentFromFirestoreCollection(){
     });
 }
 
+function fetchDocumentInFirestoreCollection(){
+    FirebasePlugin.fetchDocumentInFirestoreCollection(firestoreDocumentId, firestoreCollection, function(document){
+        log("Successfully fetched document in Firestore with id="+firestoreDocumentId+"; doc="+JSON.stringify(document));
+        console.dir(document);
+    }, function(error) {
+        logError("Failed to fetch document in Firestore", error);
+    });
+}
+
 
 function fetchFirestoreCollection(){
     FirebasePlugin.fetchFirestoreCollection(firestoreCollection, function(data){
