@@ -1,6 +1,7 @@
 package cordova.plugin.customfcmreceiver;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -11,7 +12,10 @@ import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.firebase.FirebasePluginMessageReceiver;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 public class CustomFCMReceiverPlugin extends CordovaPlugin {
 
@@ -72,6 +76,27 @@ public class CustomFCMReceiverPlugin extends CordovaPlugin {
         jsCallback("_onMessageReceived", jsQuoteEscape(message));
     }
 
+    private Map<String, String> bundleToMap(Bundle extras) {
+        Map<String, String> map = new HashMap<String, String>();
+
+        Set<String> ks = extras.keySet();
+        Iterator<String> iterator = ks.iterator();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            map.put(key, extras.getString(key));
+        }
+        return map;
+    }
+
+    private boolean inspectAndHandleMessageData(Map<String, String> data) {
+        boolean isHandled = false;
+        if (data.containsKey("custom") && data.containsKey("text")) {
+            isHandled = true;
+            instance.sendMessageToJS(data.get("text"));
+        }
+        return isHandled;
+    }
+
     private class CustomFCMReceiver extends FirebasePluginMessageReceiver {
         @Override
         public boolean onMessageReceived(RemoteMessage remoteMessage){
@@ -79,20 +104,23 @@ public class CustomFCMReceiverPlugin extends CordovaPlugin {
             boolean isHandled = false;
 
             try {
-
                 Map<String, String> data = remoteMessage.getData();
-                if (data.containsKey("custom")) {
-                    isHandled = true;
-                    String text;
-                    if (remoteMessage.getNotification() != null) {
-                        text = remoteMessage.getNotification().getBody();
-                    } else {
-                        text = data.get("text");
-                        if(TextUtils.isEmpty(text)) text = data.get("body");
-                    }
+                isHandled = inspectAndHandleMessageData(data);
+            }catch (Exception e){
+                handleException("onMessageReceived", e);
+            }
 
-                    instance.sendMessageToJS(text);
-                }
+            return isHandled;
+        }
+
+        @Override
+        public boolean sendMessage(Bundle bundle){
+            Log.d("CustomFCMReceiver", "sendMessage");
+            boolean isHandled = false;
+
+            try {
+                Map<String, String> data = bundleToMap(bundle);
+                isHandled = inspectAndHandleMessageData(data);
             }catch (Exception e){
                 handleException("onMessageReceived", e);
             }

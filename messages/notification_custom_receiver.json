@@ -1,0 +1,29 @@
+{
+  "name": "notification_custom_receiver",
+  "notification": {
+    "body": "Notification for custom receiver",
+    "title": "Custom Receiver Notification"
+  },
+  "android": {
+    "collapse_key": "a",
+    "priority": "normal",
+    "ttl": "3600s",
+    "notification": {
+      "channel_id": "fcm_default_channel",
+      "sound": "default"
+    }
+  },
+  "apns": {
+    "payload": {
+      "aps": {
+        "badge": 1,
+        "sound": "default"
+      }
+    }
+  },
+  "data": {
+    "notification_foreground": "true",
+    "custom": "true",
+    "text": "Custom receiver text"
+  }
+}
