@@ -13,7 +13,7 @@
     </js-module>
 
     <platform name="android">
-        <source-file src="src/CustomFCMReceiverPlugin.java" target-dir="src/cordova/plugin/customfcmreceiver" />
+        <source-file src="src/android/CustomFCMReceiverPlugin.java" target-dir="src/cordova/plugin/customfcmreceiver" />
 
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="CustomFCMReceiverPlugin" >
@@ -21,5 +21,19 @@
                 <param name="onload" value="true" />
             </feature>
         </config-file>
+    </platform>
+
+    <platform name="ios">
+        <config-file parent="/*" target="config.xml">
+            <feature name="CustomFCMReceiverPlugin">
+                <param name="ios-package" value="CustomFCMReceiverPlugin" />
+                <param name="onload" value="true" />
+            </feature>
+        </config-file>
+
+        <header-file src="src/ios/CustomFCMReceiverPlugin.h" />
+        <source-file src="src/ios/CustomFCMReceiverPlugin.m" />
+        <header-file src="src/ios/CustomFCMReceiver.h" />
+        <source-file src="src/ios/CustomFCMReceiver.m" />
     </platform>
 </plugin>

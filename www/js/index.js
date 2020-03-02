@@ -107,6 +107,11 @@ function onDeviceReady(){
         log("Auth state changed: User signed " + (userSignedIn ? "in" : "out"));
     });
 
+    // Custom FCM receiver plugin
+    cordova.plugin.customfcmreceiver.registerReceiver(function(message){
+        log("Received custom message: "+message);
+    });
+
     checkNotificationPermission(false); // Check permission then get token
 
     checkAutoInit();
@@ -132,11 +137,6 @@ var initIos = function(){
 };
 
 var initAndroid = function(){
-
-    // Custom FCM receiver plugin
-    cordova.plugin.customfcmreceiver.registerReceiver(function(message){
-        log("Received custom message: "+message);
-    });
 
     // Define custom  channel - all keys are except 'id' are optional.
     var customChannel  = {
