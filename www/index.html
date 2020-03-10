@@ -28,7 +28,10 @@
     <button class="autoinit-disable" onclick="disableAutoInit()">Disable Auto Init</button>
 
     <h3>Crashlytics</h3>
-    <button onclick="setCrashlyticsCollectionEnabled()">Enable crashlytics data collection</button>
+    <button onclick="setCrashlyticsCollectionEnabled(true)">Enable crashlytics data collection</button>
+    <button onclick="setCrashlyticsCollectionEnabled(false)">Disable crashlytics data collection</button>
+    <button onclick="isCrashlyticsCollectionEnabled()">Is Crashlytics collection enabled?</button>
+    <button onclick="isCrashlyticsCollectionCurrentlyEnabled()">Is Crashlytics collection enabled for this session?</button>
     <button onclick="setCrashlyticsUserId()">Set crashlytics user ID</button>
     <button onclick="sendNonFatal()">Log non-fatal error</button>
     <button onclick="causeJsException()">Raise JS exception</button>

@@ -115,7 +115,8 @@ function onDeviceReady(){
     checkNotificationPermission(false); // Check permission then get token
 
     checkAutoInit();
-
+    isCrashlyticsCollectionEnabled();
+    isCrashlyticsCollectionCurrentlyEnabled();
     isUserSignedIn();
 
     // Platform-specific
@@ -377,11 +378,27 @@ function unregister(){
 }
 
 // Crashlytics
-function setCrashlyticsCollectionEnabled(){
-    FirebasePlugin.setCrashlyticsCollectionEnabled( function(){
-        log("Enabled crashlytics data collection");
+function setCrashlyticsCollectionEnabled(enabled){
+    FirebasePlugin.setCrashlyticsCollectionEnabled(enabled, function(){
+        log("Crashlytics data collection has been " + (enabled ? "enabled" : "disabled"));
     },function(error){
         logError("Failed to enable crashlytics data collection", error);
+    });
+}
+
+function isCrashlyticsCollectionEnabled(){
+    FirebasePlugin.isCrashlyticsCollectionEnabled( function(enabled){
+        log("Crashlytics data collection setting is " + (enabled ? "enabled" : "disabled"));
+    },function(error){
+        logError("Failed to fetch crashlytics data collection setting", error);
+    });
+}
+
+function isCrashlyticsCollectionCurrentlyEnabled(){
+    FirebasePlugin.isCrashlyticsCollectionCurrentlyEnabled( function(enabled){
+        log("Crashlytics data collection is currently " + (enabled ? "enabled" : "disabled") + " for this session");
+    },function(error){
+        logError("Failed to fetch crashlytics data collection session value", error);
     });
 }
 
