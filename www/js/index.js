@@ -115,6 +115,8 @@ function onDeviceReady(){
     checkNotificationPermission(false); // Check permission then get token
 
     checkAutoInit();
+    isAnalyticsCollectionEnabled();
+    isPerformanceCollectionEnabled();
     isCrashlyticsCollectionEnabled();
     isCrashlyticsCollectionCurrentlyEnabled();
     isUserSignedIn();
@@ -444,6 +446,14 @@ function setAnalyticsCollectionEnabled(){
     });
 }
 
+function isAnalyticsCollectionEnabled(){
+    FirebasePlugin.isAnalyticsCollectionEnabled( function(enabled){
+        log("Analytics data collection setting is " + (enabled ? "enabled" : "disabled"));
+    },function(error){
+        logError("Failed to fetch Analytics data collection setting", error);
+    });
+}
+
 function logEvent(){
     FirebasePlugin.logEvent("my_event", {
         string: "bar",
@@ -486,6 +496,14 @@ function setPerformanceCollectionEnabled(){
         log("Enabled performance data collection");
     },function(error){
         logError("Failed to enable performance data collection", error);
+    });
+}
+
+function isPerformanceCollectionEnabled(){
+    FirebasePlugin.isPerformanceCollectionEnabled( function(enabled){
+        log("Performance data collection setting is " + (enabled ? "enabled" : "disabled"));
+    },function(error){
+        logError("Failed to fetch Performance data collection setting", error);
     });
 }
 
