@@ -46,6 +46,8 @@
         <custom-config-file parent="./application" target="AndroidManifest.xml">
             <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/notification_icon" />
         </custom-config-file>
+
+        <resource-file src="res/android/values/colors.xml" target="app/src/main/res/values/colors.xml" />
     </platform>
 
     <engine name="ios" spec="^5.0.1" />
