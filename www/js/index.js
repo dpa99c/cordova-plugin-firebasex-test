@@ -845,6 +845,14 @@ function deleteDocumentFromFirestoreCollection(){
     });
 }
 
+function documentExistsInFirestoreCollection(){
+    FirebasePlugin.documentExistsInFirestoreCollection(firestoreDocumentId, firestoreCollection, function(exists){
+        log("Document "+(exists ? "exists" : "doesn't exist")+" in Firestore collection");
+    }, function(error) {
+        logError("Failed to check document exists in Firestore", error);
+    });
+}
+
 function fetchDocumentInFirestoreCollection(){
     FirebasePlugin.fetchDocumentInFirestoreCollection(firestoreDocumentId, firestoreCollection, function(document){
         log("Successfully fetched document in Firestore with id="+firestoreDocumentId+"; doc="+JSON.stringify(document));
