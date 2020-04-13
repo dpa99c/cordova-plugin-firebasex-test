@@ -695,6 +695,14 @@ function getCurrentUser(){
     });
 }
 
+function reloadCurrentUser(){
+    FirebasePlugin.reloadCurrentUser(function(user) {
+        log("Reloaded user info: " + JSON.stringify(user));
+    }, function(error) {
+        logError("Failed to get reload user", error);
+    });
+}
+
 function updateUserProfile(){
     var profile = {};
 
@@ -790,6 +798,24 @@ function signInUserWithEmailAndPassword(){
                 logError("Failed to sign in to email/password-based user account", error);
             });
         });
+    });
+}
+
+function signInUserWithCustomToken(){
+    promptUserForInput("Enter token", "Enter custom token", function(token){
+        FirebasePlugin.signInUserWithCustomToken(token, function(){
+            log("Successfully signed in with custom token");
+        }, function(error) {
+            logError("Failed to sign in with custom token", error);
+        });
+    });
+}
+
+function signInUserAnonymously(){
+    FirebasePlugin.signInUserAnonymously(function(){
+        log("Successfully signed in anonymously");
+    }, function(error) {
+        logError("Failed to sign in anonymously", error);
     });
 }
 
