@@ -890,7 +890,8 @@ function fetchDocumentInFirestoreCollection(){
 
 
 function fetchFirestoreCollection(){
-    FirebasePlugin.fetchFirestoreCollection(firestoreCollection, function(data){
+    var filters = [];
+    FirebasePlugin.fetchFirestoreCollection(firestoreCollection, filters, function(data){
 
         log("Successfully fetched Firestore collection: " + JSON.stringify(data));
         console.dir(data);
