@@ -68,7 +68,7 @@ function onDeviceReady(){
 
         logMessage += ': url='+url.replace(appRootURL, '')+'; line='+line+'; col='+col;
 
-        if(typeof error === 'object'){
+        if(error && typeof error === 'object'){
             StackTrace.fromError(error).then(function(trace){
                 stackTrace = trace;
                 sendError()
@@ -118,7 +118,6 @@ function onDeviceReady(){
     isAnalyticsCollectionEnabled();
     isPerformanceCollectionEnabled();
     isCrashlyticsCollectionEnabled();
-    isCrashlyticsCollectionCurrentlyEnabled();
     isUserSignedIn();
 
     // Platform-specific
@@ -393,14 +392,6 @@ function isCrashlyticsCollectionEnabled(){
         log("Crashlytics data collection setting is " + (enabled ? "enabled" : "disabled"));
     },function(error){
         logError("Failed to fetch crashlytics data collection setting", error);
-    });
-}
-
-function isCrashlyticsCollectionCurrentlyEnabled(){
-    FirebasePlugin.isCrashlyticsCollectionCurrentlyEnabled( function(enabled){
-        log("Crashlytics data collection is currently " + (enabled ? "enabled" : "disabled") + " for this session");
-    },function(error){
-        logError("Failed to fetch crashlytics data collection session value", error);
     });
 }
 
