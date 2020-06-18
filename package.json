@@ -8,9 +8,9 @@
   "dependencies": {
     "cordova-android": "^8.1.0",
     "cordova-custom-config": "^5.1.0",
-    "cordova-ios": "^5.0.1",
-    "cordova-plugin-androidx": "^1.0.2",
-    "cordova-plugin-androidx-adapter": "^1.1.0",
+    "cordova-ios": "^6.0.0",
+    "cordova-plugin-androidx": "^2.0.0",
+    "cordova-plugin-androidx-adapter": "^1.1.1",
     "cordova-plugin-dialogs": "git+https://github.com/dpa99c/cordova-plugin-dialogs.git",
     "cordova-plugin-enable-multidex": "^0.2.0",
     "cordova-plugin-firebasex": "git+https://github.com/dpa99c/cordova-plugin-firebasex.git",
@@ -22,15 +22,17 @@
       "cordova-plugin-whitelist": {},
       "cordova-plugin-firebasex": {
         "ANDROID_ICON_ACCENT": "#FF11FF11",
+        "IOS_STRIP_DEBUG": "true",
         "FIREBASE_ANALYTICS_COLLECTION_ENABLED": "false",
         "FIREBASE_PERFORMANCE_COLLECTION_ENABLED": "false",
         "FIREBASE_CRASHLYTICS_COLLECTION_ENABLED": "false",
-        "SETUP_RECAPTCHA_VERIFICATION": "true",
-        "IOS_STRIP_DEBUG": "true"
+        "SETUP_RECAPTCHA_VERIFICATION": "true"
       },
       "cordova-custom-config": {},
       "cordova-plugin-dialogs": {},
-      "cordova-plugin-enable-multidex": {}
+      "cordova-plugin-enable-multidex": {},
+      "cordova-plugin-androidx": {},
+      "cordova-plugin-androidx-adapter": {}
     },
     "platforms": [
       "android",
