@@ -428,6 +428,10 @@ function sendCrash(){
     FirebasePlugin.sendCrash();
 }
 
+function sendNdkCrash(){
+    helloc.causeCrash();
+}
+
 // Analytics
 function setAnalyticsCollectionEnabled(){
     FirebasePlugin.setAnalyticsCollectionEnabled(true, function(){
