@@ -1,0 +1,29 @@
+{
+  "name": "topic_notification_custom_sound",
+  "topic": "my_topic",
+  "notification": {
+    "body": "Notification for my_topic",
+    "title": "Topic Notification"
+  },
+  "android": {
+    "collapse_key": "a",
+    "priority": "normal",
+    "ttl": "3600s",
+    "notification": {
+      "channel_id": "my_channel_id",
+      "sound": "msn"
+    }
+  },
+  "apns": {
+    "payload": {
+      "aps": {
+        "badge": 1,
+        "sound": "msn"
+      }
+    }
+  },
+  "data": {
+    "notification_foreground": "true",
+    "key_1": "Data for key one"
+  }
+}
