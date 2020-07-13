@@ -18,18 +18,19 @@ var init = function() {
             reject('--message argument not found - please specify as --message={message_file_name.json}');
             return
         }
-        var isTopicMessage = messageFileName.match('topic');
-
-        deviceToken = args['token'];
-        if(!deviceToken && !isTopicMessage){
-            reject('--token argument not found - please specify as --token={device_token}');
-            return;
-        }
 
         try{
             message = require('../messages/'+messageFileName);
         }catch(e){
             reject(messageFileName+'  not found in messages/ - please use the --message parameter to specify a message file in the messages/ directory');
+            return;
+        }
+
+        var isTopicMessage = JSON.stringify(message).match('topic');
+
+        deviceToken = args['token'];
+        if(!deviceToken && !isTopicMessage){
+            reject('--token argument not found - please specify as --token={device_token}');
             return;
         }
 
