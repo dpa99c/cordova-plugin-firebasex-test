@@ -1,0 +1,17 @@
+{
+  "name": "ios_notification_actionable",
+  "notification": {
+    "body": "With custom buttons",
+    "title": "iOS Actionable Notification"
+  },
+  "apns": {
+    "payload": {
+      "aps": {
+        "category": "news"
+      }
+    }
+  },
+  "data": {
+    "notification_foreground": "true"
+  }
+}

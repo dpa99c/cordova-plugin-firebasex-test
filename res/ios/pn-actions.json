@@ -1,0 +1,15 @@
+{
+  "PushNotificationActions": [
+    {
+      "category": "news",
+      "actions": [
+        {
+          "id": "read", "title": "Read"
+        },
+        {
+          "id": "skip", "title": "Skip"
+        }
+      ]
+    }
+  ]
+}
