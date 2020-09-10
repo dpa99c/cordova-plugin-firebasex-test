@@ -56,12 +56,19 @@
     <button onclick="stopTrace()">Stop trace</button>
 
     <h3>Remote config</h3>
+    <button onclick="getInfo()">Get Info</button>
     <button onclick="fetch()">Fetch</button>
-    <button id="remote_activate" disabled="disabled" onclick="activateFetched()">Activate</button>
-    <button id="remote_getValue" disabled="disabled" onclick="getValue()">Get value</button>
+    <button onclick="activateFetched()">Activate</button>
+    <button onclick="fetchAndActivate()">Fetch & Activate</button>
+    <button onclick="resetRemoteConfig()">Reset remote config</button>
+    <button onclick="getAll()">Get all values</button>
+    <button onclick="getStringValue()">Get string value</button>
+    <button onclick="getBooleanValue()">Get boolean value</button>
+    <button onclick="getIntegerValue()">Get integer value</button>
+    <button onclick="getFloatValue()">Get float value</button>
+    <button onclick="getJsonValue()">Get JSON value</button>
 
     <h3>Authentication</h3>
-
     <button onclick="createUserWithEmailAndPassword()">Create account with email/password</button>
     <button onclick="signInUserWithEmailAndPassword()">Sign in with email/password</button>
     <button onclick="signInUserWithCustomToken()">Sign in with custom token</button>

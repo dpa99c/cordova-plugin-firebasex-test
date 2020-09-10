@@ -544,10 +544,19 @@ function stopTrace(){
 }
 
 // Remote config
+function getInfo(){
+    FirebasePlugin.getInfo(function(info){
+        log("Got remote config info: "+JSON.stringify(info));
+        console.dir(info);
+    },function(error){
+        logError("Failed to get remote config info", error);
+    });
+}
+
+var cacheExpirationSeconds = 10;
 function fetch(){
-    FirebasePlugin.fetch(function(){
+    FirebasePlugin.fetch(cacheExpirationSeconds, function(){
         log("Remote config fetched");
-        $('#remote_activate').removeAttr('disabled');
     },function(error){
         logError("Failed to fetch remote config", error);
     });
@@ -556,22 +565,90 @@ function fetch(){
 function activateFetched(){
     FirebasePlugin.activateFetched(function(activated){
         log("Remote config was activated: " + activated);
-        if(activated){
-            $('#remote_getValue').removeAttr('disabled');
-        }
     },function(error){
         logError("Failed to activate remote config", error);
     });
 }
 
-function getValue(){
-    FirebasePlugin.getValue("background_color", function(value){
-        log("Get remote config activated: " + value);
-        if(value){
-            $('body').css('background-color', value);
-        }
+function fetchAndActivate(){
+    FirebasePlugin.fetchAndActivate(function(activated){
+        log("Remote config was activated: " + activated);
     },function(error){
         logError("Failed to activate remote config", error);
+    });
+}
+
+function resetRemoteConfig(){
+    FirebasePlugin.resetRemoteConfig(function(){
+        log("Successfully reset remote config");
+    },function(error){
+        logError("Failed to reset remote config", error);
+    });
+}
+
+function getAll(){
+    FirebasePlugin.getAll(function(values){
+        console.dir(values);
+        log("Got all values from remote config:");
+        for(var key in values){
+            log(key + " = " + values[key]);
+        }
+    },function(error){
+        logError("Failed to get all values from remote config", error);
+    });
+}
+
+function getStringValue(){
+    FirebasePlugin.getValue("string_value", function(value){
+        value = value.toString();
+        console.dir(value);
+        log("Got string value of type "+typeof value+ " from remote config: " + value);
+    },function(error){
+        logError("Failed to get string value from remote config", error);
+    });
+}
+
+function getBooleanValue(){
+    FirebasePlugin.getValue("boolean_value", function(value){
+        value = (value === 'true');
+        console.dir(value);
+        log("Got boolean value of type "+typeof value+ " from remote config: " + value);
+    },function(error){
+        logError("Failed to get boolean value from remote config", error);
+    });
+}
+
+function getIntegerValue(){
+    FirebasePlugin.getValue("integer_value", function(value){
+        value = parseInt(value);
+        console.dir(value);
+        log("Got integer value of type "+typeof value+ " from remote config: " + value);
+    },function(error){
+        logError("Failed to get integer value from remote config", error);
+    });
+}
+
+function getFloatValue(){
+    FirebasePlugin.getValue("float_value", function(value){
+        value = parseFloat(value);
+        console.dir(value);
+        log("Got float value of type "+typeof value+ " from remote config: " + value);
+    },function(error){
+        logError("Failed to get float value from remote config", error);
+    });
+}
+
+function getJsonValue(){
+    FirebasePlugin.getValue("json_value", function(value){
+        try{
+            value = JSON.parse(value);
+        }catch(e){
+            return logError("Failed to parse JSON value from remote config", e.message);
+        }
+        console.dir(value);
+        log("Got JSON value of type "+typeof value+ " from remote config: " + JSON.stringify(value));
+    },function(error){
+        logError("Failed to get JSON value from remote config", error);
     });
 }
 
