@@ -403,6 +403,14 @@ function setCrashlyticsUserId(){
     });
 }
 
+function setCrashlyticsCustomKey(){
+    FirebasePlugin.setCrashlyticsCustomKey("my_key", "foo", function(){
+        log("Set crashlytics custom key");
+    },function(error){
+        logError("Failed to set crashlytics custom key", error);
+    });
+}
+
 function sendNonFatal(){
     FirebasePlugin.logError("This is a non-fatal error", function(){
         log("Sent non-fatal error");
@@ -430,6 +438,14 @@ function sendCrash(){
 
 function sendNdkCrash(){
     helloc.causeCrash();
+}
+
+function didCrashOnPreviousExecution(){
+    FirebasePlugin.didCrashOnPreviousExecution(function(didCrashOnPreviousExecution){
+        log("Did crash on previous execution: "+didCrashOnPreviousExecution);
+    }, function(error){
+        logError("Failed to check crash on previous execution:" + error);
+    });
 }
 
 // Analytics
