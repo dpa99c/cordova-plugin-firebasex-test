@@ -990,6 +990,10 @@ function fetchFirestoreCollection(){
 
 var documentListenerId;
 function listenToDocument(){
+    if(documentListenerId){
+        return logError("Document listener already exists");
+    }
+
     FirebasePlugin.listenToDocumentInFirestoreCollection(function(documentEvent){
         if(documentEvent.eventType === 'id'){
             documentListenerId = documentEvent.id;
@@ -1018,6 +1022,10 @@ function unlistenToDocument(){
 
 var collectionListenerId;
 function listenToCollection(){
+    if(collectionListenerId){
+        return logError("Collection listener already exists");
+    }
+
     FirebasePlugin.listenToFirestoreCollection(function(collectionEvent){
         if(collectionEvent.eventType === 'id'){
             collectionListenerId = collectionEvent.id;
