@@ -987,3 +987,59 @@ function fetchFirestoreCollection(){
         logError("Failed to fetch Firestore collection", error);
     });
 }
+
+var documentListenerId;
+function listenToDocument(){
+    FirebasePlugin.listenToDocumentInFirestoreCollection(function(documentEvent){
+        if(documentEvent.eventType === 'id'){
+            documentListenerId = documentEvent.id;
+            log("Listening for document changes in Firestore with id="+documentListenerId);
+        }else{
+            log("Document change detected: document="+firestoreDocumentId+"; collection="+firestoreCollection+" changes="+JSON.stringify(documentEvent));
+            console.dir(documentEvent);
+        }
+    }, function(error) {
+        logError("Failed to listen for changes to document in Firestore", error);
+    }, firestoreDocumentId, firestoreCollection, true);
+}
+
+function unlistenToDocument(){
+    if(!documentListenerId){
+        return logError("No document listener currently exists");
+    }
+
+    FirebasePlugin.removeFirestoreListener(function(){
+        documentListenerId = null;
+        log("Stopped listening for document changes in Firestore");
+    }, function(error) {
+        logError("Failed to stop listening for changes to document in Firestore", error);
+    }, documentListenerId);
+}
+
+var collectionListenerId;
+function listenToCollection(){
+    FirebasePlugin.listenToFirestoreCollection(function(collectionEvent){
+        if(collectionEvent.eventType === 'id'){
+            collectionListenerId = collectionEvent.id;
+            log("Listening for collection changes in Firestore with id="+collectionListenerId);
+        }else{
+            log("Collection change detected: collection="+firestoreCollection+" changes="+JSON.stringify(collectionEvent));
+            console.dir(collectionEvent);
+        }
+    }, function(error) {
+        logError("Failed to listen for changes to collection in Firestore", error);
+    }, firestoreCollection, null, true);
+}
+
+function unlistenToCollection(){
+    if(!collectionListenerId){
+        return logError("No collection listener currently exists");
+    }
+
+    FirebasePlugin.removeFirestoreListener(function(){
+        collectionListenerId = null;
+        log("Stopped listening for collection changes in Firestore");
+    }, function(error) {
+        logError("Failed to stop listening for changes to collection in Firestore", error);
+    }, collectionListenerId);
+}
