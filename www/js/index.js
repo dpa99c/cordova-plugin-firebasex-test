@@ -915,6 +915,20 @@ function signInUserWithEmailAndPassword(){
     });
 }
 
+function authenticateUserWithEmailAndPassword(){
+    promptUserForInput("Enter email", "Enter email address", function(email){
+        promptUserForInput("Enter password", "Enter account password", function(password){
+            FirebasePlugin.authenticateUserWithEmailAndPassword(email, password, function(credential) {
+                authCredential = credential;
+                log("Successfully authenticated with email/password");
+            }, function(error) {
+                logError("Failed to authenticate with email/password", error);
+            });
+        });
+    });
+}
+
+
 function signInUserWithCustomToken(){
     promptUserForInput("Enter token", "Enter custom token", function(token){
         FirebasePlugin.signInUserWithCustomToken(token, function(){
