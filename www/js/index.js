@@ -553,6 +553,32 @@ function getInfo(){
     });
 }
 
+var fetchTimeout = 60;
+var minimumFetchInterval = 0;
+function setConfigSettings(){
+    FirebasePlugin.setConfigSettings(fetchTimeout, minimumFetchInterval,function(){
+        log("Set remote config settings");
+    },function(error){
+        logError("Failed to set remote config settings", error);
+    });
+}
+
+var defaults = {
+    float_value: 2.1,
+    json_value: {"some": "json"},
+    integer_value: 2,
+    boolean_value: false,
+    string_value: "not set"
+};
+function setDefaults(){
+    FirebasePlugin.setDefaults(defaults,function(){
+        log("Set remote config defaults");
+    },function(error){
+        logError("Failed to set remote config defaults", error);
+    });
+}
+
+
 var cacheExpirationSeconds = 10;
 function fetch(){
     FirebasePlugin.fetch(cacheExpirationSeconds, function(){
