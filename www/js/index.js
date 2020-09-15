@@ -1018,9 +1018,10 @@ function fetchDocumentInFirestoreCollection(){
 
 
 function fetchFirestoreCollection(){
-    var filters = [];
+    var filters = [
+        ['where', 'an_integer', '==', 1, 'integer']
+    ];
     FirebasePlugin.fetchFirestoreCollection(firestoreCollection, filters, function(data){
-
         log("Successfully fetched Firestore collection: " + JSON.stringify(data));
         console.dir(data);
     }, function(error) {
