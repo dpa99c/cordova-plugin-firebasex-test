@@ -4,10 +4,13 @@
       "category": "news",
       "actions": [
         {
-          "id": "read", "title": "Read"
+          "id": "read", "title": "Read", "foreground": true
         },
         {
           "id": "skip", "title": "Skip"
+        },
+        {
+          "id": "delete", "title": "Delete", "destructive": true
         }
       ]
     }
