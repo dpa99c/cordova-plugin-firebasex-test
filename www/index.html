@@ -32,11 +32,13 @@
     <button onclick="setCrashlyticsCollectionEnabled(false)">Disable crashlytics data collection</button>
     <button onclick="isCrashlyticsCollectionEnabled()">Is Crashlytics collection enabled?</button>
     <button onclick="setCrashlyticsUserId()">Set crashlytics user ID</button>
+    <button onclick="setCrashlyticsCustomKey()">Set crashlytics custom key</button>
     <button onclick="sendNonFatal()">Log non-fatal error</button>
     <button onclick="causeJsException()">Raise JS exception</button>
     <button onclick="logCrashMessage()">Log crash message</button>
     <button onclick="sendCrash()">Send crash</button>
     <button onclick="sendNdkCrash()" class="android-only">Send NDK crash</button>
+    <button onclick="didCrashOnPreviousExecution()">Crashed on previous execution?</button>
 
     <h3>Analytics</h3>
     <button onclick="setAnalyticsCollectionEnabled()">Enable analytics data collection</button>
@@ -54,14 +56,24 @@
     <button onclick="stopTrace()">Stop trace</button>
 
     <h3>Remote config</h3>
+    <button onclick="getInfo()">Get Info</button>
+    <button onclick="setConfigSettings()">Set config settings</button>
+    <button onclick="setDefaults()">Set defaults</button>
     <button onclick="fetch()">Fetch</button>
-    <button id="remote_activate" disabled="disabled" onclick="activateFetched()">Activate</button>
-    <button id="remote_getValue" disabled="disabled" onclick="getValue()">Get value</button>
+    <button onclick="activateFetched()">Activate</button>
+    <button onclick="fetchAndActivate()">Fetch & Activate</button>
+    <button onclick="resetRemoteConfig()">Reset remote config</button>
+    <button onclick="getAll()">Get all values</button>
+    <button onclick="getStringValue()">Get string value</button>
+    <button onclick="getBooleanValue()">Get boolean value</button>
+    <button onclick="getIntegerValue()">Get integer value</button>
+    <button onclick="getFloatValue()">Get float value</button>
+    <button onclick="getJsonValue()">Get JSON value</button>
 
     <h3>Authentication</h3>
-
     <button onclick="createUserWithEmailAndPassword()">Create account with email/password</button>
     <button onclick="signInUserWithEmailAndPassword()">Sign in with email/password</button>
+    <button onclick="authenticateUserWithEmailAndPassword()">Authenticate with email/password</button>
     <button onclick="signInUserWithCustomToken()">Sign in with custom token</button>
     <button onclick="signInUserAnonymously()">Sign in anonymously</button>
 
@@ -101,6 +113,10 @@
     <button onclick="documentExistsInFirestoreCollection()">Doc exists in Firestore</button>
     <button onclick="fetchDocumentInFirestoreCollection()">Fetch doc from Firestore</button>
     <button onclick="fetchFirestoreCollection()">Fetch collection from Firestore</button>
+    <button onclick="listenToDocument()">Listen to document</button>
+    <button onclick="unlistenToDocument()">Unlisten to document</button>
+    <button onclick="listenToCollection()">Listen to collection</button>
+    <button onclick="unlistenToCollection()">Unlisten to collection</button>
 </div>
 
 

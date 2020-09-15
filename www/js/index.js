@@ -403,6 +403,14 @@ function setCrashlyticsUserId(){
     });
 }
 
+function setCrashlyticsCustomKey(){
+    FirebasePlugin.setCrashlyticsCustomKey("my_key", "foo", function(){
+        log("Set crashlytics custom key");
+    },function(error){
+        logError("Failed to set crashlytics custom key", error);
+    });
+}
+
 function sendNonFatal(){
     FirebasePlugin.logError("This is a non-fatal error", function(){
         log("Sent non-fatal error");
@@ -430,6 +438,14 @@ function sendCrash(){
 
 function sendNdkCrash(){
     helloc.causeCrash();
+}
+
+function didCrashOnPreviousExecution(){
+    FirebasePlugin.didCrashOnPreviousExecution(function(didCrashOnPreviousExecution){
+        log("Did crash on previous execution: "+didCrashOnPreviousExecution);
+    }, function(error){
+        logError("Failed to check crash on previous execution:" + error);
+    });
 }
 
 // Analytics
@@ -528,10 +544,45 @@ function stopTrace(){
 }
 
 // Remote config
+function getInfo(){
+    FirebasePlugin.getInfo(function(info){
+        log("Got remote config info: "+JSON.stringify(info));
+        console.dir(info);
+    },function(error){
+        logError("Failed to get remote config info", error);
+    });
+}
+
+var fetchTimeout = 60;
+var minimumFetchInterval = 0;
+function setConfigSettings(){
+    FirebasePlugin.setConfigSettings(fetchTimeout, minimumFetchInterval,function(){
+        log("Set remote config settings");
+    },function(error){
+        logError("Failed to set remote config settings", error);
+    });
+}
+
+var defaults = {
+    float_value: 2.1,
+    json_value: {"some": "json"},
+    integer_value: 2,
+    boolean_value: false,
+    string_value: "not set"
+};
+function setDefaults(){
+    FirebasePlugin.setDefaults(defaults,function(){
+        log("Set remote config defaults");
+    },function(error){
+        logError("Failed to set remote config defaults", error);
+    });
+}
+
+
+var cacheExpirationSeconds = 10;
 function fetch(){
-    FirebasePlugin.fetch(function(){
+    FirebasePlugin.fetch(cacheExpirationSeconds, function(){
         log("Remote config fetched");
-        $('#remote_activate').removeAttr('disabled');
     },function(error){
         logError("Failed to fetch remote config", error);
     });
@@ -540,22 +591,90 @@ function fetch(){
 function activateFetched(){
     FirebasePlugin.activateFetched(function(activated){
         log("Remote config was activated: " + activated);
-        if(activated){
-            $('#remote_getValue').removeAttr('disabled');
-        }
     },function(error){
         logError("Failed to activate remote config", error);
     });
 }
 
-function getValue(){
-    FirebasePlugin.getValue("background_color", function(value){
-        log("Get remote config activated: " + value);
-        if(value){
-            $('body').css('background-color', value);
-        }
+function fetchAndActivate(){
+    FirebasePlugin.fetchAndActivate(function(activated){
+        log("Remote config was activated: " + activated);
     },function(error){
         logError("Failed to activate remote config", error);
+    });
+}
+
+function resetRemoteConfig(){
+    FirebasePlugin.resetRemoteConfig(function(){
+        log("Successfully reset remote config");
+    },function(error){
+        logError("Failed to reset remote config", error);
+    });
+}
+
+function getAll(){
+    FirebasePlugin.getAll(function(values){
+        console.dir(values);
+        log("Got all values from remote config:");
+        for(var key in values){
+            log(key + " = " + values[key]);
+        }
+    },function(error){
+        logError("Failed to get all values from remote config", error);
+    });
+}
+
+function getStringValue(){
+    FirebasePlugin.getValue("string_value", function(value){
+        value = value.toString();
+        console.dir(value);
+        log("Got string value of type "+typeof value+ " from remote config: " + value);
+    },function(error){
+        logError("Failed to get string value from remote config", error);
+    });
+}
+
+function getBooleanValue(){
+    FirebasePlugin.getValue("boolean_value", function(value){
+        value = (value === 'true');
+        console.dir(value);
+        log("Got boolean value of type "+typeof value+ " from remote config: " + value);
+    },function(error){
+        logError("Failed to get boolean value from remote config", error);
+    });
+}
+
+function getIntegerValue(){
+    FirebasePlugin.getValue("integer_value", function(value){
+        value = parseInt(value);
+        console.dir(value);
+        log("Got integer value of type "+typeof value+ " from remote config: " + value);
+    },function(error){
+        logError("Failed to get integer value from remote config", error);
+    });
+}
+
+function getFloatValue(){
+    FirebasePlugin.getValue("float_value", function(value){
+        value = parseFloat(value);
+        console.dir(value);
+        log("Got float value of type "+typeof value+ " from remote config: " + value);
+    },function(error){
+        logError("Failed to get float value from remote config", error);
+    });
+}
+
+function getJsonValue(){
+    FirebasePlugin.getValue("json_value", function(value){
+        try{
+            value = JSON.parse(value);
+        }catch(e){
+            return logError("Failed to parse JSON value from remote config", e.message);
+        }
+        console.dir(value);
+        log("Got JSON value of type "+typeof value+ " from remote config: " + JSON.stringify(value));
+    },function(error){
+        logError("Failed to get JSON value from remote config", error);
     });
 }
 
@@ -796,6 +915,20 @@ function signInUserWithEmailAndPassword(){
     });
 }
 
+function authenticateUserWithEmailAndPassword(){
+    promptUserForInput("Enter email", "Enter email address", function(email){
+        promptUserForInput("Enter password", "Enter account password", function(password){
+            FirebasePlugin.authenticateUserWithEmailAndPassword(email, password, function(credential) {
+                authCredential = credential;
+                log("Successfully authenticated with email/password");
+            }, function(error) {
+                logError("Failed to authenticate with email/password", error);
+            });
+        });
+    });
+}
+
+
 function signInUserWithCustomToken(){
     promptUserForInput("Enter token", "Enter custom token", function(token){
         FirebasePlugin.signInUserWithCustomToken(token, function(){
@@ -885,12 +1018,77 @@ function fetchDocumentInFirestoreCollection(){
 
 
 function fetchFirestoreCollection(){
-    var filters = [];
+    var filters = [
+        ['where', 'an_integer', '==', 1, 'integer']
+    ];
     FirebasePlugin.fetchFirestoreCollection(firestoreCollection, filters, function(data){
-
         log("Successfully fetched Firestore collection: " + JSON.stringify(data));
         console.dir(data);
     }, function(error) {
         logError("Failed to fetch Firestore collection", error);
     });
+}
+
+var documentListenerId;
+function listenToDocument(){
+    if(documentListenerId){
+        return logError("Document listener already exists");
+    }
+
+    FirebasePlugin.listenToDocumentInFirestoreCollection(function(documentEvent){
+        if(documentEvent.eventType === 'id'){
+            documentListenerId = documentEvent.id;
+            log("Listening for document changes in Firestore with id="+documentListenerId);
+        }else{
+            log("Document change detected: document="+firestoreDocumentId+"; collection="+firestoreCollection+" changes="+JSON.stringify(documentEvent));
+            console.dir(documentEvent);
+        }
+    }, function(error) {
+        logError("Failed to listen for changes to document in Firestore", error);
+    }, firestoreDocumentId, firestoreCollection, true);
+}
+
+function unlistenToDocument(){
+    if(!documentListenerId){
+        return logError("No document listener currently exists");
+    }
+
+    FirebasePlugin.removeFirestoreListener(function(){
+        documentListenerId = null;
+        log("Stopped listening for document changes in Firestore");
+    }, function(error) {
+        logError("Failed to stop listening for changes to document in Firestore", error);
+    }, documentListenerId);
+}
+
+var collectionListenerId;
+function listenToCollection(){
+    if(collectionListenerId){
+        return logError("Collection listener already exists");
+    }
+
+    FirebasePlugin.listenToFirestoreCollection(function(collectionEvent){
+        if(collectionEvent.eventType === 'id'){
+            collectionListenerId = collectionEvent.id;
+            log("Listening for collection changes in Firestore with id="+collectionListenerId);
+        }else{
+            log("Collection change detected: collection="+firestoreCollection+" changes="+JSON.stringify(collectionEvent));
+            console.dir(collectionEvent);
+        }
+    }, function(error) {
+        logError("Failed to listen for changes to collection in Firestore", error);
+    }, firestoreCollection, null, true);
+}
+
+function unlistenToCollection(){
+    if(!collectionListenerId){
+        return logError("No collection listener currently exists");
+    }
+
+    FirebasePlugin.removeFirestoreListener(function(){
+        collectionListenerId = null;
+        log("Stopped listening for collection changes in Firestore");
+    }, function(error) {
+        logError("Failed to stop listening for changes to collection in Firestore", error);
+    }, collectionListenerId);
 }
