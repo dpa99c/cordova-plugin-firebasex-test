@@ -10,7 +10,7 @@
     "cordova-plugin-androidx-adapter": "^1.1.1",
     "cordova-plugin-dialogs": "git+https://github.com/dpa99c/cordova-plugin-dialogs.git",
     "cordova-plugin-enable-multidex": "^0.2.0",
-    "cordova-plugin-firebasex": "git+https://github.com/dpa99c/cordova-plugin-firebasex.git#dev",
+    "cordova-plugin-firebasex": "*",
     "cordova-plugin-hello-c": "^1.1.1",
     "cordova-plugin-whitelist": "^1.3.3"
   },
