@@ -22,6 +22,9 @@
     <platform name="android">
         <preference name="AndroidXEnabled" value="true" />
 
+        <resource-file src="res/android/build-extras.gradle" target="app/build-extras.gradle" />
+        <resource-file src="res/android/gradle.properties" target="gradle.properties" />
+
         <resource-file src="res/android/raw/blackberry.mp3" target="app/src/main/res/raw/blackberry.mp3" />
         <resource-file src="res/android/raw/msn.mp3" target="app/src/main/res/raw/msn.mp3" />
         <resource-file src="res/android/raw/crystal.mp3" target="app/src/main/res/raw/crystal.mp3" />
