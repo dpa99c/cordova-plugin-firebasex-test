@@ -19,6 +19,7 @@
       "cordova-plugin-whitelist": {},
       "cordova-plugin-firebasex": {
         "ANDROID_ICON_ACCENT": "#FF11FF11",
+        "ANDROID_FIREBASE_PERFORMANCE_MONITORING": "false",
         "IOS_STRIP_DEBUG": "true",
         "FIREBASE_ANALYTICS_COLLECTION_ENABLED": "false",
         "FIREBASE_PERFORMANCE_COLLECTION_ENABLED": "false",
