@@ -136,6 +136,10 @@ var initIos = function(){
     }, function(error) {
         logError("Failed to receive APNS token", error);
     });
+
+    FirebasePlugin.registerInstallationIdChangeListener(function(installationId){
+        log("Installation ID changed - new ID: " + installationId);
+    });
 };
 
 var initAndroid = function(){
