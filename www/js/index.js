@@ -1092,3 +1092,65 @@ function unlistenToCollection(){
         logError("Failed to stop listening for changes to collection in Firestore", error);
     }, collectionListenerId);
 }
+
+/**
+ * Functions
+ */
+function callHttpsFunction(){
+    var functionName = "multiply";
+    var args = {
+        a: 2,
+        b: 3
+    };
+    FirebasePlugin.functionsHttpsCallable(functionName, args, function(result){
+        log("Successfully called function - result: "+JSON.stringify(result));
+    }, function(error){
+        logError("Error calling function: "+JSON.stringify(error));
+    });
+}
+
+/**
+ * Installations
+ */
+function getInstallationId(){
+    FirebasePlugin.getInstallationId(function(id){
+        log("Got installation ID: " + id);
+    }, function(error) {
+        logError("Failed to get installation ID", error);
+    });
+}
+
+function getInstallationToken(){
+    FirebasePlugin.getInstallationToken(function(token){
+        log("Got installation token: " + token);
+
+        // Decode JWT
+        try{
+            var payload = parseJwt(token);
+            log("Token payload: " + JSON.stringify(payload));
+        }catch(e){
+            logError("Exception in decoded installation JWT: "+e.message);
+        }
+    }, function(error) {
+        logError("Failed to get installation token", error);
+    });
+}
+
+//https://stackoverflow.com/a/38552302/777265
+function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+}
+
+function deleteInstallationId(){
+    FirebasePlugin.deleteInstallationId(function(){
+        log("Deleted installation ID");
+    }, function(error) {
+        logError("Failed to delete installation ID", error);
+    });
+}
