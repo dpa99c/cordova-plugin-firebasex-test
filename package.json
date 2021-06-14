@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "cordova-android": "^9.0.0",
-    "cordova-ios": "^6.1.1",
+    "cordova-ios": "^6.2.0",
     "google-auth-library": "^4.2.5"
   },
   "scripts": {
