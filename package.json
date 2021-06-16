@@ -1,7 +1,7 @@
 {
   "name": "uk.co.workingedge.firebase.test",
   "displayName": "FirebaseTest",
-  "version": "12.1.0",
+  "version": "13.0.0",
   "description": "Test project for cordova-plugin-firebasex",
   "author": "Dave Alden",
   "license": "Apache-2.0",
