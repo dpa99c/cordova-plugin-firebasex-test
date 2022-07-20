@@ -24,7 +24,9 @@
         "FIREBASE_CRASHLYTICS_COLLECTION_ENABLED": "false",
         "FIREBASE_FCM_AUTOINIT_ENABLED": "false",
         "SETUP_RECAPTCHA_VERIFICATION": "true",
-        "IOS_ENABLE_APPLE_SIGNIN": "true"
+        "IOS_ENABLE_APPLE_SIGNIN": "true",
+        "IOS_USE_PRECOMPILED_FIRESTORE_POD": "true",
+        "IOS_FIREBASE_SDK_VERSION": "9.1.0"
       },
       "cordova-custom-config": {},
       "cordova-plugin-dialogs": {},
