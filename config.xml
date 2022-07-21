@@ -22,6 +22,12 @@
     <platform name="android">
         <preference name="AndroidXEnabled" value="true" />
 
+        <!-- Build with SDK: Android 12 -->
+        <preference name="android-targetSdkVersion" value="32" />
+
+        <!-- Android 5.1 -->
+        <preference name="android-minSdkVersion" value="22" />
+
         <resource-file src="res/android/build-extras.gradle" target="app/build-extras.gradle" />
         <resource-file src="res/android/gradle.properties" target="gradle.properties" />
 
@@ -50,7 +56,9 @@
             <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/notification_icon" />
         </custom-config-file>
 
-        <resource-file src="res/android/values/colors.xml" target="app/src/main/res/values/colors.xml" />
+        <config-file target="app/src/main/res/values/colors.xml" parent="/resources">
+            <color name="background">#000000</color>
+        </config-file>
     </platform>
 
     <platform name="ios">
