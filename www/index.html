@@ -12,7 +12,14 @@
 <body>
 
 <h2>Firebasex Plugin Test</h2>
+
 <div id="ui">
+    <h3>OS</h3>
+    <p>Platform: <span id="device-platform"></span></p>
+    <p>Device runtime: <span id="device-version"></span> (API <span id="device-api-level"></span> / <span id="device-api-name"></span>)</p>
+    <p>Build SDK: API <span id="target-api-level"></span> / <span id="target-api-name"></span></p>
+    <p>Min SDK: API <span id="min-api-level"></span> / <span id="min-api-name"></span></p>
+
     <h3>Notifications</h3>
     <button onclick="clearNotifications()">Clear notifications</button>
     <button onclick="getID()">Get FCM ID</button>

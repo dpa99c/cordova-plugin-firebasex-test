@@ -51,6 +51,18 @@ function onDeviceReady(){
     $output = $('#log-output');
     log("deviceready");
 
+    $('#device-platform').text(cordova.platformId);
+    cordova.plugins.diagnostic.getDeviceOSVersion(function(details){
+        $('#device-version').text(details.version);
+        $('#device-api-level').text(details.apiLevel);
+        $('#device-api-name').text(details.apiName);
+    });
+    cordova.plugins.diagnostic.getBuildOSVersion(function(details){
+        $('#target-api-level').text(details.targetApiLevel);
+        $('#target-api-name').text(details.targetApiName);
+        $('#min-api-level').text(details.minApiLevel);
+        $('#min-api-name').text(details.minApiName);
+    });
 
     // Set global error handler to catch uncaught JS exceptions
     var appRootURL = window.location.href.replace("index.html",'');
