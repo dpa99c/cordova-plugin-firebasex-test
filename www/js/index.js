@@ -696,12 +696,11 @@ function getJsonValue(){
 
 
 // Authentication
-var authCredential;
+var authCredential,
+    awaitingSms = false,
+    timeoutInSeconds = 60;
+
 function verifyPhoneNumber(){
-
-    var timeoutInSeconds = 60;
-    var awaitingSms = false;
-
     var enterPhoneNumber = function(){
         promptUserForInput("Enter phone number", "Input full phone number including international dialing code", function(phoneNumber){
             if(!phoneNumber) return logError("Valid phone number must be entered");
@@ -722,7 +721,8 @@ function verifyPhoneNumber(){
     };
 
     var verify = function(phoneNumber){
-        var fakeVerificationCode = $('#mockInstantVerificationInput')[0].checked ? FAKE_SMS_VERIFICATION_CODE : null;
+        var fakeVerificationCode = $('#enterPhoneNumber .mockInstantVerificationInput')[0].checked ? FAKE_SMS_VERIFICATION_CODE : null,
+            requireSmsValidation = $('#enterPhoneNumber .requireSmsValidationInput')[0].checked;
 
         FirebasePlugin.verifyPhoneNumber(function(credential) {
             log("Received phone number verification credential");
@@ -743,7 +743,11 @@ function verifyPhoneNumber(){
         }, function(error) {
             awaitingSms = false;
             logError("Failed to verify phone number", error);
-        }, phoneNumber, timeoutInSeconds, fakeVerificationCode);
+        }, phoneNumber, {
+            timeOutDuration: timeoutInSeconds,
+            requireSmsValidation: requireSmsValidation,
+            fakeVerificationCode: fakeVerificationCode
+        });
     };
 
     var verified = function(credential){
@@ -751,6 +755,62 @@ function verifyPhoneNumber(){
     };
 
     enterPhoneNumber();
+}
+
+function enrollSecondAuthFactor(){
+    var phoneNumber, displayName, credential;
+
+    var enterPhoneNumber = function(){
+        promptUserForInput("Enter phone number", "Input full phone number including international dialing code", function(_phoneNumber){
+            if(!_phoneNumber) return logError("Valid phone number must be entered");
+            phoneNumber = _phoneNumber;
+            enroll();
+        });
+    };
+
+    var enterDisplayName = function(){
+        promptUserForInput("Enter display name", "Input name for second factor e.g. \"Work phone\" ", function(_displayName){
+            if(!_displayName) return logError("A display name must be entered");
+            displayName = _displayName;
+            enroll();
+        });
+    };
+
+    var enterVerificationCode = function(){
+        promptUserForInput("Enter verification code", "Input the code in the received verification SMS", function(verificationCode){
+            if(!verificationCode) return logError("Valid verification code must be entered");
+            credential.code = verificationCode;
+            enroll();
+        });
+    };
+
+    var enroll = function(){
+        if(!phoneNumber) return enterPhoneNumber();
+        if(!displayName) return enterDisplayName();
+
+        var fakeVerificationCode = $('#enrollSecondAuthFactor .mockInstantVerificationInput')[0].checked ? FAKE_SMS_VERIFICATION_CODE : null,
+            requireSmsValidation = $('#enrollSecondAuthFactor .requireSmsValidationInput')[0].checked;
+
+        FirebasePlugin.enrollSecondAuthFactor(function(result) {
+            if(typeof result === "object"){
+                log("Received enroll second factor credential - SMS code sent to device");
+                credential = result;
+                enterVerificationCode();
+            }else{
+                log("Second factor successfully enrolled");
+            }
+        }, function(error) {
+            logError("Failed to enroll second factor", error);
+        }, phoneNumber, {
+            displayName: displayName,
+            credential, credential,
+            timeOutDuration: timeoutInSeconds,
+            requireSmsValidation: requireSmsValidation,
+            fakeVerificationCode: fakeVerificationCode
+        });
+    };
+
+    enroll();
 }
 
 function authenticateUserWithGoogle(){

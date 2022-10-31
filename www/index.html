@@ -87,9 +87,13 @@
     <h4>Obtain auth credential</h4>
     <div id="enterPhoneNumber" class="section">
         <button onclick="verifyPhoneNumber()">Verify phone number</button>
-        <div id="mockInstantVerification">
-            <label>Mock instant verification</label>
-            <input id="mockInstantVerificationInput" type="checkbox" />
+        <div class="requireSmsValidation">
+            <label>Require SMS validation?</label>
+            <input class="requireSmsValidationInput" type="checkbox" />
+        </div>
+        <div class="mockInstantVerification">
+            <label>Mock instant verification?</label>
+            <input class="mockInstantVerificationInput" type="checkbox" />
         </div>
     </div>
     <button onclick="authenticateUserWithGoogle()">Authenticate with Google</button>
@@ -111,8 +115,19 @@
     <button onclick="sendUserPasswordResetEmail()">Send user password reset email</button>
     <button onclick="signOutUser()">Sign out user</button>
     <button onclick="deleteUser()">Delete user</button>
+    <div id="enrollSecondAuthFactor" class="section">
+        <button onclick="enrollSecondAuthFactor()">Enroll second factor</button>
+        <div class="requireSmsValidation">
+            <label>Require SMS validation?</label>
+            <input class="requireSmsValidationInput" type="checkbox" />
+        </div>
+        <div class="mockInstantVerification">
+            <label>Mock instant verification?</label>
+            <input class="mockInstantVerificationInput" type="checkbox" />
+        </div>
+    </div>
 
-    <h4>Firestore</h4>
+    <h3>Firestore</h3>
     <button onclick="addDocumentToFirestoreCollection()">Add doc to Firestore</button>
     <button onclick="setDocumentInFirestoreCollection()">Set doc in Firestore</button>
     <button onclick="updateDocumentInFirestoreCollection()">Update doc in Firestore</button>
@@ -125,10 +140,10 @@
     <button onclick="listenToCollection()">Listen to collection</button>
     <button onclick="unlistenToCollection()">Unlisten to collection</button>
 
-    <h4>Functions</h4>
+    <h3>Functions</h3>
     <button onclick="callHttpsFunction()">Call HTTPS function</button>
 
-    <h4>Installations</h4>
+    <h3>Installations</h3>
     <button onclick="getInstallationId()">Get installation ID</button>
     <button onclick="getInstallationToken()">Get installation token</button>
     <button onclick="deleteInstallationId()">Delete installation ID</button>
