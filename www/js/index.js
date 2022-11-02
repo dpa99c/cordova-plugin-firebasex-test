@@ -9,23 +9,31 @@ function prependLogMessage(message){
 }
 
 function log(msg, opts){
-    opts = opts || {};
+    if(typeof opts === 'undefined'){
+        opts = {};
+    }else if(typeof opts === 'boolean'){
+        opts = {showAlert: opts}
+    }
 
     opts.logLevel = opts.logLevel || "log";
     console[opts.logLevel](msg);
 
     opts.msg = msg;
     prependLogMessage(opts);
+    if(opts.showAlert){
+        alertUser(opts.logLevel, msg);
+    }
 }
 
-function logError(msg, error){
+function logError(msg, error, showAlert){
     if(typeof error === 'object'){
         msg += ': ' + JSON.stringify(error);
     }else if(typeof error === 'string'){
         msg += ': ' + error;
     }
     log(msg, {
-        logLevel: "error"
+        logLevel: "error",
+        showAlert: showAlert
     });
 }
 
@@ -159,11 +167,11 @@ function onDeviceReady(){
 
     checkNotificationPermission(false); // Check permission then get token
 
-    checkAutoInit();
-    isAnalyticsCollectionEnabled();
-    isPerformanceCollectionEnabled();
-    isCrashlyticsCollectionEnabled();
-    isUserSignedIn();
+    checkAutoInit(false);
+    isAnalyticsCollectionEnabled(false);
+    isPerformanceCollectionEnabled(false);
+    isCrashlyticsCollectionEnabled(false);
+    isUserSignedIn(false);
 
     // Platform-specific
     $('body').addClass(cordova.platformId);
@@ -262,7 +270,7 @@ var checkNotificationPermission = function(requested){
         if(hasPermission){
             log("Remote notifications permission granted");
             // Granted
-            getToken();
+            getToken(false);
         }else if(!requested){
             // Request permission
             log("Requesting remote notifications permission");
@@ -274,56 +282,56 @@ var checkNotificationPermission = function(requested){
     });
 };
 
-var checkAutoInit = function(){
+var checkAutoInit = function(showUser){
     FirebasePlugin.isAutoInitEnabled(function(enabled){
-        log("Auto init is " + (enabled ? "enabled" : "disabled"));
+        log("Auto init is " + (enabled ? "enabled" : "disabled"), showUser);
         $('body')
             .addClass('autoinit-' + (enabled ? 'enabled' : 'disabled'))
             .removeClass('autoinit-' + (enabled ? 'disabled' : 'enabled'));
     }, function(error) {
-        logError("Failed to check auto init", error);
+        logError("Failed to check auto init", error, true);
     });
 };
 
 var enableAutoInit = function(){
     FirebasePlugin.setAutoInitEnabled(true, function(){
-        log("Enabled auto init");
-        checkAutoInit();
+        log("Enabled auto init", true);
+        checkAutoInit(false);
     }, function(error) {
-        logError("Failed to enable auto init", error);
+        logError("Failed to enable auto init", error, true);
     });
 };
 
 var disableAutoInit = function(){
     FirebasePlugin.setAutoInitEnabled(false, function(){
-        log("Disabled auto init");
-        checkAutoInit();
+        log("Disabled auto init", true);
+        checkAutoInit(false);
     }, function(error) {
-        logError("Failed to disable auto init", error);
+        logError("Failed to disable auto init", erro, truer);
     });
 };
 
 var getID = function(){
     FirebasePlugin.getId(function(id){
-        log("Got FCM ID: " + id)
+        log("Got FCM ID: " + id, true)
     }, function(error) {
-        logError("Failed to get FCM ID", error);
+        logError("Failed to get FCM ID", error, true);
     });
 };
 
-var getToken = function(){
+var getToken = function(showAlert){
     FirebasePlugin.getToken(function(token){
-        log("Got FCM token: " + token)
+        log("Got FCM token: " + token, showAlert)
     }, function(error) {
-        logError("Failed to get FCM token", error);
+        logError("Failed to get FCM token", error, true);
     });
 };
 
 var getAPNSToken = function(){
     FirebasePlugin.getAPNSToken(function(token){
-        log("Got APNS token: " + token)
+        log("Got APNS token: " + token, true)
     }, function(error) {
-        logError("Failed to get APNS token", error);
+        logError("Failed to get APNS token", error, true);
     });
 };
 
@@ -368,33 +376,33 @@ var handleDataMessage = function(message){
 
 function clearNotifications(){
     FirebasePlugin.clearAllNotifications(function(){
-        log("Cleared all notifications");
+        log("Cleared all notifications", true);
     },function(error){
-        logError("Failed to clear notifications", error);
+        logError("Failed to clear notifications", error, true);
     });
 }
 
 function subscribe(){
     FirebasePlugin.subscribe("my_topic", function(){
-        log("Subscribed to topic");
+        log("Subscribed to topic", true);
     },function(error){
-        logError("Failed to subscribe to topic", error);
+        logError("Failed to subscribe to topic", error, true);
     });
 }
 
 function unsubscribe(){
     FirebasePlugin.unsubscribe("my_topic", function(){
-        log("Unsubscribed from topic");
+        log("Unsubscribed from topic", true);
     },function(error){
-        logError("Failed to unsubscribe from topic", error);
+        logError("Failed to unsubscribe from topic", error, true);
     });
 }
 
 function getBadgeNumber(){
     FirebasePlugin.getBadgeNumber(function(number){
-        log("Current badge number: "+number);
+        log("Current badge number: "+number, true);
     },function(error){
-        logError("Failed to get badge number", error);
+        logError("Failed to get badge number", error, true);
     });
 }
 
@@ -402,53 +410,53 @@ function incrementBadgeNumber(){
     FirebasePlugin.getBadgeNumber(function(current){
         var number = current+1;
         FirebasePlugin.setBadgeNumber(number, function(){
-            log("Set badge number to: "+number);
+            log("Set badge number to: "+number, true);
         },function(error){
-            logError("Failed to set badge number", error);
+            logError("Failed to set badge number", error, true);
         });
     },function(error){
-        logError("Failed to get badge number", error);
+        logError("Failed to get badge number", error, true);
     });
 }
 
 function clearBadgeNumber(){
     FirebasePlugin.setBadgeNumber(0, function(){
-        log("Cleared badge number");
+        log("Cleared badge number", true);
     },function(error){
-        logError("Failed to clear badge number", error);
+        logError("Failed to clear badge number", error, true);
     });
 }
 
 function unregister(){
     FirebasePlugin.unregister(function(){
-        log("Unregistered from Firebase");
+        log("Unregistered from Firebase", true);
     },function(error){
-        logError("Failed to unregister from Firebase", error);
+        logError("Failed to unregister from Firebase", error, true);
     });
 }
 
 // Crashlytics
 function setCrashlyticsCollectionEnabled(enabled){
     FirebasePlugin.setCrashlyticsCollectionEnabled(enabled, function(){
-        log("Crashlytics data collection has been " + (enabled ? "enabled" : "disabled"));
+        log("Crashlytics data collection has been " + (enabled ? "enabled" : "disabled"), true);
     },function(error){
-        logError("Failed to enable crashlytics data collection", error);
+        logError("Failed to enable crashlytics data collection", error, true);
     });
 }
 
-function isCrashlyticsCollectionEnabled(){
+function isCrashlyticsCollectionEnabled(showUser){
     FirebasePlugin.isCrashlyticsCollectionEnabled( function(enabled){
-        log("Crashlytics data collection setting is " + (enabled ? "enabled" : "disabled"));
+        log("Crashlytics data collection setting is " + (enabled ? "enabled" : "disabled"), showUser);
     },function(error){
-        logError("Failed to fetch crashlytics data collection setting", error);
+        logError("Failed to fetch crashlytics data collection setting", error, true);
     });
 }
 
 function setCrashlyticsUserId(){
     FirebasePlugin.setCrashlyticsUserId("crashlytics_user_id", function(){
-        log("Set crashlytics user ID");
+        log("Set crashlytics user ID", true);
     },function(error){
-        logError("Failed to set crashlytics user ID", error);
+        logError("Failed to set crashlytics user ID", error, true);
     });
 }
 
@@ -462,9 +470,9 @@ function setCrashlyticsCustomKey(){
 
 function sendNonFatal(){
     FirebasePlugin.logError("This is a non-fatal error", function(){
-        log("Sent non-fatal error");
+        log("Sent non-fatal error", true);
     },function(error){
-        logError("Failed to send non-fatal error", error);
+        logError("Failed to send non-fatal error", error, true);
     });
 }
 
@@ -477,7 +485,7 @@ function logCrashMessage(){
     FirebasePlugin.logMessage("A custom message about this crash", function(){
         console.log("Logged crash message - it will be sent with the next crash");
     },function(error){
-        logError("Failed to log crash message", error);
+        logError("Failed to log crash message", error, true);
     });
 }
 
@@ -491,26 +499,26 @@ function sendNdkCrash(){
 
 function didCrashOnPreviousExecution(){
     FirebasePlugin.didCrashOnPreviousExecution(function(didCrashOnPreviousExecution){
-        log("Did crash on previous execution: "+didCrashOnPreviousExecution);
+        log("Did crash on previous execution: "+didCrashOnPreviousExecution, true);
     }, function(error){
-        logError("Failed to check crash on previous execution:" + error);
+        logError("Failed to check crash on previous execution:" + error, true);
     });
 }
 
 // Analytics
 function setAnalyticsCollectionEnabled(){
     FirebasePlugin.setAnalyticsCollectionEnabled(true, function(){
-        log("Enabled analytics data collection");
+        log("Enabled analytics data collection", true);
     },function(error){
-        logError("Failed to enable analytics data collection", error);
+        logError("Failed to enable analytics data collection", error, true);
     });
 }
 
-function isAnalyticsCollectionEnabled(){
+function isAnalyticsCollectionEnabled(showUser){
     FirebasePlugin.isAnalyticsCollectionEnabled( function(enabled){
-        log("Analytics data collection setting is " + (enabled ? "enabled" : "disabled"));
+        log("Analytics data collection setting is " + (enabled ? "enabled" : "disabled"), showUser);
     },function(error){
-        logError("Failed to fetch Analytics data collection setting", error);
+        logError("Failed to fetch Analytics data collection setting", error, true);
     });
 }
 
@@ -520,33 +528,33 @@ function logEvent(){
         integer: 10,
         float: 1.234
     }, function(){
-        log("Logged event");
+        log("Logged event", true);
     },function(error){
-        logError("Failed to log event", error);
+        logError("Failed to log event", error, true);
     });
 }
 
 function setScreenName(){
     FirebasePlugin.setScreenName("my_screen", function(){
-        log("Sent screen name");
+        log("Sent screen name", true);
     },function(error){
-        logError("Failed to send screen name", error);
+        logError("Failed to send screen name", error, true);
     });
 }
 
 function setUserID(){
     FirebasePlugin.setUserId("user_id", function(){
-        log("Set user ID");
+        log("Set user ID", true);
     },function(error){
-        logError("Failed to set user ID", error);
+        logError("Failed to set user ID", error, true);
     });
 }
 
 function setUserProperty(){
     FirebasePlugin.setUserProperty("some_key", "some_value", function(){
-        log("Set user property");
+        log("Set user property", true);
     },function(error){
-        logError("Failed to set user property", error);
+        logError("Failed to set user property", error, true);
     });
 }
 
@@ -555,50 +563,50 @@ function setPerformanceCollectionEnabled(){
     FirebasePlugin.setPerformanceCollectionEnabled(true, function(){
         log("Enabled performance data collection");
     },function(error){
-        logError("Failed to enable performance data collection", error);
+        logError("Failed to enable performance data collection", error, true);
     });
 }
 
-function isPerformanceCollectionEnabled(){
+function isPerformanceCollectionEnabled(showUser){
     FirebasePlugin.isPerformanceCollectionEnabled( function(enabled){
-        log("Performance data collection setting is " + (enabled ? "enabled" : "disabled"));
+        log("Performance data collection setting is " + (enabled ? "enabled" : "disabled"), showUser);
     },function(error){
-        logError("Failed to fetch Performance data collection setting", error);
+        logError("Failed to fetch Performance data collection setting", error, true);
     });
 }
 
 var traceName = "my_trace";
 function startTrace(){
     FirebasePlugin.startTrace(traceName, function(){
-        log("Trace started");
+        log("Trace started", true);
     },function(error){
-        logError("Failed to start trace", error);
+        logError("Failed to start trace", erro, truer);
     });
 }
 
 function incrementCounter(){
     FirebasePlugin.incrementCounter(traceName, "my_counter", function(){
-        log("Incremented trace counter");
+        log("Incremented trace counter", true);
     },function(error){
-        logError("Failed to increment trace counter", error);
+        logError("Failed to increment trace counter", error, true);
     });
 }
 
 function stopTrace(){
     FirebasePlugin.stopTrace(traceName, function(){
-        log("Trace stopped");
+        log("Trace stopped", true);
     },function(error){
-        logError("Failed to stop trace", error);
+        logError("Failed to stop trace", error, true);
     });
 }
 
 // Remote config
 function getInfo(){
     FirebasePlugin.getInfo(function(info){
-        log("Got remote config info: "+JSON.stringify(info));
+        log("Got remote config info: "+JSON.stringify(info), true);
         console.dir(info);
     },function(error){
-        logError("Failed to get remote config info", error);
+        logError("Failed to get remote config info", error, true);
     });
 }
 
@@ -606,9 +614,9 @@ var fetchTimeout = 60;
 var minimumFetchInterval = 0;
 function setConfigSettings(){
     FirebasePlugin.setConfigSettings(fetchTimeout, minimumFetchInterval,function(){
-        log("Set remote config settings");
+        log("Set remote config settings", true);
     },function(error){
-        logError("Failed to set remote config settings", error);
+        logError("Failed to set remote config settings", error, true);
     });
 }
 
@@ -621,9 +629,9 @@ var defaults = {
 };
 function setDefaults(){
     FirebasePlugin.setDefaults(defaults,function(){
-        log("Set remote config defaults");
+        log("Set remote config defaults", true);
     },function(error){
-        logError("Failed to set remote config defaults", error);
+        logError("Failed to set remote config defaults", error, true);
     });
 }
 
@@ -631,45 +639,45 @@ function setDefaults(){
 var cacheExpirationSeconds = 10;
 function fetch(){
     FirebasePlugin.fetch(cacheExpirationSeconds, function(){
-        log("Remote config fetched");
+        log("Remote config fetched", true);
     },function(error){
-        logError("Failed to fetch remote config", error);
+        logError("Failed to fetch remote config", error, true);
     });
 }
 
 function activateFetched(){
     FirebasePlugin.activateFetched(function(activated){
-        log("Remote config was activated: " + activated);
+        log("Remote config was activated: " + activated, true);
     },function(error){
-        logError("Failed to activate remote config", error);
+        logError("Failed to activate remote config", error, true);
     });
 }
 
 function fetchAndActivate(){
     FirebasePlugin.fetchAndActivate(function(activated){
-        log("Remote config was activated: " + activated);
+        log("Remote config was activated: " + activated, true);
     },function(error){
-        logError("Failed to activate remote config", error);
+        logError("Failed to activate remote config", error, true);
     });
 }
 
 function resetRemoteConfig(){
     FirebasePlugin.resetRemoteConfig(function(){
-        log("Successfully reset remote config");
+        log("Successfully reset remote config", true);
     },function(error){
-        logError("Failed to reset remote config", error);
+        logError("Failed to reset remote config", error, true);
     });
 }
 
 function getAll(){
     FirebasePlugin.getAll(function(values){
         console.dir(values);
-        log("Got all values from remote config:");
+        log("Got all values from remote config", true);
         for(var key in values){
             log(key + " = " + values[key]);
         }
     },function(error){
-        logError("Failed to get all values from remote config", error);
+        logError("Failed to get all values from remote config", error, true);
     });
 }
 
@@ -677,9 +685,9 @@ function getStringValue(){
     FirebasePlugin.getValue("string_value", function(value){
         value = value.toString();
         console.dir(value);
-        log("Got string value of type "+typeof value+ " from remote config: " + value);
+        log("Got string value of type "+typeof value+ " from remote config: " + value, true);
     },function(error){
-        logError("Failed to get string value from remote config", error);
+        logError("Failed to get string value from remote config", error, true);
     });
 }
 
@@ -687,9 +695,9 @@ function getBooleanValue(){
     FirebasePlugin.getValue("boolean_value", function(value){
         value = (value === 'true');
         console.dir(value);
-        log("Got boolean value of type "+typeof value+ " from remote config: " + value);
+        log("Got boolean value of type "+typeof value+ " from remote config: " + value, true);
     },function(error){
-        logError("Failed to get boolean value from remote config", error);
+        logError("Failed to get boolean value from remote config", error, true);
     });
 }
 
@@ -697,9 +705,9 @@ function getIntegerValue(){
     FirebasePlugin.getValue("integer_value", function(value){
         value = parseInt(value);
         console.dir(value);
-        log("Got integer value of type "+typeof value+ " from remote config: " + value);
+        log("Got integer value of type "+typeof value+ " from remote config: " + value, true);
     },function(error){
-        logError("Failed to get integer value from remote config", error);
+        logError("Failed to get integer value from remote config", error, true);
     });
 }
 
@@ -707,9 +715,9 @@ function getFloatValue(){
     FirebasePlugin.getValue("float_value", function(value){
         value = parseFloat(value);
         console.dir(value);
-        log("Got float value of type "+typeof value+ " from remote config: " + value);
+        log("Got float value of type "+typeof value+ " from remote config: " + value, true);
     },function(error){
-        logError("Failed to get float value from remote config", error);
+        logError("Failed to get float value from remote config", error, true);
     });
 }
 
@@ -718,12 +726,12 @@ function getJsonValue(){
         try{
             value = JSON.parse(value);
         }catch(e){
-            return logError("Failed to parse JSON value from remote config", e.message);
+            return logError("Failed to parse JSON value from remote config", e.message, true);
         }
         console.dir(value);
-        log("Got JSON value of type "+typeof value+ " from remote config: " + JSON.stringify(value));
+        log("Got JSON value of type "+typeof value+ " from remote config: " + JSON.stringify(value), true);
     },function(error){
-        logError("Failed to get JSON value from remote config", error);
+        logError("Failed to get JSON value from remote config", error, true);
     });
 }
 
@@ -734,16 +742,18 @@ var authCredential,
     timeoutInSeconds = 60;
 
 function verifyPhoneNumber(){
+    var phoneNumber;
     var enterPhoneNumber = function(){
-        promptUserForInput("Enter phone number", "Input full phone number including international dialing code", function(phoneNumber){
-            if(!phoneNumber) return logError("Valid phone number must be entered");
-            verify(phoneNumber);
+        promptUserForInput("Enter phone number", "Input full phone number including international dialing code", function(_phoneNumber){
+            if(!_phoneNumber) return alertUser("Invalid phone number", "Valid phone number must be entered", enterPhoneNumber);
+            phoneNumber = _phoneNumber;
+            verify();
         });
     };
 
     var enterVerificationCode = function(credential){
         promptUserForInput("Enter verification code", "Input the code in the received verification SMS", function(verificationCode){
-            if(!verificationCode) return logError("Valid verification code must be entered");
+            if(!verificationCode) return alertUser("verification code", "Valid verification code must be entered", enterVerificationCode);
             credential.code = verificationCode;
             verified(credential);
         });
@@ -753,7 +763,7 @@ function verifyPhoneNumber(){
         navigator.notification.dismissAll();
     };
 
-    var verify = function(phoneNumber){
+    var verify = function(){
         var fakeVerificationCode = $('#enterPhoneNumber .mockInstantVerificationInput')[0].checked ? FAKE_SMS_VERIFICATION_CODE : null,
             requireSmsValidation = $('#enterPhoneNumber .requireSmsValidationInput')[0].checked;
 
@@ -775,7 +785,7 @@ function verifyPhoneNumber(){
             }
         }, function(error) {
             awaitingSms = false;
-            logError("Failed to verify phone number", error);
+            logError("Failed to verify phone number", error, true);
         }, phoneNumber, {
             timeOutDuration: timeoutInSeconds,
             requireSmsValidation: requireSmsValidation,
@@ -784,6 +794,7 @@ function verifyPhoneNumber(){
     };
 
     var verified = function(credential){
+        log("Phone number successefully verified", true);
         authCredential = credential;
     };
 
@@ -795,7 +806,7 @@ function enrollSecondAuthFactor(){
 
     var enterPhoneNumber = function(){
         promptUserForInput("Enter phone number", "Input full phone number including international dialing code", function(_phoneNumber){
-            if(!_phoneNumber) return logError("Valid phone number must be entered");
+            if(!_phoneNumber) return alertUser("Invalid phone number", "Valid phone number must be entered", enterPhoneNumber);
             phoneNumber = _phoneNumber;
             enroll();
         });
@@ -803,7 +814,7 @@ function enrollSecondAuthFactor(){
 
     var enterDisplayName = function(){
         promptUserForInput("Enter display name", "Input name for second factor e.g. \"Work phone\" ", function(_displayName){
-            if(!_displayName) return logError("A display name must be entered");
+            if(!_displayName) return alertUser("Invalid display name", "Valid display name must be entered", enterDisplayName);
             displayName = _displayName;
             enroll();
         });
@@ -811,7 +822,7 @@ function enrollSecondAuthFactor(){
 
     var enterVerificationCode = function(){
         promptUserForInput("Enter verification code", "Input the code in the received verification SMS", function(verificationCode){
-            if(!verificationCode) return logError("Valid verification code must be entered");
+            if(!verificationCode) return alertUser("verification code", "Valid verification code must be entered", enterVerificationCode);
             credential.code = verificationCode;
             enroll();
         });
@@ -830,10 +841,10 @@ function enrollSecondAuthFactor(){
                 credential = result;
                 enterVerificationCode();
             }else{
-                log("Second factor successfully enrolled");
+                log("Second factor successfully enrolled", true);
             }
         }, function(error) {
-            logError("Failed to enroll second factor", error);
+            logError("Failed to enroll second factor", error, true);
         }, phoneNumber, {
             displayName: displayName,
             credential, credential,
@@ -847,7 +858,7 @@ function enrollSecondAuthFactor(){
 }
 
 function verifySecondAuthFactor(){
-    if(!_secondFactors) return logError("No second factors found to selected from!")
+    if(!_secondFactors) return logError("No second factors found to selected from!", true)
     var selectedIndex, credential, fakeVerificationCode, phoneNumber,  requireSmsValidation;
 
     var selectFactor = function(){
@@ -916,10 +927,10 @@ function verifySecondAuthFactor(){
                 credential = result;
                 enterVerificationCode();
             }else{
-                log("Second factor successfully verified");
+                log("Second factor successfully verified", true);
             }
         }, function(error) {
-            logError("Failed to verify second factor", error);
+            logError("Failed to verify second factor", error, true);
         }, {
             selectedIndex: selectedIndex,
             credential, credential
@@ -937,18 +948,18 @@ function verifySecondAuthFactor(){
 function authenticateUserWithGoogle(){
     FirebasePlugin.authenticateUserWithGoogle(SERVER_CLIENT_ID, function(credential) {
         authCredential = credential;
-        log("Successfully authenticated with Google");
+        log("Successfully authenticated with Google", true);
     }, function(error) {
-        logError("Failed to authenticate with Google", error);
+        logError("Failed to authenticate with Google", error, true);
     });
 }
 
 function authenticateUserWithApple(){
     FirebasePlugin.authenticateUserWithApple(function(credential) {
         authCredential = credential;
-        log("Successfully authenticated with Apple");
+        log("Successfully authenticated with Apple", true);
     }, function(error) {
-        logError("Failed to authenticate with Apple", error);
+        logError("Failed to authenticate with Apple", error, true);
     }, 'en-GB');
 }
 
@@ -956,12 +967,12 @@ function signInWithCredential(){
     if(!authCredential) return logError("No auth credential exists - request a credential first");
 
     FirebasePlugin.signInWithCredential(authCredential, function() {
-        log("Successfully signed in");
+        log("Successfully signed in", true);
     }, function(error, secondFactors) {
         if(typeof secondFactors !== 'undefined'){
             return handleSecondFactorChallenge(secondFactors)
         }
-        logError("Failed to sign in", error);
+        logError("Failed to sign in", error, true);
     });
 }
 
@@ -969,57 +980,57 @@ function reauthenticateWithCredential(){
     if(!authCredential) return logError("No auth credential exists - request a credential first");
 
     FirebasePlugin.reauthenticateWithCredential(authCredential, function() {
-        log("Successfully reauthenticated");
+        log("Successfully reauthenticated", true);
     }, function(error, secondFactors) {
         if(typeof secondFactors !== 'undefined'){
             return handleSecondFactorChallenge(secondFactors)
         }
-        logError("Failed to reauthenticate", error);
+        logError("Failed to reauthenticate", error, true);
     });
 }
 
 function linkUserWithCredential(){
-    if(!authCredential) return logError("No auth credential exists - request a credential first");
+    if(!authCredential) return logError("No auth credential exists - request a credential first", true);
 
     FirebasePlugin.linkUserWithCredential(authCredential, function() {
-        log("Successfully linked user");
+        log("Successfully linked user", true);
     }, function(error, secondFactors) {
         if(typeof secondFactors !== 'undefined'){
             return handleSecondFactorChallenge(secondFactors)
         }
-        logError("Failed to link user", error);
+        logError("Failed to link user", error, true);
     });
 }
 
-function isUserSignedIn(){
+function isUserSignedIn(showAlert){
     FirebasePlugin.isUserSignedIn(function(isSignedIn) {
-        log("User "+(isSignedIn ? "is" : "is not") + " signed in");
+        log("User "+(isSignedIn ? "is" : "is not") + " signed in", showAlert);
     }, function(error) {
-        logError("Failed to check if user is signed in", error);
+        logError("Failed to check if user is signed in", error, true);
     });
 }
 
 function signOutUser(){
     FirebasePlugin.signOutUser(function() {
-        log("User signed out");
+        log("User signed out", true);
     }, function(error) {
-        logError("Failed to sign out user", error);
+        logError("Failed to sign out user", error, true);
     });
 }
 
 function getCurrentUser(){
     FirebasePlugin.getCurrentUser(function(user) {
-        log("Current user info: " + JSON.stringify(user));
+        log("Current user info: " + JSON.stringify(user), true);
     }, function(error) {
-        logError("Failed to get current user", error);
+        logError("Failed to get current user", error, true);
     });
 }
 
 function reloadCurrentUser(){
     FirebasePlugin.reloadCurrentUser(function(user) {
-        log("Reloaded user info: " + JSON.stringify(user));
+        log("Reloaded user info: " + JSON.stringify(user), true);
     }, function(error) {
-        logError("Failed to get reload user", error);
+        logError("Failed to get reload user", error, true);
     });
 }
 
@@ -1042,9 +1053,9 @@ function updateUserProfile(){
 
     var updateProfile = function(){
         FirebasePlugin.updateUserProfile(profile, function(){
-            log("User profile successfully updated");
+            log("User profile successfully updated", true);
         }, function(error) {
-            logError("Failed to update user profile", error);
+            logError("Failed to update user profile", error, true);
         });
     };
 
@@ -1054,27 +1065,27 @@ function updateUserProfile(){
 function updateUserEmail(){
     promptUserForInput("Enter email", "Input user email address to update", function(email){
         FirebasePlugin.updateUserEmail(email, function(){
-            log("User email successfully updated");
+            log("User email successfully updated", true);
         }, function(error) {
-            logError("Failed to update user email", error);
+            logError("Failed to update user email", error, true);
         });
     });
 }
 
 function sendUserEmailVerification(){
     FirebasePlugin.sendUserEmailVerification(function(){
-        log("Sent user email verification successfully updated");
+        log("Sent user email verification successfully updated", true);
     }, function(error) {
-        logError("Failed to send user verification email", error);
+        logError("Failed to send user verification email", error, true);
     });
 }
 
 function updateUserPassword(){
     promptUserForInput("Enter password", "Input new account password", function(password){
         FirebasePlugin.updateUserPassword(password, function(){
-            log("User password successfully updated");
+            log("User password successfully updated", true);
         }, function(error) {
-            logError("Failed to update user password", error);
+            logError("Failed to update user password", error, true);
         });
     });
 }
@@ -1082,18 +1093,18 @@ function updateUserPassword(){
 function sendUserPasswordResetEmail(){
     promptUserForInput("Enter email", "Input user email address for reset password", function(email){
         FirebasePlugin.sendUserPasswordResetEmail(email, function(){
-            log("User password reset email sent successfully");
+            log("User password reset email sent successfully", true);
         }, function(error) {
-            logError("Failed to send user password reset email", error);
+            logError("Failed to send user password reset email", error, true);
         });
     });
 }
 
 function deleteUser(){
     FirebasePlugin.deleteUser(function(){
-        log("User account deleted");
+        log("User account deleted", true);
     }, function(error) {
-        logError("Failed to delete current user account", error);
+        logError("Failed to delete current user account", error, true);
     });
 }
 
@@ -1107,12 +1118,12 @@ function createUserWithEmailAndPassword(){
     promptUserForInput("Enter email", "Email address for new account", function(email){
         promptUserForInput("Enter password", "Password for new account", function(password){
             FirebasePlugin.createUserWithEmailAndPassword(email, password, function(){
-                log("Successfully created email/password-based user account");
+                log("Successfully created email/password-based user account", true);
             }, function(error, secondFactors) {
                 if(typeof secondFactors !== 'undefined'){
                     return handleSecondFactorChallenge(secondFactors)
                 }
-                logError("Failed to create email/password-based user account", error);
+                logError("Failed to create email/password-based user account", error, true);
             });
         });
     });
@@ -1122,12 +1133,12 @@ function signInUserWithEmailAndPassword(){
     promptUserForInput("Enter email", "Enter email address", function(email){
         promptUserForInput("Enter password", "Enter account password", function(password){
             FirebasePlugin.signInUserWithEmailAndPassword(email, password, function(){
-                log("Successfully signed in to email/password-based user account");
+                log("Successfully signed in to email/password-based user account", true);
             }, function(error, secondFactors) {
                 if(typeof secondFactors !== 'undefined'){
                     return handleSecondFactorChallenge(secondFactors)
                 }
-                logError("Failed to sign in to email/password-based user account", error);
+                logError("Failed to sign in to email/password-based user account", error, true);
             });
         });
     });
@@ -1138,12 +1149,12 @@ function authenticateUserWithEmailAndPassword(){
         promptUserForInput("Enter password", "Enter account password", function(password){
             FirebasePlugin.authenticateUserWithEmailAndPassword(email, password, function(credential) {
                 authCredential = credential;
-                log("Successfully authenticated with email/password");
+                log("Successfully authenticated with email/password", true);
             }, function(error, secondFactors) {
                 if(typeof secondFactors !== 'undefined'){
                     return handleSecondFactorChallenge(secondFactors)
                 }
-                logError("Failed to authenticate with email/password", error);
+                logError("Failed to authenticate with email/password", error, true);
             });
         });
     });
@@ -1153,21 +1164,21 @@ function authenticateUserWithEmailAndPassword(){
 function signInUserWithCustomToken(){
     promptUserForInput("Enter token", "Enter custom token", function(token){
         FirebasePlugin.signInUserWithCustomToken(token, function(){
-            log("Successfully signed in with custom token");
+            log("Successfully signed in with custom token", true);
         }, function(error, secondFactors) {
             if(typeof secondFactors !== 'undefined'){
                 return handleSecondFactorChallenge(secondFactors)
             }
-            logError("Failed to sign in with custom token", error);
+            logError("Failed to sign in with custom token", error, true);
         });
     });
 }
 
 function signInUserAnonymously(){
     FirebasePlugin.signInUserAnonymously(function(){
-        log("Successfully signed in anonymously");
+        log("Successfully signed in anonymously", true);
     }, function(error) {
-        logError("Failed to sign in anonymously", error);
+        logError("Failed to sign in anonymously", error, true);
     });
 }
 
@@ -1189,17 +1200,17 @@ var firestoreDocumentId = 1;
 
 function addDocumentToFirestoreCollection(){
     FirebasePlugin.addDocumentToFirestoreCollection(firestoreDocument, firestoreCollection, function(id){
-        log("Successfully added document to Firestore with id="+id);
+        log("Successfully added document to Firestore with id="+id, true);
     }, function(error) {
-        logError("Failed to add document to Firestore", error);
+        logError("Failed to add document to Firestore", error, true);
     });
 }
 
 function setDocumentInFirestoreCollection(){
     FirebasePlugin.setDocumentInFirestoreCollection(firestoreDocumentId, firestoreDocument, firestoreCollection, function(){
-        log("Successfully set document in Firestore with id="+firestoreDocumentId);
+        log("Successfully set document in Firestore with id="+firestoreDocumentId, true);
     }, function(error) {
-        logError("Failed to set document in Firestore", error);
+        logError("Failed to set document in Firestore", error, true);
     });
 }
 
@@ -1209,34 +1220,34 @@ function updateDocumentInFirestoreCollection(){
         "a_string": "foobar"
     };
     FirebasePlugin.updateDocumentInFirestoreCollection(firestoreDocumentId, documentFragment, firestoreCollection, function(){
-        log("Successfully updated document in Firestore with id="+firestoreDocumentId);
+        log("Successfully updated document in Firestore with id="+firestoreDocumentId, true);
     }, function(error) {
-        logError("Failed to update document in Firestore", error);
+        logError("Failed to update document in Firestore", error, true);
     });
 }
 
 function deleteDocumentFromFirestoreCollection(){
     FirebasePlugin.deleteDocumentFromFirestoreCollection(firestoreDocumentId, firestoreCollection, function(){
-        log("Successfully deleted document in Firestore with id="+firestoreDocumentId);
+        log("Successfully deleted document in Firestore with id="+firestoreDocumentId, true);
     }, function(error) {
-        logError("Failed to delete document in Firestore", error);
+        logError("Failed to delete document in Firestore", error, true);
     });
 }
 
 function documentExistsInFirestoreCollection(){
     FirebasePlugin.documentExistsInFirestoreCollection(firestoreDocumentId, firestoreCollection, function(exists){
-        log("Document "+(exists ? "exists" : "doesn't exist")+" in Firestore collection");
+        log("Document "+(exists ? "exists" : "doesn't exist")+" in Firestore collection", true);
     }, function(error) {
-        logError("Failed to check document exists in Firestore", error);
+        logError("Failed to check document exists in Firestore", error, true);
     });
 }
 
 function fetchDocumentInFirestoreCollection(){
     FirebasePlugin.fetchDocumentInFirestoreCollection(firestoreDocumentId, firestoreCollection, function(document){
-        log("Successfully fetched document in Firestore with id="+firestoreDocumentId+"; doc="+JSON.stringify(document));
+        log("Successfully fetched document in Firestore with id="+firestoreDocumentId+"; doc="+JSON.stringify(document), true);
         console.dir(document);
     }, function(error) {
-        logError("Failed to fetch document in Firestore", error);
+        logError("Failed to fetch document in Firestore", error, true);
     });
 }
 
@@ -1246,74 +1257,74 @@ function fetchFirestoreCollection(){
         ['where', 'an_integer', '==', 1, 'integer']
     ];
     FirebasePlugin.fetchFirestoreCollection(firestoreCollection, filters, function(data){
-        log("Successfully fetched Firestore collection: " + JSON.stringify(data));
+        log("Successfully fetched Firestore collection: " + JSON.stringify(data), true);
         console.dir(data);
     }, function(error) {
-        logError("Failed to fetch Firestore collection", error);
+        logError("Failed to fetch Firestore collection", error, true);
     });
 }
 
 var documentListenerId;
 function listenToDocument(){
     if(documentListenerId){
-        return logError("Document listener already exists");
+        return logError("Document listener already exists", true);
     }
 
     FirebasePlugin.listenToDocumentInFirestoreCollection(function(documentEvent){
         if(documentEvent.eventType === 'id'){
             documentListenerId = documentEvent.id;
-            log("Listening for document changes in Firestore with id="+documentListenerId);
+            log("Listening for document changes in Firestore with id="+documentListenerId, true);
         }else{
             log("Document change detected: document="+firestoreDocumentId+"; collection="+firestoreCollection+" changes="+JSON.stringify(documentEvent));
             console.dir(documentEvent);
         }
     }, function(error) {
-        logError("Failed to listen for changes to document in Firestore", error);
+        logError("Failed to listen for changes to document in Firestore", error, true);
     }, firestoreDocumentId, firestoreCollection, true);
 }
 
 function unlistenToDocument(){
     if(!documentListenerId){
-        return logError("No document listener currently exists");
+        return logError("No document listener currently exists", true);
     }
 
     FirebasePlugin.removeFirestoreListener(function(){
         documentListenerId = null;
-        log("Stopped listening for document changes in Firestore");
+        log("Stopped listening for document changes in Firestore", true);
     }, function(error) {
-        logError("Failed to stop listening for changes to document in Firestore", error);
+        logError("Failed to stop listening for changes to document in Firestore", error, true);
     }, documentListenerId);
 }
 
 var collectionListenerId;
 function listenToCollection(){
     if(collectionListenerId){
-        return logError("Collection listener already exists");
+        return logError("Collection listener already exists", true);
     }
 
     FirebasePlugin.listenToFirestoreCollection(function(collectionEvent){
         if(collectionEvent.eventType === 'id'){
             collectionListenerId = collectionEvent.id;
-            log("Listening for collection changes in Firestore with id="+collectionListenerId);
+            log("Listening for collection changes in Firestore with id="+collectionListenerId, true);
         }else{
             log("Collection change detected: collection="+firestoreCollection+" changes="+JSON.stringify(collectionEvent));
             console.dir(collectionEvent);
         }
     }, function(error) {
-        logError("Failed to listen for changes to collection in Firestore", error);
+        logError("Failed to listen for changes to collection in Firestore", error, true);
     }, firestoreCollection, null, true);
 }
 
 function unlistenToCollection(){
     if(!collectionListenerId){
-        return logError("No collection listener currently exists");
+        return logError("No collection listener currently exists", true);
     }
 
     FirebasePlugin.removeFirestoreListener(function(){
         collectionListenerId = null;
-        log("Stopped listening for collection changes in Firestore");
+        log("Stopped listening for collection changes in Firestore", true);
     }, function(error) {
-        logError("Failed to stop listening for changes to collection in Firestore", error);
+        logError("Failed to stop listening for changes to collection in Firestore", error, true);
     }, collectionListenerId);
 }
 
@@ -1327,9 +1338,9 @@ function callHttpsFunction(){
         b: 3
     };
     FirebasePlugin.functionsHttpsCallable(functionName, args, function(result){
-        log("Successfully called function - result: "+JSON.stringify(result));
+        log("Successfully called function - result: "+JSON.stringify(result), true);
     }, function(error){
-        logError("Error calling function: "+JSON.stringify(error));
+        logError("Error calling function: "+JSON.stringify(error), true);
     });
 }
 
@@ -1338,9 +1349,9 @@ function callHttpsFunction(){
  */
 function getInstallationId(){
     FirebasePlugin.getInstallationId(function(id){
-        log("Got installation ID: " + id);
+        log("Got installation ID: " + id, true);
     }, function(error) {
-        logError("Failed to get installation ID", error);
+        logError("Failed to get installation ID", error, true);
     });
 }
 
@@ -1351,12 +1362,12 @@ function getInstallationToken(){
         // Decode JWT
         try{
             var payload = parseJwt(token);
-            log("Token payload: " + JSON.stringify(payload));
+            log("Token payload: " + JSON.stringify(payload), true);
         }catch(e){
-            logError("Exception in decoded installation JWT: "+e.message);
+            logError("Exception in decoded installation JWT: "+e.message, true);
         }
     }, function(error) {
-        logError("Failed to get installation token", error);
+        logError("Failed to get installation token", error, true);
     });
 }
 
@@ -1373,8 +1384,8 @@ function parseJwt (token) {
 
 function deleteInstallationId(){
     FirebasePlugin.deleteInstallationId(function(){
-        log("Deleted installation ID");
+        log("Deleted installation ID", true);
     }, function(error) {
-        logError("Failed to delete installation ID", error);
+        logError("Failed to delete installation ID", error, true);
     });
 }
