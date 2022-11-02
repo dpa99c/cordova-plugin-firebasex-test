@@ -33,6 +33,26 @@ function clearLog(){
     $output.empty();
 }
 
+/**
+ * Determines if given string contains a numeric value.
+ * https://stackoverflow.com/a/175787/777265
+ * @param {string} str
+ * @return {boolean}
+ */
+function isNumericString (str) {
+    if (typeof str != "string") return false;
+    return !isNaN(str) &&
+        !isNaN(parseFloat(str));
+}
+
+function alertUser(title, msg, cb) {
+    navigator.notification.alert(
+        msg,
+        cb,
+        title
+    );
+}
+
 function promptUserForInput(title, msg, cb) {
     navigator.notification.prompt(
         msg,
@@ -42,6 +62,19 @@ function promptUserForInput(title, msg, cb) {
         },
         title,
         ['Ok']
+    );
+}
+
+function promptUserForYesNoChoice(title, msg, cb) {
+    navigator.notification.confirm(
+        msg,
+        function(result){
+            if(result){
+                cb(result === 1);
+            }
+        },
+        title,
+        ['Yes','No']
     );
 }
 
@@ -793,7 +826,7 @@ function enrollSecondAuthFactor(){
 
         FirebasePlugin.enrollSecondAuthFactor(function(result) {
             if(typeof result === "object"){
-                log("Received enroll second factor credential - SMS code sent to device");
+                log("Received second factor credential - SMS code sent to device");
                 credential = result;
                 enterVerificationCode();
             }else{
@@ -811,6 +844,94 @@ function enrollSecondAuthFactor(){
     };
 
     enroll();
+}
+
+function verifySecondAuthFactor(){
+    if(!_secondFactors) return logError("No second factors found to selected from!")
+    var selectedIndex, credential, fakeVerificationCode, phoneNumber,  requireSmsValidation;
+
+    var selectFactor = function(){
+        var msg = "";
+        for(var i=0; i<_secondFactors.length; i++){
+            if(msg) msg += '\n';
+            var factor = _secondFactors[i];
+            msg += (factor.index+1)+": ";
+            if(factor.displayName){
+                msg += factor.displayName + " ("+factor.phoneNumber+")"
+            }else{
+                msg += factor.phoneNumber;
+            }
+        }
+        promptUserForInput("Enter factor number", msg, function(enteredFactorNumber){
+            if(!isNumericString(enteredFactorNumber) || !_secondFactors[enteredFactorNumber-1]) return alertUser("Invalid factor", "A factor number between 1 and "+(_secondFactors.length)+" must be entered", selectFactor);
+            selectedIndex = enteredFactorNumber-1;
+            verify();
+        });
+    };
+
+    var enterPhoneNumber = function(){
+        promptUserForInput("Enter test phone number", "Input test phone number for fake instant verification", function(_phoneNumber){
+            if(!_phoneNumber) return alertUser("Invalid phone number", "Valid phone number must be entered", enterPhoneNumber);
+            phoneNumber = _phoneNumber;
+            verify();
+        });
+    };
+
+    var enterVerificationCode = function(){
+        promptUserForInput("Enter verification code", "Input the code in the received verification SMS", function(verificationCode){
+            if(!verificationCode) return alertUser("verification code", "Valid verification code must be entered", enterVerificationCode);
+            credential.code = verificationCode;
+            verify();
+        });
+    };
+
+    var confirmUseFakeVerificationCode = function(){
+        promptUserForYesNoChoice("Use fake verification code?", "Test instant verification on Android using a test phone number?", function(shouldUse){
+            fakeVerificationCode = shouldUse;
+            if(fakeVerificationCode){
+                enterPhoneNumber();
+            }else{
+                verify();
+            }
+        });
+    };
+
+    var confirmRequireSMSValidation = function(){
+        promptUserForYesNoChoice("Require SMS validation code?", "Always require SMS validation on Android even if instant verification is available?", function(shouldRequire){
+            requireSmsValidation = shouldRequire;
+            verify();
+        });
+    };
+
+    var verify = function(){
+        if(typeof selectedIndex === 'undefined') return selectFactor();
+        if(cordova.platformId === "android"){
+            if(typeof fakeVerificationCode === 'undefined') return confirmUseFakeVerificationCode();
+            if(typeof requireSmsValidation === 'undefined') return confirmRequireSMSValidation();
+        }
+
+        FirebasePlugin.verifySecondAuthFactor(function(result) {
+            if(typeof result === "object"){
+                log("Received second factor credential - SMS code sent to device");
+                credential = result;
+                enterVerificationCode();
+            }else{
+                log("Second factor successfully verified");
+            }
+        }, function(error) {
+            logError("Failed to verify second factor", error);
+        }, {
+            selectedIndex: selectedIndex,
+            credential, credential
+        }, {
+            timeOutDuration: timeoutInSeconds,
+            requireSmsValidation: requireSmsValidation,
+            fakeVerificationCode: fakeVerificationCode,
+            phoneNumber: phoneNumber
+        });
+    };
+
+    verify();
 }
 
 function authenticateUserWithGoogle(){
@@ -836,7 +957,10 @@ function signInWithCredential(){
 
     FirebasePlugin.signInWithCredential(authCredential, function() {
         log("Successfully signed in");
-    }, function(error) {
+    }, function(error, secondFactors) {
+        if(typeof secondFactors !== 'undefined'){
+            return handleSecondFactorChallenge(secondFactors)
+        }
         logError("Failed to sign in", error);
     });
 }
@@ -846,7 +970,10 @@ function reauthenticateWithCredential(){
 
     FirebasePlugin.reauthenticateWithCredential(authCredential, function() {
         log("Successfully reauthenticated");
-    }, function(error) {
+    }, function(error, secondFactors) {
+        if(typeof secondFactors !== 'undefined'){
+            return handleSecondFactorChallenge(secondFactors)
+        }
         logError("Failed to reauthenticate", error);
     });
 }
@@ -856,7 +983,10 @@ function linkUserWithCredential(){
 
     FirebasePlugin.linkUserWithCredential(authCredential, function() {
         log("Successfully linked user");
-    }, function(error) {
+    }, function(error, secondFactors) {
+        if(typeof secondFactors !== 'undefined'){
+            return handleSecondFactorChallenge(secondFactors)
+        }
         logError("Failed to link user", error);
     });
 }
@@ -967,12 +1097,21 @@ function deleteUser(){
     });
 }
 
+var _secondFactors;
+function handleSecondFactorChallenge(secondFactors){
+    _secondFactors = secondFactors;
+    verifySecondAuthFactor();
+}
+
 function createUserWithEmailAndPassword(){
     promptUserForInput("Enter email", "Email address for new account", function(email){
         promptUserForInput("Enter password", "Password for new account", function(password){
             FirebasePlugin.createUserWithEmailAndPassword(email, password, function(){
                 log("Successfully created email/password-based user account");
-            }, function(error) {
+            }, function(error, secondFactors) {
+                if(typeof secondFactors !== 'undefined'){
+                    return handleSecondFactorChallenge(secondFactors)
+                }
                 logError("Failed to create email/password-based user account", error);
             });
         });
@@ -984,7 +1123,10 @@ function signInUserWithEmailAndPassword(){
         promptUserForInput("Enter password", "Enter account password", function(password){
             FirebasePlugin.signInUserWithEmailAndPassword(email, password, function(){
                 log("Successfully signed in to email/password-based user account");
-            }, function(error) {
+            }, function(error, secondFactors) {
+                if(typeof secondFactors !== 'undefined'){
+                    return handleSecondFactorChallenge(secondFactors)
+                }
                 logError("Failed to sign in to email/password-based user account", error);
             });
         });
@@ -997,7 +1139,10 @@ function authenticateUserWithEmailAndPassword(){
             FirebasePlugin.authenticateUserWithEmailAndPassword(email, password, function(credential) {
                 authCredential = credential;
                 log("Successfully authenticated with email/password");
-            }, function(error) {
+            }, function(error, secondFactors) {
+                if(typeof secondFactors !== 'undefined'){
+                    return handleSecondFactorChallenge(secondFactors)
+                }
                 logError("Failed to authenticate with email/password", error);
             });
         });
@@ -1009,7 +1154,10 @@ function signInUserWithCustomToken(){
     promptUserForInput("Enter token", "Enter custom token", function(token){
         FirebasePlugin.signInUserWithCustomToken(token, function(){
             log("Successfully signed in with custom token");
-        }, function(error) {
+        }, function(error, secondFactors) {
+            if(typeof secondFactors !== 'undefined'){
+                return handleSecondFactorChallenge(secondFactors)
+            }
             logError("Failed to sign in with custom token", error);
         });
     });
