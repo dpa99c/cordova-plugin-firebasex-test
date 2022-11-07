@@ -915,7 +915,13 @@ function verifySecondAuthFactor(){
     };
 
     var verify = function(){
-        if(typeof selectedIndex === 'undefined') return selectFactor();
+        if(typeof selectedIndex === 'undefined'){
+            if(_secondFactors.length === 1){
+                selectedIndex = 0; // only 1 enrolled factor so use that
+            }else {
+                return selectFactor();
+            }
+        }
         if(cordova.platformId === "android"){
             if(typeof fakeVerificationCode === 'undefined') return confirmUseFakeVerificationCode();
             if(typeof requireSmsValidation === 'undefined') return confirmRequireSMSValidation();
