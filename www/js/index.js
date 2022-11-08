@@ -26,7 +26,9 @@ function log(msg, opts){
 }
 
 function logError(msg, error, showAlert){
-    if(typeof error === 'object'){
+    if(typeof error === 'boolean'){
+        showAlert = error;
+    }else if(typeof error === 'object'){
         msg += ': ' + JSON.stringify(error);
     }else if(typeof error === 'string'){
         msg += ': ' + error;
@@ -951,6 +953,75 @@ function verifySecondAuthFactor(){
     verify();
 }
 
+function listEnrolledSecondFactors(){
+    FirebasePlugin.listEnrolledSecondAuthFactors(function(secondFactors) {
+        var msg = "";
+        if(secondFactors.length === 0){
+            msg = "No enrolled second factors"
+        }else{
+            msg = "Enrolled second factors:";
+            for(var i=0; i<secondFactors.length; i++){
+                msg += '\n';
+                var factor = secondFactors[i];
+                msg += (factor.index+1)+": ";
+                if(factor.displayName){
+                    msg += factor.displayName + " ("+factor.phoneNumber+")"
+                }else{
+                    msg += factor.phoneNumber;
+                }
+            }
+        }
+        log(msg, true);
+    }, function(error) {
+        logError("Failed to list second factors", error, true);
+    });
+}
+
+function unenrollSecondFactor(){
+    var secondFactors;
+
+    function selectFactor(){
+        var msg = "";
+        for(var i=0; i<secondFactors.length; i++){
+            if(msg) msg += '\n';
+            var factor = secondFactors[i];
+            msg += (factor.index+1)+": ";
+            if(factor.displayName){
+                msg += factor.displayName + " ("+factor.phoneNumber+")"
+            }else{
+                msg += factor.phoneNumber;
+            }
+        }
+        promptUserForInput("Enter factor number to unenroll", msg, function(enteredFactorNumber){
+            if(!isNumericString(enteredFactorNumber) || !secondFactors[enteredFactorNumber-1]) return alertUser("Invalid factor", "A factor number between 1 and "+(secondFactors.length)+" must be entered", selectFactor);
+            var selectedIndex = enteredFactorNumber-1;
+            unenroll(selectedIndex);
+        });
+    }
+
+    function unenroll(selectedIndex){
+        FirebasePlugin.unenrollSecondAuthFactor(
+            function() {
+                log("Successfully unenrolled selected second factor", true);
+            }, function(error) {
+                console.error("Failed to unenroll second factor: " + JSON.stringify(error), true);
+            },
+            selectedIndex
+        )
+    }
+
+    FirebasePlugin.listEnrolledSecondAuthFactors(function(_secondFactors) {
+        if(_secondFactors.length > 0){
+            secondFactors = _secondFactors;
+            selectFactor();
+        }else{
+            logError("No second factors are enrolled", true);
+        }
+    }, function(error) {
+        logError("Failed to list second factors", error, true);
+    });
+}
+
 function authenticateUserWithGoogle(){
     FirebasePlugin.authenticateUserWithGoogle(SERVER_CLIENT_ID, function(credential) {
         authCredential = credential;
@@ -1069,9 +1140,19 @@ function updateUserProfile(){
 }
 
 function updateUserEmail(){
-    promptUserForInput("Enter email", "Input user email address to update", function(email){
+    promptUserForInput("Enter email", "Input new email address", function(email){
         FirebasePlugin.updateUserEmail(email, function(){
-            log("User email successfully updated", true);
+            log("User email successfully updated to "+email, true);
+        }, function(error) {
+            logError("Failed to update user email", error, true);
+        });
+    });
+}
+
+function verifyBeforeUpdateEmail(){
+    promptUserForInput("Enter email", "Input new email address", function(email){
+        FirebasePlugin.verifyBeforeUpdateEmail(email, function(){
+            log("User email successfully updated to "+email, true);
         }, function(error) {
             logError("Failed to update user email", error, true);
         });
