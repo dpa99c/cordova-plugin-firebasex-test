@@ -815,8 +815,7 @@ function enrollSecondAuthFactor(){
     };
 
     var enterDisplayName = function(){
-        promptUserForInput("Enter display name", "Input name for second factor e.g. \"Work phone\" ", function(_displayName){
-            if(!_displayName) return alertUser("Invalid display name", "Valid display name must be entered", enterDisplayName);
+        promptUserForInput("Enter display name", "Input name for second factor e.g. \"Work phone\" (or leave blank)", function(_displayName){
             displayName = _displayName;
             enroll();
         });
@@ -832,7 +831,7 @@ function enrollSecondAuthFactor(){
 
     var enroll = function(){
         if(!phoneNumber) return enterPhoneNumber();
-        if(!displayName) return enterDisplayName();
+        if(typeof displayName === 'undefined') return enterDisplayName();
 
         var fakeVerificationCode = $('#enrollSecondAuthFactor .mockInstantVerificationInput')[0].checked ? FAKE_SMS_VERIFICATION_CODE : null,
             requireSmsValidation = $('#enrollSecondAuthFactor .requireSmsValidationInput')[0].checked;
@@ -868,12 +867,7 @@ function verifySecondAuthFactor(){
         for(var i=0; i<_secondFactors.length; i++){
             if(msg) msg += '\n';
             var factor = _secondFactors[i];
-            msg += (factor.index+1)+": ";
-            if(factor.displayName){
-                msg += factor.displayName + " ("+factor.phoneNumber+")"
-            }else{
-                msg += factor.phoneNumber;
-            }
+            msg += (factor.index+1)+": " + factor.displayName + " (" + factor.phoneNumber + ")";
         }
         promptUserForInput("Enter factor number", msg, function(enteredFactorNumber){
             if(!isNumericString(enteredFactorNumber) || !_secondFactors[enteredFactorNumber-1]) return alertUser("Invalid factor", "A factor number between 1 and "+(_secondFactors.length)+" must be entered", selectFactor);
@@ -963,11 +957,9 @@ function listEnrolledSecondFactors(){
             for(var i=0; i<secondFactors.length; i++){
                 msg += '\n';
                 var factor = secondFactors[i];
-                msg += (factor.index+1)+": ";
-                if(factor.displayName){
-                    msg += factor.displayName + " ("+factor.phoneNumber+")"
-                }else{
-                    msg += factor.phoneNumber;
+                msg += (factor.index+1)+": " + factor.displayName;
+                if(factor.phoneNumber){
+                    msg += " ("+factor.phoneNumber+")";
                 }
             }
         }
@@ -985,11 +977,9 @@ function unenrollSecondFactor(){
         for(var i=0; i<secondFactors.length; i++){
             if(msg) msg += '\n';
             var factor = secondFactors[i];
-            msg += (factor.index+1)+": ";
-            if(factor.displayName){
-                msg += factor.displayName + " ("+factor.phoneNumber+")"
-            }else{
-                msg += factor.phoneNumber;
+            msg += (factor.index+1)+": " + factor.displayName;
+            if(factor.phoneNumber){
+                msg += " ("+factor.phoneNumber+")";
             }
         }
         promptUserForInput("Enter factor number to unenroll", msg, function(enteredFactorNumber){
@@ -1004,7 +994,7 @@ function unenrollSecondFactor(){
             function() {
                 log("Successfully unenrolled selected second factor", true);
             }, function(error) {
-                console.error("Failed to unenroll second factor: " + JSON.stringify(error), true);
+                logError("Failed to unenroll second factor: " + JSON.stringify(error), true);
             },
             selectedIndex
         )
