@@ -22,8 +22,8 @@
     <platform name="android">
         <preference name="AndroidXEnabled" value="true" />
 
-        <!-- Build with SDK: Android 12 -->
-        <preference name="android-targetSdkVersion" value="32" />
+        <!-- Build with SDK: Android 13 -->
+        <preference name="android-targetSdkVersion" value="33" />
 
         <!-- Android 5.1 -->
         <preference name="android-minSdkVersion" value="22" />
@@ -59,9 +59,14 @@
         <config-file target="app/src/main/res/values/colors.xml" parent="/resources">
             <color name="background">#000000</color>
         </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+        </config-file>
     </platform>
 
     <platform name="ios">
+    	<preference name="deployment-target" value="11.0" /> <!-- min supported iOS version  -->
         <resource-file src="res/ios/sound/blackberry.caf" />
         <resource-file src="res/ios/sound/crystal.caf" />
         <resource-file src="res/ios/sound/msn.caf" />

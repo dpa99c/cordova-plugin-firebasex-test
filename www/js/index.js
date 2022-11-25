@@ -1030,6 +1030,15 @@ function authenticateUserWithApple(){
     }, 'en-GB');
 }
 
+function authenticateUserWithMicrosoft(){
+    FirebasePlugin.authenticateUserWithMicrosoft(function(credential) {
+        authCredential = credential;
+        log("Successfully authenticated with Microsoft");
+    }, function(error) {
+        logError("Failed to authenticate with Microsoft", error);
+    }, 'en-GB');
+}
+
 function signInWithCredential(){
     if(!authCredential) return logError("No auth credential exists - request a credential first");
 
