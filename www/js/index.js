@@ -1039,6 +1039,24 @@ function authenticateUserWithMicrosoft(){
     }, 'en-GB');
 }
 
+function authenticateUserWithFacebook(){
+    facebookConnectPlugin.login(["public_profile"],
+        function(userData){
+            var accessToken = userData.authResponse.accessToken;
+            FirebasePlugin.authenticateUserWithFacebook(accessToken, function(credential) {
+                authCredential = credential;
+                log("Successfully authenticated with Facebook", true);
+            }, function(error) {
+                logError("Failed to authenticate with Facebook", error, true);
+            });
+
+        },
+        function(error){
+            logError("Failed to login to Facebook", error, true);
+        }
+    );
+}
+
 function signInWithCredential(){
     if(!authCredential) return logError("No auth credential exists - request a credential first");
 
