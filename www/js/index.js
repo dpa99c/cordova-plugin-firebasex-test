@@ -195,6 +195,14 @@ var initIos = function(){
     FirebasePlugin.registerInstallationIdChangeListener(function(installationId){
         log("Installation ID changed - new ID: " + installationId);
     });
+
+    FirebasePlugin.registerApplicationDidBecomeActiveListener(function(){
+        log("Application did become active");
+    });
+
+    FirebasePlugin.registerApplicationDidEnterBackgroundListener(function(){
+        log("Application did enter background");
+    });
 };
 
 var initAndroid = function(){
