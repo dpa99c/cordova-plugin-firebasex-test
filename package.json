@@ -56,7 +56,7 @@
     ]
   },
   "devDependencies": {
-    "cordova-android": "^11.0.0",
+    "cordova-android": "^12.0.0",
     "cordova-ios": "^6.2.0",
     "cordova.plugins.diagnostic": "^7.1.0",
     "google-auth-library": "^4.2.5"
