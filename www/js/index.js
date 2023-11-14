@@ -162,6 +162,14 @@ function onDeviceReady(){
         log("Auth state changed: User signed " + (userSignedIn ? "in" : "out"));
     });
 
+    FirebasePlugin.registerAuthIdTokenChangeListener(function(result){
+        if(result){
+            log("Auth ID token changed to: " + result.idToken + "; providerId: " + result.providerId);
+        }else{
+            log("Auth ID token not present");
+        }
+    });
+
     // Custom FCM receiver plugin
     cordova.plugin.customfcmreceiver.registerReceiver(function(message){
         log("Received custom message: "+message);
