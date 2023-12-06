@@ -213,6 +213,15 @@ var initIos = function(){
     });
 };
 
+var initiateOnDeviceConversionMeasurement = function(){
+    FirebasePlugin.initiateOnDeviceConversionMeasurement({emailAddress: "me@here.com"},
+    function(){
+        log("Initiated on-device conversion")
+    }, function(error) {
+        logError("Failed to initiate on-device conversion", error);
+    });
+}
+
 var initAndroid = function(){
 
     // Define custom  channel - all keys are except 'id' are optional.
@@ -527,6 +536,7 @@ function didCrashOnPreviousExecution(){
 function setAnalyticsCollectionEnabled(){
     FirebasePlugin.setAnalyticsCollectionEnabled(true, function(){
         log("Enabled analytics data collection", true);
+        initiateOnDeviceConversionMeasurement();
     },function(error){
         logError("Failed to enable analytics data collection", error, true);
     });
