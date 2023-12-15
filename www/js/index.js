@@ -94,7 +94,7 @@ function onDeviceReady(){
     $output = $('#log-output');
     log("deviceready");
 
-    $('#device-platform').text(cordova.platformId);
+    $('#device-platform').text('cordova-'+cordova.platformId+'@'+cordova.platformVersion);
     cordova.plugins.diagnostic.getDeviceOSVersion(function(details){
         $('#device-version').text(details.version);
         $('#device-api-level').text(details.apiLevel);
