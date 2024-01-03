@@ -1083,6 +1083,21 @@ function authenticateUserWithFacebook(){
     );
 }
 
+function authenticateUserWithOAuth(){
+    const providerId = "oidc.dev-d2r7p3fhwnej1xgv.uk.auth0.com",
+        customParameters = {
+            "locale": "en-GB"
+        },
+        scopes = ["openid", "profile", "email", "phone", "address"];
+
+    FirebasePlugin.authenticateUserWithOAuth(function(credential) {
+        authCredential = credential;
+        log("Successfully authenticated with OpenID Connect Playground using OAuth");
+    }, function(error) {
+        logError("Failed to authenticate with OpenID Connect Playground using OAuth", error);
+    }, providerId, customParameters, scopes);
+}
+
 function signInWithCredential(){
     if(!authCredential) return logError("No auth credential exists - request a credential first");
 
