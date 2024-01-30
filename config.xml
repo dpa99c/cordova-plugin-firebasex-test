@@ -28,6 +28,16 @@
         <!-- Android 5.1 -->
         <preference name="android-minSdkVersion" value="22" />
 
+        <preference name="AndroidXEnabled" value="true" />
+        <preference name="GradlePluginKotlinEnabled" value="true" />
+        <preference name="GradlePluginKotlinVersion" value="1.9.0" />
+        
+        <!-- <preference name="android-compileSdkVersion" value="34" /> -->
+
+        <!-- <preference name="GradleVersion" value="8.0" /> -->
+        <!-- <preference name="AndroidGradlePluginVersion" value="8.0.0" /> -->
+            
+
         <resource-file src="res/android/build-extras.gradle" target="app/build-extras.gradle" />
         <resource-file src="res/android/gradle.properties" target="gradle.properties" />
 
