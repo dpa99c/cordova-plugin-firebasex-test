@@ -550,6 +550,22 @@ function isAnalyticsCollectionEnabled(showUser){
     });
 }
 
+function setAnalyticsConsentEnabled(){
+    var consents = {};
+    consents[FirebasePlugin.AnalyticsConsentMode.ANALYTICS_STORAGE] = FirebasePlugin.AnalyticsConsentStatus.GRANTED;
+    consents[FirebasePlugin.AnalyticsConsentMode.AD_STORAGE] = FirebasePlugin.AnalyticsConsentStatus.GRANTED;
+    consents[FirebasePlugin.AnalyticsConsentMode.AD_USER_DATA] = FirebasePlugin.AnalyticsConsentStatus.GRANTED;
+    consents[FirebasePlugin.AnalyticsConsentMode.AD_PERSONALIZATION] = FirebasePlugin.AnalyticsConsentStatus.GRANTED;
+
+    FirebasePlugin.setAnalyticsConsentMode(consents);
+
+    FirebasePlugin.setAnalyticsConsentMode(consents, function(){
+        log("Set analytics consent", true);
+    },function(error){
+        logError("Failed to set analytics consent", error, true);
+    });
+}
+
 function logEvent(){
     FirebasePlugin.logEvent("my_event", {
         string: "bar",
@@ -1134,6 +1150,14 @@ function linkUserWithCredential(){
             return handleSecondFactorChallenge(secondFactors)
         }
         logError("Failed to link user", error, true);
+    });
+}
+
+function unlinkUserWithProvider(){
+    FirebasePlugin.unlinkUserWithProvider("microsoft.com", function() {
+        log("Successfully unlinked user with provider: Microsoft", true);
+    }, function(error) {
+        logError("Failed to unlink user with provider", error, true);
     });
 }
 
