@@ -665,7 +665,7 @@ function setDefaults(){
 
 
 var cacheExpirationSeconds = 10;
-function fetch(){
+function fetchConfig(){
     FirebasePlugin.fetch(cacheExpirationSeconds, function(){
         log("Remote config fetched", true);
     },function(error){
