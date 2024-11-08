@@ -31,7 +31,7 @@
         "GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_PERSONALIZATION_SIGNALS": "false",
         "SETUP_RECAPTCHA_VERIFICATION": "true",
         "IOS_ENABLE_APPLE_SIGNIN": "true",
-        "IOS_USE_PRECOMPILED_FIRESTORE_POD": "false",
+        "IOS_USE_PRECOMPILED_FIRESTORE_POD": "true",
         "IOS_ON_DEVICE_CONVERSION_ANALYTICS": "true"
       },
       "cordova-custom-config": {},
