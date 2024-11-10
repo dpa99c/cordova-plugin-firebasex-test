@@ -520,10 +520,6 @@ function sendCrash(){
     FirebasePlugin.sendCrash();
 }
 
-function sendNdkCrash(){
-    helloc.causeCrash();
-}
-
 function didCrashOnPreviousExecution(){
     FirebasePlugin.didCrashOnPreviousExecution(function(didCrashOnPreviousExecution){
         log("Did crash on previous execution: "+didCrashOnPreviousExecution, true);
