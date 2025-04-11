@@ -22,8 +22,8 @@
     <platform name="android">
         <preference name="AndroidXEnabled" value="true" />
 
-        <!-- Build with SDK API 34 / Android 14 -->
-        <preference name="android-targetSdkVersion" value="34" />
+        <!-- Build with SDK API 35 / Android 15 -->
+        <preference name="android-targetSdkVersion" value="35" />
 
         <!-- Android API 24 / v7.0.0 -->
         <preference name="android-minSdkVersion" value="24" />
