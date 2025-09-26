@@ -8,7 +8,8 @@
   "dependencies": {
     "cordova-custom-config": "^5.1.0",
     "cordova-plugin-dialogs": "git+https://github.com/dpa99c/cordova-plugin-dialogs.git",
-    "cordova-plugin-firebasex": "*"
+    "cordova-plugin-firebasex": "*",
+    "xml-js": "^1.6.11"
   },
   "cordova": {
     "plugins": {
@@ -34,18 +35,6 @@
       "cordova-custom-config": {},
       "cordova-plugin-dialogs": {},
       "cordova.plugins.diagnostic": {},
-      "cordova-plugin-facebook-connect": {
-        "APP_ID": "828119491855582",
-        "APP_NAME": "FirebaseX Test",
-        "FACEBOOK_URL_SCHEME_SUFFIX": " ",
-        "OTHER_APP_SCHEMES": " ",
-        "FACEBOOK_AUTO_LOG_APP_EVENTS": "true",
-        "FACEBOOK_HYBRID_APP_EVENTS": "false",
-        "FACEBOOK_ADVERTISER_ID_COLLECTION": "true",
-        "FACEBOOK_ANDROID_SDK_VERSION": "11.3.0",
-        "FACEBOOK_IOS_SDK_VERSION": "11.1.0",
-        "FACEBOOK_BROWSER_SDK_VERSION": "v11.0"
-      },
       "cordova-plugin-androidx-adapter": {}
     },
     "platforms": [
