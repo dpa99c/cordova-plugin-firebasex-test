@@ -196,6 +196,8 @@ $(document).on('deviceready', onDeviceReady);
 var initIos = function(){
     FirebasePlugin.onApnsTokenReceived(function(token){
         log("APNS token received: " + token)
+        // get FCM token once APNS token received
+        getToken(false);
     }, function(error) {
         logError("Failed to receive APNS token", error);
     });
@@ -289,6 +291,9 @@ var initAndroid = function(){
             logError("Create channel error", error);
         }
     );
+
+    // get FCM token
+    getToken(false);
 };
 
 // Notifications
@@ -296,8 +301,6 @@ var checkNotificationPermission = function(requested){
     FirebasePlugin.hasPermission(function(hasPermission){
         if(hasPermission){
             log("Remote notifications permission granted");
-            // Granted
-            getToken(false);
         }else if(!requested){
             // Request permission
             log("Requesting remote notifications permission");
