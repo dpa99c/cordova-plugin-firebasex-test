@@ -2,36 +2,62 @@
   "name": "uk.co.workingedge.firebase.test",
   "displayName": "FirebaseTest",
   "version": "17.0.0",
-  "description": "Test project for cordova-plugin-firebasex",
+  "description": "Test project for cordova-plugin-firebasex modular plugins",
   "author": "Dave Alden",
   "license": "Apache-2.0",
   "dependencies": {
     "cordova-custom-config": "^5.1.0",
     "cordova-plugin-dialogs": "git+https://github.com/dpa99c/cordova-plugin-dialogs.git",
-    "cordova-plugin-firebasex": "*",
+    "cordova-plugin-firebasex-core": "file:../cordova-plugin-firebasex-modular/cordova-plugin-firebasex-core",
+    "cordova-plugin-firebasex-messaging": "file:../cordova-plugin-firebasex-modular/cordova-plugin-firebasex-messaging",
+    "cordova-plugin-firebasex-auth": "file:../cordova-plugin-firebasex-modular/cordova-plugin-firebasex-auth",
+    "cordova-plugin-firebasex-analytics": "file:../cordova-plugin-firebasex-modular/cordova-plugin-firebasex-analytics",
+    "cordova-plugin-firebasex-crashlytics": "file:../cordova-plugin-firebasex-modular/cordova-plugin-firebasex-crashlytics",
+    "cordova-plugin-firebasex-firestore": "file:../cordova-plugin-firebasex-modular/cordova-plugin-firebasex-firestore",
+    "cordova-plugin-firebasex-functions": "file:../cordova-plugin-firebasex-modular/cordova-plugin-firebasex-functions",
+    "cordova-plugin-firebasex-config": "file:../cordova-plugin-firebasex-modular/cordova-plugin-firebasex-config",
+    "cordova-plugin-firebasex-performance": "file:../cordova-plugin-firebasex-modular/cordova-plugin-firebasex-performance",
+    "cordova-plugin-firebasex-inappmessaging": "file:../cordova-plugin-firebasex-modular/cordova-plugin-firebasex-inappmessaging",
+    "cordova-plugin-firebasex": "file:../cordova-plugin-firebasex-modular/cordova-plugin-firebasex",
     "xml-js": "^1.6.11"
   },
   "cordova": {
     "plugins": {
-      "cordova-plugin-firebasex": {
+      "cordova-plugin-firebasex-core": {
         "ANDROID_ICON_ACCENT": "#FF11FF11",
-        "ANDROID_FIREBASE_PERFORMANCE_MONITORING": "false",
-        "IOS_STRIP_DEBUG": "true",
+        "IOS_STRIP_DEBUG": "true"
+      },
+      "cordova-plugin-firebasex-messaging": {
+        "FIREBASE_FCM_AUTOINIT_ENABLED": "false"
+      },
+      "cordova-plugin-firebasex-auth": {
+        "SETUP_RECAPTCHA_VERIFICATION": "true",
+        "IOS_ENABLE_APPLE_SIGNIN": "true"
+      },
+      "cordova-plugin-firebasex-analytics": {
         "FIREBASE_ANALYTICS_COLLECTION_ENABLED": "false",
-        "FIREBASE_PERFORMANCE_COLLECTION_ENABLED": "false",
-        "FIREBASE_CRASHLYTICS_COLLECTION_ENABLED": "false",
-        "FIREBASE_FCM_AUTOINIT_ENABLED": "false",
         "FIREBASE_ANALYTICS_WITHOUT_ADS": "false",
         "GOOGLE_ANALYTICS_ADID_COLLECTION_ENABLED": "false",
         "GOOGLE_ANALYTICS_DEFAULT_ALLOW_ANALYTICS_STORAGE": "false",
         "GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_STORAGE": "false",
         "GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_USER_DATA": "false",
         "GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_PERSONALIZATION_SIGNALS": "false",
-        "SETUP_RECAPTCHA_VERIFICATION": "true",
-        "IOS_ENABLE_APPLE_SIGNIN": "true",
-        "IOS_USE_PRECOMPILED_FIRESTORE_POD": "true",
         "IOS_ON_DEVICE_CONVERSION_ANALYTICS": "true"
       },
+      "cordova-plugin-firebasex-crashlytics": {
+        "FIREBASE_CRASHLYTICS_COLLECTION_ENABLED": "false"
+      },
+      "cordova-plugin-firebasex-firestore": {
+        "IOS_USE_PRECOMPILED_FIRESTORE_POD": "true"
+      },
+      "cordova-plugin-firebasex-functions": {},
+      "cordova-plugin-firebasex-config": {},
+      "cordova-plugin-firebasex-performance": {
+        "FIREBASE_PERFORMANCE_COLLECTION_ENABLED": "false",
+        "ANDROID_FIREBASE_PERFORMANCE_MONITORING": "false"
+      },
+      "cordova-plugin-firebasex-inappmessaging": {},
+      "cordova-plugin-firebasex": {},
       "cordova-custom-config": {},
       "cordova-plugin-dialogs": {},
       "cordova.plugins.diagnostic": {},
@@ -43,7 +69,7 @@
     ]
   },
   "devDependencies": {
-    "cordova-android": "^14.0.0",
+    "cordova-android": "^14.0.1",
     "cordova-ios": "^8.0.0",
     "cordova-plugin-androidx-adapter": "^1.1.3",
     "cordova.plugins.diagnostic": "^7.1.0",
