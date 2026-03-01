@@ -980,12 +980,17 @@ function verifySecondAuthFactor() {
         }, {
             selectedIndex: selectedIndex,
             credential, credential
-        }, {
-            timeOutDuration: timeoutInSeconds,
-            requireSmsValidation: requireSmsValidation,
-            fakeVerificationCode: fakeVerificationCode,
-            phoneNumber: phoneNumber
-        });
+        }, (function(){
+            var opts = {
+                timeOutDuration: timeoutInSeconds,
+                requireSmsValidation: requireSmsValidation
+            };
+            if (fakeVerificationCode) {
+                opts.fakeVerificationCode = fakeVerificationCode;
+                opts.phoneNumber = phoneNumber;
+            }
+            return opts;
+        })());
     };
 
     verify();
