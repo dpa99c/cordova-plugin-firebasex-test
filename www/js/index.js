@@ -67,8 +67,9 @@ function promptUserForInput(title, msg, cb) {
     navigator.notification.prompt(
         msg,
         function (result) {
-            var input = result.input1 || '';
-            cb(input.trim());
+            var input = (result.input1 || '').trim();
+            log("Prompt: \"" + title + "\": user entered \"" + input + "\"");
+            cb(input);
         },
         title,
         ['Ok']
@@ -79,6 +80,7 @@ function promptUserForYesNoChoice(title, msg, cb) {
     navigator.notification.confirm(
         msg,
         function (result) {
+            log("Confirm: \"" + title + "\": user selected " + (result === 1 ? "Yes" : "No"));
             if (result) {
                 cb(result === 1);
             }
@@ -93,6 +95,7 @@ function onDeviceReady() {
     FirebasePlugin = window.FirebasePlugin;
     $output = $('#log-output');
     log("deviceready");
+    log("plugin type: modular");
 
     $('#device-platform').text('cordova-' + cordova.platformId + '@' + cordova.platformVersion);
     cordova.plugins.diagnostic.getDeviceOSVersion(function (details) {
@@ -990,6 +993,7 @@ function verifySecondAuthFactor() {
 
 function listEnrolledSecondFactors() {
     FirebasePlugin.listEnrolledSecondAuthFactors(function (secondFactors) {
+        log("Received list of enrolled second factors: " + JSON.stringify(secondFactors));
         var msg = "";
         if (secondFactors.length === 0) {
             msg = "No enrolled second factors"
@@ -1042,6 +1046,7 @@ function unenrollSecondFactor() {
     }
 
     FirebasePlugin.listEnrolledSecondAuthFactors(function (_secondFactors) {
+        log("Received list of enrolled second factors: " + JSON.stringify(_secondFactors));
         if (_secondFactors.length > 0) {
             secondFactors = _secondFactors;
             selectFactor();
@@ -1281,6 +1286,7 @@ function deleteUser() {
 
 var _secondFactors;
 function handleSecondFactorChallenge(secondFactors) {
+    log("Second factor challenge received with factors: " + JSON.stringify(secondFactors));
     _secondFactors = secondFactors;
     verifySecondAuthFactor();
 }
