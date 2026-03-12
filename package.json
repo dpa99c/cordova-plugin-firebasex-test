@@ -1,14 +1,14 @@
 {
   "name": "uk.co.workingedge.firebase.test",
   "displayName": "FirebaseTest",
-  "version": "17.0.0",
+  "version": "19.0.0",
   "description": "Test project for cordova-plugin-firebasex",
   "author": "Dave Alden",
   "license": "Apache-2.0",
   "dependencies": {
     "cordova-custom-config": "^5.1.0",
     "cordova-plugin-dialogs": "git+https://github.com/dpa99c/cordova-plugin-dialogs.git",
-    "cordova-plugin-firebasex": "*",
+    "cordova-plugin-firebasex": "^19.0.0",
     "xml-js": "^1.6.11"
   },
   "cordova": {

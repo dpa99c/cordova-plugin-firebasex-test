@@ -11,7 +11,7 @@
     <content src="index.html" />
     <access origin="*" />
 
-    <plugin name="cordova-plugin-firebasex" spec="https://github.com/dpa99c/cordova-plugin-firebase" >
+    <plugin name="cordova-plugin-firebasex">
         <variable name="IOS_STRIP_DEBUG" value="true" />
         <variable name="FIREBASE_ANALYTICS_COLLECTION_ENABLED" value="false" />
         <variable name="FIREBASE_PERFORMANCE_COLLECTION_ENABLED" value="false" />
