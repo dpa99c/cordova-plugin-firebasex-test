@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="uk.co.workingedge.firebase.test" version="19.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="uk.co.workingedge.firebase.test" version="20.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>FirebaseTest</name>
     <description>
         Test project for cordova-plugin-firebasex
@@ -11,7 +11,7 @@
     <content src="index.html" />
     <access origin="*" />
 
-    <plugin name="cordova-plugin-firebasex" spec="https://github.com/dpa99c/cordova-plugin-firebase" >
+    <plugin name="cordova-plugin-firebasex" >
         <variable name="IOS_STRIP_DEBUG" value="true" />
         <variable name="FIREBASE_ANALYTICS_COLLECTION_ENABLED" value="false" />
         <variable name="FIREBASE_PERFORMANCE_COLLECTION_ENABLED" value="false" />
