@@ -12,26 +12,26 @@
     <access origin="*" />
 
     <!-- Modular Firebase plugins -->
-    <plugin name="cordova-plugin-firebasex-core" spec="../cordova-plugin-firebasex-core">
+    <plugin name="cordova-plugin-firebasex-core">
         <variable name="IOS_STRIP_DEBUG" value="true" />
     </plugin>
-    <plugin name="cordova-plugin-firebasex-messaging" spec="../cordova-plugin-firebasex-messaging" />
-    <plugin name="cordova-plugin-firebasex-auth" spec="../cordova-plugin-firebasex-auth">
+    <plugin name="cordova-plugin-firebasex-messaging" />
+    <plugin name="cordova-plugin-firebasex-auth">
         <variable name="SETUP_RECAPTCHA_VERIFICATION" value="true" />
     </plugin>
-    <plugin name="cordova-plugin-firebasex-analytics" spec="../cordova-plugin-firebasex-analytics">
+    <plugin name="cordova-plugin-firebasex-analytics">
         <variable name="FIREBASE_ANALYTICS_COLLECTION_ENABLED" value="false" />
     </plugin>
-    <plugin name="cordova-plugin-firebasex-crashlytics" spec="../cordova-plugin-firebasex-crashlytics">
+    <plugin name="cordova-plugin-firebasex-crashlytics">
         <variable name="FIREBASE_CRASHLYTICS_COLLECTION_ENABLED" value="false" />
     </plugin>
-    <plugin name="cordova-plugin-firebasex-firestore" spec="../cordova-plugin-firebasex-firestore" />
-    <plugin name="cordova-plugin-firebasex-functions" spec="../cordova-plugin-firebasex-functions" />
-    <plugin name="cordova-plugin-firebasex-config" spec="../cordova-plugin-firebasex-config" />
-    <plugin name="cordova-plugin-firebasex-performance" spec="../cordova-plugin-firebasex-performance">
+    <plugin name="cordova-plugin-firebasex-firestore" />
+    <plugin name="cordova-plugin-firebasex-functions" />
+    <plugin name="cordova-plugin-firebasex-config" />
+    <plugin name="cordova-plugin-firebasex-performance">
         <variable name="FIREBASE_PERFORMANCE_COLLECTION_ENABLED" value="false" />
     </plugin>
-    <plugin name="cordova-plugin-firebasex-inappmessaging" spec="../cordova-plugin-firebasex-inappmessaging" />
+    <plugin name="cordova-plugin-firebasex-inappmessaging" />
 
     <!-- Backward-compatible wrapper providing the unified FirebasePlugin global -->
     <plugin name="cordova-plugin-firebasex" spec="../cordova-plugin-firebasex" />
