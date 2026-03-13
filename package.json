@@ -5,12 +5,6 @@
   "description": "Test project for cordova-plugin-firebasex modular plugins",
   "author": "Dave Alden",
   "license": "Apache-2.0",
-  "dependencies": {
-    "cordova-custom-config": "^5.1.0",
-    "cordova-plugin-dialogs": "git+https://github.com/dpa99c/cordova-plugin-dialogs.git",
-    "cordova-plugin-firebasex-analytics": "file:../cordova-plugin-firebasex-analytics",
-    "xml-js": "^1.6.11"
-  },
   "cordova": {
     "plugins": {
       "cordova-plugin-firebasex-core": {
@@ -54,18 +48,6 @@
         "ANDROID_FIREBASE_PERF_GRADLE_PLUGIN_VERSION": "2.0.1"
       },
       "cordova-plugin-firebasex-inappmessaging": {},
-      "cordova-plugin-firebasex": {
-        "ANDROID_ICON_ACCENT": "#FF00FFFF",
-        "IOS_STRIP_DEBUG": "false",
-        "FIREBASE_ANALYTICS_COLLECTION_ENABLED": "true",
-        "FIREBASE_ANALYTICS_WITHOUT_ADS": "false",
-        "IOS_ON_DEVICE_CONVERSION_ANALYTICS": "false",
-        "FIREBASE_CRASHLYTICS_COLLECTION_ENABLED": "true",
-        "FIREBASE_PERFORMANCE_COLLECTION_ENABLED": "true",
-        "ANDROID_FIREBASE_PERFORMANCE_MONITORING": "false",
-        "ANDROID_FIREBASE_PERF_GRADLE_PLUGIN_VERSION": "2.0.1",
-        "IOS_USE_PRECOMPILED_FIRESTORE_POD": "false"
-      },
       "cordova-custom-config": {},
       "cordova-plugin-dialogs": {},
       "cordova.plugins.diagnostic": {},
@@ -78,8 +60,10 @@
   },
   "devDependencies": {
     "cordova-android": "^14.0.1",
+    "cordova-custom-config": "^5.1.0",
     "cordova-ios": "^8.0.0",
     "cordova-plugin-androidx-adapter": "^1.1.3",
+    "cordova-plugin-dialogs": "git+https://github.com/dpa99c/cordova-plugin-dialogs.git",
     "cordova-plugin-firebasex-auth": "^1.0.1",
     "cordova-plugin-firebasex-config": "^1.0.1",
     "cordova-plugin-firebasex-core": "^1.0.1",
@@ -90,7 +74,8 @@
     "cordova-plugin-firebasex-messaging": "^1.0.1",
     "cordova-plugin-firebasex-performance": "^1.0.1",
     "cordova.plugins.diagnostic": "^7.1.0",
-    "google-auth-library": "^4.2.5"
+    "google-auth-library": "^4.2.5",
+    "xml-js": "^1.6.11"
   },
   "scripts": {
     "send": "node ./scripts/sendMessage.js",
