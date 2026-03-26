@@ -8,7 +8,7 @@
   "dependencies": {
     "cordova-custom-config": "^5.1.0",
     "cordova-plugin-dialogs": "git+https://github.com/dpa99c/cordova-plugin-dialogs.git",
-    "cordova-plugin-firebasex": "git+https://github.com/dpa99c/cordova-plugin-firebasex.git#modular",
+    "cordova-plugin-firebasex": "git+https://github.com/dpa99c/cordova-plugin-firebasex.git#modular_github",
     "xml-js": "^1.6.11"
   },
   "cordova": {
