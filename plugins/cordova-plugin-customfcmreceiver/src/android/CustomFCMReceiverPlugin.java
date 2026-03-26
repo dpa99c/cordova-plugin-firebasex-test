@@ -10,7 +10,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
-import org.apache.cordova.firebase.FirebasePluginMessageReceiver;
+import org.apache.cordova.firebasex.FirebasePluginMessageReceiver;
 
 import java.util.HashMap;
 import java.util.Iterator;

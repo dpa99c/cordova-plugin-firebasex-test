@@ -1,4 +1,4 @@
-var $output, FirebasePlugin;
+var $output;
 
 // Fake authentication code as defined in the Firebase Console: see https://firebase.google.com/docs/auth/android/phone-auth#integration-testing
 var FAKE_SMS_VERIFICATION_CODE = '123456';
@@ -92,10 +92,9 @@ function promptUserForYesNoChoice(title, msg, cb) {
 
 // Init
 function onDeviceReady() {
-    FirebasePlugin = window.FirebasePlugin;
     $output = $('#log-output');
     log("deviceready");
-    log("plugin type: monolith");
+    log("plugin type: modular");
 
     $('#device-platform').text('cordova-' + cordova.platformId + '@' + cordova.platformVersion);
     cordova.plugins.diagnostic.getDeviceOSVersion(function (details) {
@@ -117,7 +116,7 @@ function onDeviceReady() {
         var stackTrace = null;
 
         var sendError = function () {
-            FirebasePlugin.logError(logMessage, stackTrace, function () {
+            FirebasexCrashlytics.logError(logMessage, stackTrace, function () {
                 log("Sent JS exception trace");
             }, function (error) {
                 logError("Failed to send JS exception trace", error);
@@ -138,7 +137,7 @@ function onDeviceReady() {
 
 
     //Register handlers
-    FirebasePlugin.onMessageReceived(function (message) {
+    FirebasexMessaging.onMessageReceived(function (message) {
         try {
             console.log("onMessageReceived");
             console.dir(message);
@@ -155,17 +154,17 @@ function onDeviceReady() {
         logError("Failed receiving FirebasePlugin message", error);
     });
 
-    FirebasePlugin.onTokenRefresh(function (token) {
+    FirebasexMessaging.onTokenRefresh(function (token) {
         log("Token refreshed: " + token)
     }, function (error) {
         logError("Failed to refresh token", error);
     });
 
-    FirebasePlugin.registerAuthStateChangeListener(function (userSignedIn) {
+    FirebasexAuth.registerAuthStateChangeListener(function (userSignedIn) {
         log("Auth state changed: User signed " + (userSignedIn ? "in" : "out"));
     });
 
-    FirebasePlugin.registerAuthIdTokenChangeListener(function (result) {
+    FirebasexAuth.registerAuthIdTokenChangeListener(function (result) {
         if (result) {
             log("Auth ID token changed to: " + result.idToken + "; providerId: " + result.providerId);
         } else {
@@ -197,7 +196,7 @@ function onDeviceReady() {
 $(document).on('deviceready', onDeviceReady);
 
 var initIos = function () {
-    FirebasePlugin.onApnsTokenReceived(function (token) {
+    FirebasexMessaging.onApnsTokenReceived(function (token) {
         log("APNS token received: " + token)
         // get FCM token once APNS token received
         getToken(false);
@@ -205,21 +204,21 @@ var initIos = function () {
         logError("Failed to receive APNS token", error);
     });
 
-    FirebasePlugin.registerInstallationIdChangeListener(function (installationId) {
+    FirebasexCore.registerInstallationIdChangeListener(function (installationId) {
         log("Installation ID changed - new ID: " + installationId);
     });
 
-    FirebasePlugin.registerApplicationDidBecomeActiveListener(function () {
+    FirebasexCore.registerApplicationDidBecomeActiveListener(function () {
         log("Application did become active");
     });
 
-    FirebasePlugin.registerApplicationDidEnterBackgroundListener(function () {
+    FirebasexCore.registerApplicationDidEnterBackgroundListener(function () {
         log("Application did enter background");
     });
 };
 
 var initiateOnDeviceConversionMeasurement = function () {
-    FirebasePlugin.initiateOnDeviceConversionMeasurement({ emailAddress: "me@here.com" },
+    FirebasexAnalytics.initiateOnDeviceConversionMeasurement({ emailAddress: "me@here.com" },
         function () {
             log("Initiated on-device conversion")
         }, function (error) {
@@ -275,10 +274,10 @@ var initAndroid = function () {
         visibility: 1
     };
 
-    FirebasePlugin.createChannel(customChannel,
+    FirebasexMessaging.createChannel(customChannel,
         function () {
             log("Created custom channel: " + customChannel.id);
-            FirebasePlugin.listChannels(
+            FirebasexMessaging.listChannels(
                 function (channels) {
                     if (typeof channels == "undefined") return;
                     for (var i = 0; i < channels.length; i++) {
@@ -301,13 +300,13 @@ var initAndroid = function () {
 
 // Notifications
 var checkNotificationPermission = function (requested) {
-    FirebasePlugin.hasPermission(function (hasPermission) {
+    FirebasexMessaging.hasPermission(function (hasPermission) {
         if (hasPermission) {
             log("Remote notifications permission granted");
         } else if (!requested) {
             // Request permission
             log("Requesting remote notifications permission");
-            FirebasePlugin.grantPermission(checkNotificationPermission.bind(this, true));
+            FirebasexMessaging.grantPermission(checkNotificationPermission.bind(this, true));
         } else {
             // Denied
             logError("Notifications won't be shown as permission is denied");
@@ -316,7 +315,7 @@ var checkNotificationPermission = function (requested) {
 };
 
 var checkAutoInit = function (showUser) {
-    FirebasePlugin.isAutoInitEnabled(function (enabled) {
+    FirebasexMessaging.isAutoInitEnabled(function (enabled) {
         log("Auto init is " + (enabled ? "enabled" : "disabled"), showUser);
         $('body')
             .addClass('autoinit-' + (enabled ? 'enabled' : 'disabled'))
@@ -327,7 +326,7 @@ var checkAutoInit = function (showUser) {
 };
 
 var enableAutoInit = function () {
-    FirebasePlugin.setAutoInitEnabled(true, function () {
+    FirebasexMessaging.setAutoInitEnabled(true, function () {
         log("Enabled auto init", true);
         checkAutoInit(false);
     }, function (error) {
@@ -336,7 +335,7 @@ var enableAutoInit = function () {
 };
 
 var disableAutoInit = function () {
-    FirebasePlugin.setAutoInitEnabled(false, function () {
+    FirebasexMessaging.setAutoInitEnabled(false, function () {
         log("Disabled auto init", true);
         checkAutoInit(false);
     }, function (error) {
@@ -345,7 +344,7 @@ var disableAutoInit = function () {
 };
 
 var getID = function () {
-    FirebasePlugin.getId(function (id) {
+    FirebasexCore.getId(function (id) {
         log("Got FCM ID: " + id, true)
     }, function (error) {
         logError("Failed to get FCM ID", error, true);
@@ -353,7 +352,7 @@ var getID = function () {
 };
 
 var getToken = function (showAlert) {
-    FirebasePlugin.getToken(function (token) {
+    FirebasexMessaging.getToken(function (token) {
         log("Got FCM token: " + token, showAlert)
     }, function (error) {
         logError("Failed to get FCM token", error, true);
@@ -361,7 +360,7 @@ var getToken = function (showAlert) {
 };
 
 var getAPNSToken = function () {
-    FirebasePlugin.getAPNSToken(function (token) {
+    FirebasexMessaging.getAPNSToken(function (token) {
         log("Got APNS token: " + token, true)
     }, function (error) {
         logError("Failed to get APNS token", error, true);
@@ -408,7 +407,7 @@ var handleDataMessage = function (message) {
 
 
 function clearNotifications() {
-    FirebasePlugin.clearAllNotifications(function () {
+    FirebasexMessaging.clearAllNotifications(function () {
         log("Cleared all notifications", true);
     }, function (error) {
         logError("Failed to clear notifications", error, true);
@@ -416,7 +415,7 @@ function clearNotifications() {
 }
 
 function subscribe() {
-    FirebasePlugin.subscribe("my_topic", function () {
+    FirebasexMessaging.subscribe("my_topic", function () {
         log("Subscribed to topic", true);
     }, function (error) {
         logError("Failed to subscribe to topic", error, true);
@@ -424,7 +423,7 @@ function subscribe() {
 }
 
 function unsubscribe() {
-    FirebasePlugin.unsubscribe("my_topic", function () {
+    FirebasexMessaging.unsubscribe("my_topic", function () {
         log("Unsubscribed from topic", true);
     }, function (error) {
         logError("Failed to unsubscribe from topic", error, true);
@@ -432,7 +431,7 @@ function unsubscribe() {
 }
 
 function getBadgeNumber() {
-    FirebasePlugin.getBadgeNumber(function (number) {
+    FirebasexMessaging.getBadgeNumber(function (number) {
         log("Current badge number: " + number, true);
     }, function (error) {
         logError("Failed to get badge number", error, true);
@@ -440,9 +439,9 @@ function getBadgeNumber() {
 }
 
 function incrementBadgeNumber() {
-    FirebasePlugin.getBadgeNumber(function (current) {
+    FirebasexMessaging.getBadgeNumber(function (current) {
         var number = current + 1;
-        FirebasePlugin.setBadgeNumber(number, function () {
+        FirebasexMessaging.setBadgeNumber(number, function () {
             log("Set badge number to: " + number, true);
         }, function (error) {
             logError("Failed to set badge number", error, true);
@@ -453,7 +452,7 @@ function incrementBadgeNumber() {
 }
 
 function clearBadgeNumber() {
-    FirebasePlugin.setBadgeNumber(0, function () {
+    FirebasexMessaging.setBadgeNumber(0, function () {
         log("Cleared badge number", true);
     }, function (error) {
         logError("Failed to clear badge number", error, true);
@@ -461,7 +460,7 @@ function clearBadgeNumber() {
 }
 
 function unregister() {
-    FirebasePlugin.unregister(function () {
+    FirebasexMessaging.unregister(function () {
         log("Unregistered from Firebase", true);
     }, function (error) {
         logError("Failed to unregister from Firebase", error, true);
@@ -470,7 +469,7 @@ function unregister() {
 
 // Crashlytics
 function setCrashlyticsCollectionEnabled(enabled) {
-    FirebasePlugin.setCrashlyticsCollectionEnabled(enabled, function () {
+    FirebasexCrashlytics.setCrashlyticsCollectionEnabled(enabled, function () {
         log("Crashlytics data collection has been " + (enabled ? "enabled" : "disabled"), true);
     }, function (error) {
         logError("Failed to enable crashlytics data collection", error, true);
@@ -478,7 +477,7 @@ function setCrashlyticsCollectionEnabled(enabled) {
 }
 
 function isCrashlyticsCollectionEnabled(showUser) {
-    FirebasePlugin.isCrashlyticsCollectionEnabled(function (enabled) {
+    FirebasexCrashlytics.isCrashlyticsCollectionEnabled(function (enabled) {
         log("Crashlytics data collection setting is " + (enabled ? "enabled" : "disabled"), showUser);
     }, function (error) {
         logError("Failed to fetch crashlytics data collection setting", error, true);
@@ -486,7 +485,7 @@ function isCrashlyticsCollectionEnabled(showUser) {
 }
 
 function setCrashlyticsUserId() {
-    FirebasePlugin.setCrashlyticsUserId("crashlytics_user_id", function () {
+    FirebasexCrashlytics.setCrashlyticsUserId("crashlytics_user_id", function () {
         log("Set crashlytics user ID", true);
     }, function (error) {
         logError("Failed to set crashlytics user ID", error, true);
@@ -494,7 +493,7 @@ function setCrashlyticsUserId() {
 }
 
 function setCrashlyticsCustomKey() {
-    FirebasePlugin.setCrashlyticsCustomKey("my_key", "foo", function () {
+    FirebasexCrashlytics.setCrashlyticsCustomKey("my_key", "foo", function () {
         log("Set crashlytics custom key");
     }, function (error) {
         logError("Failed to set crashlytics custom key", error);
@@ -502,7 +501,7 @@ function setCrashlyticsCustomKey() {
 }
 
 function sendNonFatal() {
-    FirebasePlugin.logError("This is a non-fatal error", function () {
+    FirebasexCrashlytics.logError("This is a non-fatal error", function () {
         log("Sent non-fatal error", true);
     }, function (error) {
         logError("Failed to send non-fatal error", error, true);
@@ -515,7 +514,7 @@ function causeJsException() {
 }
 
 function logCrashMessage() {
-    FirebasePlugin.logMessage("A custom message about this crash", function () {
+    FirebasexCrashlytics.logMessage("A custom message about this crash", function () {
         console.log("Logged crash message - it will be sent with the next crash");
     }, function (error) {
         logError("Failed to log crash message", error, true);
@@ -523,11 +522,11 @@ function logCrashMessage() {
 }
 
 function sendCrash() {
-    FirebasePlugin.sendCrash();
+    FirebasexCrashlytics.sendCrash();
 }
 
 function didCrashOnPreviousExecution() {
-    FirebasePlugin.didCrashOnPreviousExecution(function (didCrashOnPreviousExecution) {
+    FirebasexCrashlytics.didCrashOnPreviousExecution(function (didCrashOnPreviousExecution) {
         log("Did crash on previous execution: " + didCrashOnPreviousExecution, true);
     }, function (error) {
         logError("Failed to check crash on previous execution:" + error, true);
@@ -536,7 +535,7 @@ function didCrashOnPreviousExecution() {
 
 // Analytics
 function setAnalyticsCollectionEnabled() {
-    FirebasePlugin.setAnalyticsCollectionEnabled(true, function () {
+    FirebasexAnalytics.setAnalyticsCollectionEnabled(true, function () {
         log("Enabled analytics data collection", true);
         initiateOnDeviceConversionMeasurement();
     }, function (error) {
@@ -545,7 +544,7 @@ function setAnalyticsCollectionEnabled() {
 }
 
 function isAnalyticsCollectionEnabled(showUser) {
-    FirebasePlugin.isAnalyticsCollectionEnabled(function (enabled) {
+    FirebasexAnalytics.isAnalyticsCollectionEnabled(function (enabled) {
         log("Analytics data collection setting is " + (enabled ? "enabled" : "disabled"), showUser);
     }, function (error) {
         logError("Failed to fetch Analytics data collection setting", error, true);
@@ -554,14 +553,14 @@ function isAnalyticsCollectionEnabled(showUser) {
 
 function setAnalyticsConsentEnabled() {
     var consents = {};
-    consents[FirebasePlugin.AnalyticsConsentMode.ANALYTICS_STORAGE] = FirebasePlugin.AnalyticsConsentStatus.GRANTED;
-    consents[FirebasePlugin.AnalyticsConsentMode.AD_STORAGE] = FirebasePlugin.AnalyticsConsentStatus.GRANTED;
-    consents[FirebasePlugin.AnalyticsConsentMode.AD_USER_DATA] = FirebasePlugin.AnalyticsConsentStatus.GRANTED;
-    consents[FirebasePlugin.AnalyticsConsentMode.AD_PERSONALIZATION] = FirebasePlugin.AnalyticsConsentStatus.GRANTED;
+    consents[FirebasexAnalytics.AnalyticsConsentMode.ANALYTICS_STORAGE] = FirebasexAnalytics.AnalyticsConsentStatus.GRANTED;
+    consents[FirebasexAnalytics.AnalyticsConsentMode.AD_STORAGE] = FirebasexAnalytics.AnalyticsConsentStatus.GRANTED;
+    consents[FirebasexAnalytics.AnalyticsConsentMode.AD_USER_DATA] = FirebasexAnalytics.AnalyticsConsentStatus.GRANTED;
+    consents[FirebasexAnalytics.AnalyticsConsentMode.AD_PERSONALIZATION] = FirebasexAnalytics.AnalyticsConsentStatus.GRANTED;
 
-    FirebasePlugin.setAnalyticsConsentMode(consents);
+    FirebasexAnalytics.setAnalyticsConsentMode(consents);
 
-    FirebasePlugin.setAnalyticsConsentMode(consents, function () {
+    FirebasexAnalytics.setAnalyticsConsentMode(consents, function () {
         log("Set analytics consent", true);
     }, function (error) {
         logError("Failed to set analytics consent", error, true);
@@ -569,7 +568,7 @@ function setAnalyticsConsentEnabled() {
 }
 
 function logEvent() {
-    FirebasePlugin.logEvent("my_event", {
+    FirebasexAnalytics.logEvent("my_event", {
         string: "bar",
         integer: 10,
         float: 1.234
@@ -581,7 +580,7 @@ function logEvent() {
 }
 
 function setScreenName() {
-    FirebasePlugin.setScreenName("my_screen", function () {
+    FirebasexAnalytics.setScreenName("my_screen", function () {
         log("Sent screen name", true);
     }, function (error) {
         logError("Failed to send screen name", error, true);
@@ -589,7 +588,7 @@ function setScreenName() {
 }
 
 function setUserID() {
-    FirebasePlugin.setUserId("user_id", function () {
+    FirebasexAnalytics.setUserId("user_id", function () {
         log("Set user ID", true);
     }, function (error) {
         logError("Failed to set user ID", error, true);
@@ -597,7 +596,7 @@ function setUserID() {
 }
 
 function setUserProperty() {
-    FirebasePlugin.setUserProperty("some_key", "some_value", function () {
+    FirebasexAnalytics.setUserProperty("some_key", "some_value", function () {
         log("Set user property", true);
     }, function (error) {
         logError("Failed to set user property", error, true);
@@ -606,7 +605,7 @@ function setUserProperty() {
 
 // Performance
 function setPerformanceCollectionEnabled() {
-    FirebasePlugin.setPerformanceCollectionEnabled(true, function () {
+    FirebasexPerformance.setPerformanceCollectionEnabled(true, function () {
         log("Enabled performance data collection");
     }, function (error) {
         logError("Failed to enable performance data collection", error, true);
@@ -614,7 +613,7 @@ function setPerformanceCollectionEnabled() {
 }
 
 function isPerformanceCollectionEnabled(showUser) {
-    FirebasePlugin.isPerformanceCollectionEnabled(function (enabled) {
+    FirebasexPerformance.isPerformanceCollectionEnabled(function (enabled) {
         log("Performance data collection setting is " + (enabled ? "enabled" : "disabled"), showUser);
     }, function (error) {
         logError("Failed to fetch Performance data collection setting", error, true);
@@ -623,7 +622,7 @@ function isPerformanceCollectionEnabled(showUser) {
 
 var traceName = "my_trace";
 function startTrace() {
-    FirebasePlugin.startTrace(traceName, function () {
+    FirebasexPerformance.startTrace(traceName, function () {
         log("Trace started", true);
     }, function (error) {
         logError("Failed to start trace", erro, truer);
@@ -631,7 +630,7 @@ function startTrace() {
 }
 
 function incrementCounter() {
-    FirebasePlugin.incrementCounter(traceName, "my_counter", function () {
+    FirebasexPerformance.incrementCounter(traceName, "my_counter", function () {
         log("Incremented trace counter", true);
     }, function (error) {
         logError("Failed to increment trace counter", error, true);
@@ -639,7 +638,7 @@ function incrementCounter() {
 }
 
 function stopTrace() {
-    FirebasePlugin.stopTrace(traceName, function () {
+    FirebasexPerformance.stopTrace(traceName, function () {
         log("Trace stopped", true);
     }, function (error) {
         logError("Failed to stop trace", error, true);
@@ -648,7 +647,7 @@ function stopTrace() {
 
 // Remote config
 function getInfo() {
-    FirebasePlugin.getInfo(function (info) {
+    FirebasexConfig.getInfo(function (info) {
         log("Got remote config info: " + JSON.stringify(info), true);
         console.dir(info);
     }, function (error) {
@@ -659,7 +658,7 @@ function getInfo() {
 var fetchTimeout = 60;
 var minimumFetchInterval = 0;
 function setConfigSettings() {
-    FirebasePlugin.setConfigSettings(fetchTimeout, minimumFetchInterval, function () {
+    FirebasexConfig.setConfigSettings(fetchTimeout, minimumFetchInterval, function () {
         log("Set remote config settings", true);
     }, function (error) {
         logError("Failed to set remote config settings", error, true);
@@ -674,7 +673,7 @@ var defaults = {
     string_value: "not set"
 };
 function setDefaults() {
-    FirebasePlugin.setDefaults(defaults, function () {
+    FirebasexConfig.setDefaults(defaults, function () {
         log("Set remote config defaults", true);
     }, function (error) {
         logError("Failed to set remote config defaults", error, true);
@@ -684,7 +683,7 @@ function setDefaults() {
 
 var cacheExpirationSeconds = 10;
 function fetch() {
-    FirebasePlugin.fetch(cacheExpirationSeconds, function () {
+    FirebasexConfig.fetch(cacheExpirationSeconds, function () {
         log("Remote config fetched", true);
     }, function (error) {
         logError("Failed to fetch remote config", error, true);
@@ -692,7 +691,7 @@ function fetch() {
 }
 
 function activateFetched() {
-    FirebasePlugin.activateFetched(function (activated) {
+    FirebasexConfig.activateFetched(function (activated) {
         log("Remote config was activated: " + activated, true);
     }, function (error) {
         logError("Failed to activate remote config", error, true);
@@ -700,7 +699,7 @@ function activateFetched() {
 }
 
 function fetchAndActivate() {
-    FirebasePlugin.fetchAndActivate(function (activated) {
+    FirebasexConfig.fetchAndActivate(function (activated) {
         log("Remote config was activated: " + activated, true);
     }, function (error) {
         logError("Failed to activate remote config", error, true);
@@ -708,7 +707,7 @@ function fetchAndActivate() {
 }
 
 function resetRemoteConfig() {
-    FirebasePlugin.resetRemoteConfig(function () {
+    FirebasexConfig.resetRemoteConfig(function () {
         log("Successfully reset remote config", true);
     }, function (error) {
         logError("Failed to reset remote config", error, true);
@@ -716,7 +715,7 @@ function resetRemoteConfig() {
 }
 
 function getAll() {
-    FirebasePlugin.getAll(function (values) {
+    FirebasexConfig.getAll(function (values) {
         console.dir(values);
         log("Got all values from remote config", true);
         for (var key in values) {
@@ -728,7 +727,7 @@ function getAll() {
 }
 
 function getStringValue() {
-    FirebasePlugin.getValue("string_value", function (value) {
+    FirebasexConfig.getValue("string_value", function (value) {
         value = value.toString();
         console.dir(value);
         log("Got string value of type " + typeof value + " from remote config: " + value, true);
@@ -738,7 +737,7 @@ function getStringValue() {
 }
 
 function getBooleanValue() {
-    FirebasePlugin.getValue("boolean_value", function (value) {
+    FirebasexConfig.getValue("boolean_value", function (value) {
         value = (value === 'true');
         console.dir(value);
         log("Got boolean value of type " + typeof value + " from remote config: " + value, true);
@@ -748,7 +747,7 @@ function getBooleanValue() {
 }
 
 function getIntegerValue() {
-    FirebasePlugin.getValue("integer_value", function (value) {
+    FirebasexConfig.getValue("integer_value", function (value) {
         value = parseInt(value);
         console.dir(value);
         log("Got integer value of type " + typeof value + " from remote config: " + value, true);
@@ -758,7 +757,7 @@ function getIntegerValue() {
 }
 
 function getFloatValue() {
-    FirebasePlugin.getValue("float_value", function (value) {
+    FirebasexConfig.getValue("float_value", function (value) {
         value = parseFloat(value);
         console.dir(value);
         log("Got float value of type " + typeof value + " from remote config: " + value, true);
@@ -768,7 +767,7 @@ function getFloatValue() {
 }
 
 function getJsonValue() {
-    FirebasePlugin.getValue("json_value", function (value) {
+    FirebasexConfig.getValue("json_value", function (value) {
         try {
             value = JSON.parse(value);
         } catch (e) {
@@ -813,7 +812,7 @@ function verifyPhoneNumber() {
         var fakeVerificationCode = $('#enterPhoneNumber .mockInstantVerificationInput')[0].checked ? FAKE_SMS_VERIFICATION_CODE : null,
             requireSmsValidation = $('#enterPhoneNumber .requireSmsValidationInput')[0].checked;
 
-        FirebasePlugin.verifyPhoneNumber(function (credential) {
+        FirebasexAuth.verifyPhoneNumber(function (credential) {
             log("Received phone number verification credential");
             if (credential.instantVerification) {
                 if (awaitingSms) {
@@ -880,7 +879,7 @@ function enrollSecondAuthFactor() {
         var fakeVerificationCode = $('#enrollSecondAuthFactor .mockInstantVerificationInput')[0].checked ? FAKE_SMS_VERIFICATION_CODE : null,
             requireSmsValidation = $('#enrollSecondAuthFactor .requireSmsValidationInput')[0].checked;
 
-        FirebasePlugin.enrollSecondAuthFactor(function (result) {
+        FirebasexAuth.enrollSecondAuthFactor(function (result) {
             if (typeof result === "object") {
                 log("Received second factor credential - SMS code sent to device");
                 credential = result;
@@ -967,7 +966,7 @@ function verifySecondAuthFactor() {
             if (typeof requireSmsValidation === 'undefined') return confirmRequireSMSValidation();
         }
 
-        FirebasePlugin.verifySecondAuthFactor(function (result) {
+        FirebasexAuth.verifySecondAuthFactor(function (result) {
             if (typeof result === "object") {
                 log("Received second factor credential - SMS code sent to device");
                 credential = result;
@@ -980,19 +979,24 @@ function verifySecondAuthFactor() {
         }, {
             selectedIndex: selectedIndex,
             credential, credential
-        }, {
-            timeOutDuration: timeoutInSeconds,
-            requireSmsValidation: requireSmsValidation,
-            fakeVerificationCode: fakeVerificationCode,
-            phoneNumber: phoneNumber
-        });
+        }, (function(){
+            var opts = {
+                timeOutDuration: timeoutInSeconds,
+                requireSmsValidation: requireSmsValidation
+            };
+            if (fakeVerificationCode) {
+                opts.fakeVerificationCode = fakeVerificationCode;
+                opts.phoneNumber = phoneNumber;
+            }
+            return opts;
+        })());
     };
 
     verify();
 }
 
 function listEnrolledSecondFactors() {
-    FirebasePlugin.listEnrolledSecondAuthFactors(function (secondFactors) {
+    FirebasexAuth.listEnrolledSecondAuthFactors(function (secondFactors) {
         log("Received list of enrolled second factors: " + JSON.stringify(secondFactors));
         var msg = "";
         if (secondFactors.length === 0) {
@@ -1035,7 +1039,7 @@ function unenrollSecondFactor() {
     }
 
     function unenroll(selectedIndex) {
-        FirebasePlugin.unenrollSecondAuthFactor(
+        FirebasexAuth.unenrollSecondAuthFactor(
             function () {
                 log("Successfully unenrolled selected second factor", true);
             }, function (error) {
@@ -1045,7 +1049,7 @@ function unenrollSecondFactor() {
         )
     }
 
-    FirebasePlugin.listEnrolledSecondAuthFactors(function (_secondFactors) {
+    FirebasexAuth.listEnrolledSecondAuthFactors(function (_secondFactors) {
         log("Received list of enrolled second factors: " + JSON.stringify(_secondFactors));
         if (_secondFactors.length > 0) {
             secondFactors = _secondFactors;
@@ -1060,7 +1064,7 @@ function unenrollSecondFactor() {
 
 function authenticateUserWithGoogle() {
     log("authenticateUserWithGoogle using SERVER_CLIENT_ID: " + SERVER_CLIENT_ID);
-    FirebasePlugin.authenticateUserWithGoogle(SERVER_CLIENT_ID, function (credential) {
+    FirebasexAuth.authenticateUserWithGoogle(SERVER_CLIENT_ID, function (credential) {
         authCredential = credential;
         log("Successfully authenticated with Google", true);
     }, function (error) {
@@ -1071,7 +1075,7 @@ function authenticateUserWithGoogle() {
 }
 
 function authenticateUserWithApple() {
-    FirebasePlugin.authenticateUserWithApple(function (credential) {
+    FirebasexAuth.authenticateUserWithApple(function (credential) {
         authCredential = credential;
         log("Successfully authenticated with Apple", true);
     }, function (error) {
@@ -1080,7 +1084,7 @@ function authenticateUserWithApple() {
 }
 
 function authenticateUserWithMicrosoft() {
-    FirebasePlugin.authenticateUserWithMicrosoft(function (credential) {
+    FirebasexAuth.authenticateUserWithMicrosoft(function (credential) {
         authCredential = credential;
         log("Successfully authenticated with Microsoft");
     }, function (error) {
@@ -1092,7 +1096,7 @@ function authenticateUserWithFacebook() {
     facebookConnectPlugin.login(["public_profile"],
         function (userData) {
             var accessToken = userData.authResponse.accessToken;
-            FirebasePlugin.authenticateUserWithFacebook(accessToken, function (credential) {
+            FirebasexAuth.authenticateUserWithFacebook(accessToken, function (credential) {
                 authCredential = credential;
                 log("Successfully authenticated with Facebook", true);
             }, function (error) {
@@ -1113,7 +1117,7 @@ function authenticateUserWithOAuth() {
         },
         scopes = ["openid", "profile", "email", "phone", "address"];
 
-    FirebasePlugin.authenticateUserWithOAuth(function (credential) {
+    FirebasexAuth.authenticateUserWithOAuth(function (credential) {
         authCredential = credential;
         log("Successfully authenticated with OpenID Connect Playground using OAuth");
     }, function (error) {
@@ -1124,7 +1128,7 @@ function authenticateUserWithOAuth() {
 function signInWithCredential() {
     if (!authCredential) return logError("No auth credential exists - request a credential first");
 
-    FirebasePlugin.signInWithCredential(authCredential, function () {
+    FirebasexAuth.signInWithCredential(authCredential, function () {
         log("Successfully signed in", true);
     }, function (error, secondFactors) {
         if (typeof secondFactors !== 'undefined') {
@@ -1137,7 +1141,7 @@ function signInWithCredential() {
 function reauthenticateWithCredential() {
     if (!authCredential) return logError("No auth credential exists - request a credential first");
 
-    FirebasePlugin.reauthenticateWithCredential(authCredential, function () {
+    FirebasexAuth.reauthenticateWithCredential(authCredential, function () {
         log("Successfully reauthenticated", true);
     }, function (error, secondFactors) {
         if (typeof secondFactors !== 'undefined') {
@@ -1150,7 +1154,7 @@ function reauthenticateWithCredential() {
 function linkUserWithCredential() {
     if (!authCredential) return logError("No auth credential exists - request a credential first", true);
 
-    FirebasePlugin.linkUserWithCredential(authCredential, function () {
+    FirebasexAuth.linkUserWithCredential(authCredential, function () {
         log("Successfully linked user", true);
     }, function (error, secondFactors) {
         if (typeof secondFactors !== 'undefined') {
@@ -1161,7 +1165,7 @@ function linkUserWithCredential() {
 }
 
 function unlinkUserWithProvider() {
-    FirebasePlugin.unlinkUserWithProvider("microsoft.com", function () {
+    FirebasexAuth.unlinkUserWithProvider("microsoft.com", function () {
         log("Successfully unlinked user with provider: Microsoft", true);
     }, function (error) {
         logError("Failed to unlink user with provider", error, true);
@@ -1169,7 +1173,7 @@ function unlinkUserWithProvider() {
 }
 
 function isUserSignedIn(showAlert) {
-    FirebasePlugin.isUserSignedIn(function (isSignedIn) {
+    FirebasexAuth.isUserSignedIn(function (isSignedIn) {
         log("User " + (isSignedIn ? "is" : "is not") + " signed in", showAlert);
     }, function (error) {
         logError("Failed to check if user is signed in", error, true);
@@ -1177,7 +1181,7 @@ function isUserSignedIn(showAlert) {
 }
 
 function signOutUser() {
-    FirebasePlugin.signOutUser(function () {
+    FirebasexAuth.signOutUser(function () {
         log("User signed out", true);
     }, function (error) {
         logError("Failed to sign out user", error, true);
@@ -1185,7 +1189,7 @@ function signOutUser() {
 }
 
 function getCurrentUser() {
-    FirebasePlugin.getCurrentUser(function (user) {
+    FirebasexAuth.getCurrentUser(function (user) {
         log("Current user info: " + JSON.stringify(user), true);
     }, function (error) {
         logError("Failed to get current user", error, true);
@@ -1193,7 +1197,7 @@ function getCurrentUser() {
 }
 
 function reloadCurrentUser() {
-    FirebasePlugin.reloadCurrentUser(function (user) {
+    FirebasexAuth.reloadCurrentUser(function (user) {
         log("Reloaded user info: " + JSON.stringify(user), true);
     }, function (error) {
         logError("Failed to get reload user", error, true);
@@ -1218,7 +1222,7 @@ function updateUserProfile() {
     };
 
     var updateProfile = function () {
-        FirebasePlugin.updateUserProfile(profile, function () {
+        FirebasexAuth.updateUserProfile(profile, function () {
             log("User profile successfully updated", true);
         }, function (error) {
             logError("Failed to update user profile", error, true);
@@ -1230,7 +1234,7 @@ function updateUserProfile() {
 
 function updateUserEmail() {
     promptUserForInput("Enter email", "Input new email address", function (email) {
-        FirebasePlugin.updateUserEmail(email, function () {
+        FirebasexAuth.updateUserEmail(email, function () {
             log("User email successfully updated to " + email, true);
         }, function (error) {
             logError("Failed to update user email", error, true);
@@ -1240,7 +1244,7 @@ function updateUserEmail() {
 
 function verifyBeforeUpdateEmail() {
     promptUserForInput("Enter email", "Input new email address", function (email) {
-        FirebasePlugin.verifyBeforeUpdateEmail(email, function () {
+        FirebasexAuth.verifyBeforeUpdateEmail(email, function () {
             log("User email successfully updated to " + email, true);
         }, function (error) {
             logError("Failed to update user email", error, true);
@@ -1249,7 +1253,7 @@ function verifyBeforeUpdateEmail() {
 }
 
 function sendUserEmailVerification() {
-    FirebasePlugin.sendUserEmailVerification(function () {
+    FirebasexAuth.sendUserEmailVerification(function () {
         log("Sent user email verification successfully updated", true);
     }, function (error) {
         logError("Failed to send user verification email", error, true);
@@ -1258,7 +1262,7 @@ function sendUserEmailVerification() {
 
 function updateUserPassword() {
     promptUserForInput("Enter password", "Input new account password", function (password) {
-        FirebasePlugin.updateUserPassword(password, function () {
+        FirebasexAuth.updateUserPassword(password, function () {
             log("User password successfully updated", true);
         }, function (error) {
             logError("Failed to update user password", error, true);
@@ -1268,7 +1272,7 @@ function updateUserPassword() {
 
 function sendUserPasswordResetEmail() {
     promptUserForInput("Enter email", "Input user email address for reset password", function (email) {
-        FirebasePlugin.sendUserPasswordResetEmail(email, function () {
+        FirebasexAuth.sendUserPasswordResetEmail(email, function () {
             log("User password reset email sent successfully", true);
         }, function (error) {
             logError("Failed to send user password reset email", error, true);
@@ -1277,7 +1281,7 @@ function sendUserPasswordResetEmail() {
 }
 
 function deleteUser() {
-    FirebasePlugin.deleteUser(function () {
+    FirebasexAuth.deleteUser(function () {
         log("User account deleted", true);
     }, function (error) {
         logError("Failed to delete current user account", error, true);
@@ -1294,7 +1298,7 @@ function handleSecondFactorChallenge(secondFactors) {
 function createUserWithEmailAndPassword() {
     promptUserForInput("Enter email", "Email address for new account", function (email) {
         promptUserForInput("Enter password", "Password for new account", function (password) {
-            FirebasePlugin.createUserWithEmailAndPassword(email, password, function () {
+            FirebasexAuth.createUserWithEmailAndPassword(email, password, function () {
                 log("Successfully created email/password-based user account", true);
             }, function (error, secondFactors) {
                 if (typeof secondFactors !== 'undefined') {
@@ -1309,7 +1313,7 @@ function createUserWithEmailAndPassword() {
 function signInUserWithEmailAndPassword() {
     promptUserForInput("Enter email", "Enter email address", function (email) {
         promptUserForInput("Enter password", "Enter account password", function (password) {
-            FirebasePlugin.signInUserWithEmailAndPassword(email, password, function () {
+            FirebasexAuth.signInUserWithEmailAndPassword(email, password, function () {
                 log("Successfully signed in to email/password-based user account", true);
             }, function (error, secondFactors) {
                 if (typeof secondFactors !== 'undefined') {
@@ -1324,7 +1328,7 @@ function signInUserWithEmailAndPassword() {
 function authenticateUserWithEmailAndPassword() {
     promptUserForInput("Enter email", "Enter email address", function (email) {
         promptUserForInput("Enter password", "Enter account password", function (password) {
-            FirebasePlugin.authenticateUserWithEmailAndPassword(email, password, function (credential) {
+            FirebasexAuth.authenticateUserWithEmailAndPassword(email, password, function (credential) {
                 authCredential = credential;
                 log("Successfully authenticated with email/password", true);
             }, function (error, secondFactors) {
@@ -1340,7 +1344,7 @@ function authenticateUserWithEmailAndPassword() {
 
 function signInUserWithCustomToken() {
     promptUserForInput("Enter token", "Enter custom token", function (token) {
-        FirebasePlugin.signInUserWithCustomToken(token, function () {
+        FirebasexAuth.signInUserWithCustomToken(token, function () {
             log("Successfully signed in with custom token", true);
         }, function (error, secondFactors) {
             if (typeof secondFactors !== 'undefined') {
@@ -1352,7 +1356,7 @@ function signInUserWithCustomToken() {
 }
 
 function signInUserAnonymously() {
-    FirebasePlugin.signInUserAnonymously(function () {
+    FirebasexAuth.signInUserAnonymously(function () {
         log("Successfully signed in anonymously", true);
     }, function (error) {
         logError("Failed to sign in anonymously", error, true);
@@ -1376,7 +1380,7 @@ var firestoreDocument = {
 var firestoreDocumentId = 1;
 
 function addDocumentToFirestoreCollection() {
-    FirebasePlugin.addDocumentToFirestoreCollection(firestoreDocument, firestoreCollection, function (id) {
+    FirebasexFirestore.addDocumentToFirestoreCollection(firestoreDocument, firestoreCollection, function (id) {
         log("Successfully added document to Firestore with id=" + id, true);
     }, function (error) {
         logError("Failed to add document to Firestore", error, true);
@@ -1384,7 +1388,7 @@ function addDocumentToFirestoreCollection() {
 }
 
 function setDocumentInFirestoreCollection() {
-    FirebasePlugin.setDocumentInFirestoreCollection(firestoreDocumentId, firestoreDocument, firestoreCollection, function () {
+    FirebasexFirestore.setDocumentInFirestoreCollection(firestoreDocumentId, firestoreDocument, firestoreCollection, function () {
         log("Successfully set document in Firestore with id=" + firestoreDocumentId, true);
     }, function (error) {
         logError("Failed to set document in Firestore", error, true);
@@ -1396,7 +1400,7 @@ function updateDocumentInFirestoreCollection() {
         "an_integer": Math.round(Math.random() * 100),
         "a_string": "foobar"
     };
-    FirebasePlugin.updateDocumentInFirestoreCollection(firestoreDocumentId, documentFragment, firestoreCollection, function () {
+    FirebasexFirestore.updateDocumentInFirestoreCollection(firestoreDocumentId, documentFragment, firestoreCollection, function () {
         log("Successfully updated document in Firestore with id=" + firestoreDocumentId, true);
     }, function (error) {
         logError("Failed to update document in Firestore", error, true);
@@ -1404,7 +1408,7 @@ function updateDocumentInFirestoreCollection() {
 }
 
 function deleteDocumentFromFirestoreCollection() {
-    FirebasePlugin.deleteDocumentFromFirestoreCollection(firestoreDocumentId, firestoreCollection, function () {
+    FirebasexFirestore.deleteDocumentFromFirestoreCollection(firestoreDocumentId, firestoreCollection, function () {
         log("Successfully deleted document in Firestore with id=" + firestoreDocumentId, true);
     }, function (error) {
         logError("Failed to delete document in Firestore", error, true);
@@ -1412,7 +1416,7 @@ function deleteDocumentFromFirestoreCollection() {
 }
 
 function documentExistsInFirestoreCollection() {
-    FirebasePlugin.documentExistsInFirestoreCollection(firestoreDocumentId, firestoreCollection, function (exists) {
+    FirebasexFirestore.documentExistsInFirestoreCollection(firestoreDocumentId, firestoreCollection, function (exists) {
         log("Document " + (exists ? "exists" : "doesn't exist") + " in Firestore collection", true);
     }, function (error) {
         logError("Failed to check document exists in Firestore", error, true);
@@ -1420,7 +1424,7 @@ function documentExistsInFirestoreCollection() {
 }
 
 function fetchDocumentInFirestoreCollection() {
-    FirebasePlugin.fetchDocumentInFirestoreCollection(firestoreDocumentId, firestoreCollection, function (document) {
+    FirebasexFirestore.fetchDocumentInFirestoreCollection(firestoreDocumentId, firestoreCollection, function (document) {
         log("Successfully fetched document in Firestore with id=" + firestoreDocumentId + "; doc=" + JSON.stringify(document), true);
         console.dir(document);
     }, function (error) {
@@ -1433,7 +1437,7 @@ function fetchFirestoreCollection() {
     var filters = [
         ['where', 'an_integer', '==', 1, 'integer']
     ];
-    FirebasePlugin.fetchFirestoreCollection(firestoreCollection, filters, function (data) {
+    FirebasexFirestore.fetchFirestoreCollection(firestoreCollection, filters, function (data) {
         log("Successfully fetched Firestore collection: " + JSON.stringify(data), true);
         console.dir(data);
     }, function (error) {
@@ -1447,7 +1451,7 @@ function listenToDocument() {
         return logError("Document listener already exists", true);
     }
 
-    FirebasePlugin.listenToDocumentInFirestoreCollection(function (documentEvent) {
+    FirebasexFirestore.listenToDocumentInFirestoreCollection(function (documentEvent) {
         if (documentEvent.eventType === 'id') {
             documentListenerId = documentEvent.id;
             log("Listening for document changes in Firestore with id=" + documentListenerId, true);
@@ -1465,7 +1469,7 @@ function unlistenToDocument() {
         return logError("No document listener currently exists", true);
     }
 
-    FirebasePlugin.removeFirestoreListener(function () {
+    FirebasexFirestore.removeFirestoreListener(function () {
         documentListenerId = null;
         log("Stopped listening for document changes in Firestore", true);
     }, function (error) {
@@ -1479,7 +1483,7 @@ function listenToCollection() {
         return logError("Collection listener already exists", true);
     }
 
-    FirebasePlugin.listenToFirestoreCollection(function (collectionEvent) {
+    FirebasexFirestore.listenToFirestoreCollection(function (collectionEvent) {
         if (collectionEvent.eventType === 'id') {
             collectionListenerId = collectionEvent.id;
             log("Listening for collection changes in Firestore with id=" + collectionListenerId, true);
@@ -1497,7 +1501,7 @@ function unlistenToCollection() {
         return logError("No collection listener currently exists", true);
     }
 
-    FirebasePlugin.removeFirestoreListener(function () {
+    FirebasexFirestore.removeFirestoreListener(function () {
         collectionListenerId = null;
         log("Stopped listening for collection changes in Firestore", true);
     }, function (error) {
@@ -1514,7 +1518,7 @@ function callHttpsFunction() {
         a: 2,
         b: 3
     };
-    FirebasePlugin.functionsHttpsCallable(functionName, args, function (result) {
+    FirebasexFunctions.functionsHttpsCallable(functionName, args, function (result) {
         log("Successfully called function - result: " + JSON.stringify(result), true);
     }, function (error) {
         logError("Error calling function: " + JSON.stringify(error), true);
@@ -1525,7 +1529,7 @@ function callHttpsFunction() {
  * Installations
  */
 function getInstallationId() {
-    FirebasePlugin.getInstallationId(function (id) {
+    FirebasexCore.getInstallationId(function (id) {
         log("Got installation ID: " + id, true);
     }, function (error) {
         logError("Failed to get installation ID", error, true);
@@ -1533,7 +1537,7 @@ function getInstallationId() {
 }
 
 function getInstallationToken() {
-    FirebasePlugin.getInstallationToken(function (token) {
+    FirebasexCore.getInstallationToken(function (token) {
         log("Got installation token: " + token);
 
         // Decode JWT
@@ -1560,7 +1564,7 @@ function parseJwt(token) {
 }
 
 function deleteInstallationId() {
-    FirebasePlugin.deleteInstallationId(function () {
+    FirebasexCore.deleteInstallationId(function () {
         log("Deleted installation ID", true);
     }, function (error) {
         logError("Failed to delete installation ID", error, true);

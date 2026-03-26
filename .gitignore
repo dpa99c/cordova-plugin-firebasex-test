@@ -1,7 +1,7 @@
 /.idea
 /platforms
 /plugins/cordova-plugin-androidx
-/plugins/cordova-plugin-firebasex
+/plugins/cordova-plugin-firebasex*
 /plugins/cordova-plugin-cocoapod-supportx
 /plugins/cordova-plugin-whitelist
 /plugins/android.json

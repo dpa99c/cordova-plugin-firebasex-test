@@ -11,13 +11,17 @@
     <content src="index.html" />
     <access origin="*" />
 
-    <plugin name="cordova-plugin-firebasex" spec="https://github.com/dpa99c/cordova-plugin-firebase" >
-        <variable name="IOS_STRIP_DEBUG" value="true" />
-        <variable name="FIREBASE_ANALYTICS_COLLECTION_ENABLED" value="false" />
-        <variable name="FIREBASE_PERFORMANCE_COLLECTION_ENABLED" value="false" />
-        <variable name="FIREBASE_CRASHLYTICS_COLLECTION_ENABLED" value="false" />
-        <variable name="SETUP_RECAPTCHA_VERIFICATION" value="true" />
-    </plugin>
+    <!-- Modular Firebase plugins -->
+    <plugin name="cordova-plugin-firebasex-core" />
+    <plugin name="cordova-plugin-firebasex-messaging" />
+    <plugin name="cordova-plugin-firebasex-auth" />
+    <plugin name="cordova-plugin-firebasex-analytics" />
+    <plugin name="cordova-plugin-firebasex-crashlytics" />
+    <plugin name="cordova-plugin-firebasex-firestore" />
+    <plugin name="cordova-plugin-firebasex-functions" />
+    <plugin name="cordova-plugin-firebasex-config" />
+    <plugin name="cordova-plugin-firebasex-performance" />
+    <plugin name="cordova-plugin-firebasex-inappmessaging" />
 
     <platform name="android">
         <preference name="AndroidXEnabled" value="true" />
