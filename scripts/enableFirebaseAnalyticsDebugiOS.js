@@ -10,9 +10,27 @@ try{
     throw "Unable to read required CLI args: " + e.message;
 }
 
-var schemeFilepath = "platforms/ios/"+projectName+".xcworkspace/xcshareddata/xcschemes/"+projectName+".xcscheme";
+function resolveSchemeFilepath(projectName) {
+    var candidates = [
+        path.join("platforms", "ios", "App.xcodeproj", "xcshareddata", "xcschemes", "App.xcscheme"),
+        path.join("platforms", "ios", "App.xcworkspace", "xcshareddata", "xcschemes", "App.xcscheme"),
+        path.join("platforms", "ios", projectName + ".xcodeproj", "xcshareddata", "xcschemes", projectName + ".xcscheme"),
+        path.join("platforms", "ios", projectName + ".xcworkspace", "xcshareddata", "xcschemes", projectName + ".xcscheme")
+    ];
+
+    for (var i = 0; i < candidates.length; i++) {
+        var candidate = path.resolve(candidates[i]);
+        if (fs.existsSync(candidate)) {
+            return candidate;
+        }
+    }
+
+    throw "Unable to find an iOS scheme file under platforms/ios for projectName=" + projectName;
+}
+
+var schemeFilepath = resolveSchemeFilepath(projectName);
 try{
-    var schemeFileXml = fs.readFileSync(path.resolve(schemeFilepath), 'utf-8');
+    var schemeFileXml = fs.readFileSync(schemeFilepath, 'utf-8');
 }catch(e){
     throw "Unable to read scheme file: " + e.message;
 }
@@ -44,7 +62,7 @@ function writeJsToSchemeFile(js){
     try{
         var builder = new xml2js.Builder();
         var xml = builder.buildObject(js);
-        fs.writeFileSync(path.resolve(schemeFilepath), xml, 'utf-8');
+        fs.writeFileSync(schemeFilepath, xml, 'utf-8');
     }catch(e){
         throw "Unable to write scheme to file: " + e.message;
     }

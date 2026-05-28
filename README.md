@@ -87,7 +87,7 @@ Plugin variables are now specified per-plugin. Each plugin only reads variables 
 ### Firestore
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `IOS_USE_PRECOMPILED_FIRESTORE_POD` | `false` | Use precompiled Firestore pod for faster iOS builds |
+| `IOS_USE_PRECOMPILED_FIRESTORE_POD` | `false` | Use the precompiled Firestore pod for CocoaPods fallback builds only |
 
 ### Performance
 | Variable | Default | Description |
@@ -102,14 +102,13 @@ The [configured package ID](https://github.com/dpa99c/cordova-plugin-firebasex-t
 
 Therefore in order to test this project on iOS, you will need to change the package ID to one which is associated with your Apple Developer Team and for which you have set appropriate capabilities.
 
-### CocoaPods
-The modular `cordova-plugin-firebasex-*` plugins rely on `cordova-ios@7+` support for the [CocoaPods dependency manager](https://cocoapods.org/) in order to satisfy the iOS Firebase SDK library dependencies.
+### Swift Package Manager
+The modular `cordova-plugin-firebasex-*` plugins use Swift Package Manager on `cordova-ios@8+` to resolve the iOS Firebase SDK dependencies. That is the primary path used by this test project, so no Podfile or manual `pod install` step is required.
 
-Therefore please make sure you have CocoaPods installed in your iOS build environment - setup instructions can be found [here](https://cocoapods.org/).
-Also make sure your local CocoaPods repo is up-to-date by running `pod repo update`.
+If you intentionally stay on `cordova-ios@7.x`, the retained CocoaPods fallback still works. In that case you will need CocoaPods installed in your build environment and should keep your local specs repo up to date.
 
 ### Building in Xcode
-If building your project in Xcode, you need to open `YourProject.xcworkspace` (not `YourProject.xcodeproj`) so both your Cordova app project and the Pods project will be loaded into Xcode.
+If building this project with `cordova-ios@8+`, open `platforms/ios/App.xcodeproj` in Xcode. If you are using the older CocoaPods fallback on `cordova-ios@7.x`, continue to open `YourProject.xcworkspace` instead.
 
 ## Testing Cloud Messaging
 If you want to test FCM using this project, you'll need to do the following:
@@ -163,4 +162,12 @@ To test the authentication methods, you must configure each method for the targe
 Set your server client ID in `www/js/config.js` - see the [Firebase documentation](https://firebase.google.com/docs/auth/android/google-signin#authenticate_with_firebase) for where to find this. This is used for Google Sign In on Android.
 
 # Analytics DebugView
+You can enable the local iOS scheme flag used by Firebase Analytics DebugView with:
+
+```
+npm run enableAnalyticsDebug -- --platform=ios
+```
+
+The helper script now detects both the Swift Package Manager `App.xcodeproj` scheme used by `cordova-ios@8+` and the older CocoaPods workspace scheme.
+
 See [this page](https://support.google.com/firebase/answer/7201382?hl=en&utm_id=ad&authuser=1) for how to manually enable Firebase Analytics DebugView.

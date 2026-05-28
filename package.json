@@ -37,9 +37,7 @@
       "cordova-plugin-firebasex-crashlytics": {
         "FIREBASE_CRASHLYTICS_COLLECTION_ENABLED": "false"
       },
-      "cordova-plugin-firebasex-firestore": {
-        "IOS_USE_PRECOMPILED_FIRESTORE_POD": "true"
-      },
+      "cordova-plugin-firebasex-firestore": {},
       "cordova-plugin-firebasex-functions": {},
       "cordova-plugin-firebasex-config": {},
       "cordova-plugin-firebasex-performance": {
