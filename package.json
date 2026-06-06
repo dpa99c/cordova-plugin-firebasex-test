@@ -1,7 +1,7 @@
 {
   "name": "uk.co.workingedge.firebase.test",
   "displayName": "FirebaseTest",
-  "version": "17.0.0",
+  "version": "20.0.0",
   "description": "Test project for cordova-plugin-firebasex modular plugins",
   "author": "Dave Alden",
   "license": "Apache-2.0",
@@ -9,10 +9,7 @@
     "plugins": {
       "cordova-plugin-firebasex-core": {
         "ANDROID_ICON_ACCENT": "#FF11FF11",
-        "IOS_STRIP_DEBUG": "true",
-        "ANDROID_FIREBASE_CORE_VERSION": "21.1.1",
-        "ANDROID_FIREBASE_INSTALLATIONS_VERSION": "18.0.0",
-        "ANDROID_GSON_VERSION": "2.10.1"
+        "IOS_STRIP_DEBUG": "true"
       },
       "cordova-plugin-firebasex-messaging": {
         "FIREBASE_FCM_AUTOINIT_ENABLED": "false",
@@ -42,8 +39,7 @@
       "cordova-plugin-firebasex-config": {},
       "cordova-plugin-firebasex-performance": {
         "FIREBASE_PERFORMANCE_COLLECTION_ENABLED": "false",
-        "ANDROID_FIREBASE_PERFORMANCE_MONITORING": "false",
-        "ANDROID_FIREBASE_PERF_GRADLE_PLUGIN_VERSION": "2.0.1"
+        "ANDROID_FIREBASE_PERFORMANCE_MONITORING": "false"
       },
       "cordova-plugin-firebasex-inappmessaging": {},
       "cordova-custom-config": {},
@@ -59,18 +55,18 @@
   "devDependencies": {
     "cordova-android": "^14.0.1",
     "cordova-custom-config": "^5.1.0",
-    "cordova-ios": "^8.0.0",
+    "cordova-ios": "^8.0.1",
     "cordova-plugin-androidx-adapter": "^1.1.3",
     "cordova-plugin-dialogs": "git+https://github.com/dpa99c/cordova-plugin-dialogs.git",
-    "cordova-plugin-firebasex-auth": "^1.0.1",
-    "cordova-plugin-firebasex-config": "^1.0.1",
-    "cordova-plugin-firebasex-core": "^1.0.1",
-    "cordova-plugin-firebasex-crashlytics": "^1.0.1",
-    "cordova-plugin-firebasex-firestore": "^1.0.1",
-    "cordova-plugin-firebasex-functions": "^1.0.1",
-    "cordova-plugin-firebasex-inappmessaging": "^1.0.1",
-    "cordova-plugin-firebasex-messaging": "^1.0.1",
-    "cordova-plugin-firebasex-performance": "^1.0.1",
+    "cordova-plugin-firebasex-auth": "^2.0.0",
+    "cordova-plugin-firebasex-config": "^2.0.0",
+    "cordova-plugin-firebasex-core": "^2.0.0",
+    "cordova-plugin-firebasex-crashlytics": "^2.0.0",
+    "cordova-plugin-firebasex-firestore": "^2.0.0",
+    "cordova-plugin-firebasex-functions": "^2.0.0",
+    "cordova-plugin-firebasex-inappmessaging": "^2.0.0",
+    "cordova-plugin-firebasex-messaging": "^2.0.0",
+    "cordova-plugin-firebasex-performance": "^2.0.0",
     "cordova.plugins.diagnostic": "^7.1.0",
     "google-auth-library": "^4.2.5",
     "xml-js": "^1.6.11"
